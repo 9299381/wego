@@ -1,0 +1,5 @@
+package clients
+
+func NewHttpClient()  {
+	
+}

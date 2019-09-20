@@ -1,0 +1,17 @@
+syntax = "proto3";
+
+package protobuf;
+
+service Service{
+    rpc Handle(Request) returns (Response) {}
+}
+
+message Request {
+  string id = 1;
+  string param = 2;
+}
+message Response {
+  string code = 1;
+  string msg = 2;
+  string data = 3;
+}
