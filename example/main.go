@@ -15,13 +15,13 @@ func main()  {
 	wego.Provider(&provider.ExamProvider{})
 
 
-	//wego.Router("grpc",&router.GrpcRouter{})
+	wego.Router("grpc",&router.GrpcRouter{})
 	wego.Router("http",&router.HttpRouter{})
-	//wego.Router("queue",&router.QueueRouter{})
-	//wego.Router("command",&router.CommandRouter{})
-	//wego.Router("websocket",&router.WebSocketRouter{})
-	//wego.Router("timer",&router.TimerRouter{})
-	//wego.Router("cron",&router.CronRouter{})
+	wego.Router("queue",&router.QueueRouter{})
+	wego.Router("command",&router.CommandRouter{})
+	wego.Router("websocket",&router.WebSocketRouter{})
+	wego.Router("timer",&router.TimerRouter{})
+	wego.Router("cron",&router.CronRouter{})
 
 
 	wego.Start()
