@@ -145,3 +145,8 @@ snowflake id生成器
 ~~~~
     wego.ID()
 ~~~~
+
+command
+~~~~
+    main -cmd="注册的路由" -args="json参数"
+~~~~

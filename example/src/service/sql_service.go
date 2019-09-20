@@ -2,7 +2,7 @@ package service
 
 import (
 	"github.com/9299381/wego/contracts"
-	repository2 "github.com/9299381/wego/example/src/repository"
+	"github.com/9299381/wego/example/src/repository"
 )
 
 type SqlService struct {
@@ -15,7 +15,7 @@ func (it *SqlService)Next(srv contracts.IService) contracts.IService {
 	return it
 }
 func (it *SqlService)Handle(ctx contracts.Context) error  {
-	repo := &repository2.UserRepo{Context: ctx}
+	repo := &repository.UserRepo{Context: ctx}
 	user := repo.FetchId("1189164474851006208")
 
 	ctx.Response("user",user)
