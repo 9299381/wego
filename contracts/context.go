@@ -159,8 +159,13 @@ func (c *Context) GetValue(key string) (ret interface{}) {
 	return
 }
 
-func (c *Context) Request(key string) (ret interface{}) {
-	k := "request." + key
+func (c *Context) Request(key ...string) (ret interface{}) {
+	var k string
+	if key == nil {
+		k = "request"
+	} else {
+		k = "request." + key[0]
+	}
 	return c.GetValue(k)
 }
 func (c *Context) Response(key string, value interface{}) {

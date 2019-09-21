@@ -20,14 +20,20 @@ func (it *ResponseEndpoint) Next(next endpoint.Endpoint) contracts.IFilter {
 
 func (it *ResponseEndpoint) Make() endpoint.Endpoint {
 	return func(ctx context.Context, request interface{}) (response interface{}, err error) {
-
-		if wego.App.Status ==false{
-			return contracts.ResponseFaile(errors.New(constants.ErrStop)),nil
+		//全局扑捉错误
+		defer func() {
+			if err := recover(); err != nil {
+				wego.App.Logger.Info(err)
+				response = contracts.ResponseFaile(err.(error))
+			}
+		}()
+		if wego.App.Status == false {
+			return contracts.ResponseFaile(errors.New(constants.ErrStop)), nil
 		}
-		resp,err := it.next(ctx, request)
-		if err!= nil{
-			return contracts.ResponseFaile(err),nil
+		response, err = it.next(ctx, request)
+		if err != nil {
+			return contracts.ResponseFaile(err), nil
 		}
-		return resp ,nil
+		return response, nil
 	}
 }

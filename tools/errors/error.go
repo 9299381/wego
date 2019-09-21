@@ -11,5 +11,5 @@ type Error struct {
 }
 
 func (e *Error) Error() string {
-	return e.Code + ":" + e.Message
+	return e.Code + "::" + e.Message
 }

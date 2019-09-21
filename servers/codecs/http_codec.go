@@ -18,18 +18,18 @@ func HttpFormDecodeRequest(_ context.Context, r *http.Request) (interface{}, err
 	requestId, ok := vars["request_id"]
 	if ok == false {
 		requestId = make([]string, 1)
-		requestId[0] =  wego.ID()
+		requestId[0] = wego.ID()
 	}
 	data := make(map[string]interface{})
 	for k, v := range vars {
 		data[k] = v[0]
 	}
-	if strings.Index(r.RemoteAddr,"::") >0 {
+	if strings.Index(r.RemoteAddr, "::") > 0 {
 		data["client_ip"] = "127.0.0.1"
-	}else{
-		data["client_ip"]=r.RemoteAddr
+	} else {
+		data["client_ip"] = r.RemoteAddr
 	}
-	if 	autoken :=r.Header.Get("autoken") ; autoken !="" {
+	if autoken := r.Header.Get("autoken"); autoken != "" {
 		data["autoken"] = autoken
 	}
 
@@ -59,7 +59,8 @@ func HttpEncodeResponse(ctx context.Context, w http.ResponseWriter, response int
 	w.Header().Set("Content-Type", "application/json;charset=utf-8")
 	w.Header().Set("Access-Control-Allow-Origin", "*")
 	w.Header().Set("Access-Control-Allow-Headers", "Content-Type,X-Requested-With,authToken")
-	w.Header().Set("Access-Control-Allow-Credentials","true")
-	w.Header().Set("Access-Control-Expose-Headers","*")
+	w.Header().Set("Access-Control-Allow-Credentials", "true")
+	w.Header().Set("Access-Control-Expose-Headers", "*")
 	return json.NewEncoder(w).Encode(response)
+
 }

@@ -26,26 +26,24 @@ func (it *CommEndpoint) Make() endpoint.Endpoint {
 		err = it.Service.Handle(cc)
 		if err != nil {
 			cc.Log.Info(err.Error())
-			return nil,err
+			return nil, err
 		} else {
-			return contracts.ResponseSucess(cc.GetValue("response")),nil
+			return contracts.ResponseSucess(cc.GetValue("response")), nil
 		}
 	}
 }
-
-
 
 func (it *CommEndpoint) makeLog(ctx contracts.Context, req contracts.Request) *logrus.Entry {
 	logger := wego.App.Logger
 	//初始化日志字段,放到context中
 
 	ip := (req.Data)["client_ip"]
-	if ip == nil{
+	if ip == nil {
 		ip = "LAN"
 	}
 	entity := logger.WithFields(logrus.Fields{
 		"request_id": req.Id,
-		"client_ip" :ip,
+		"client_ip":  ip,
 	})
 	return entity
 }
@@ -55,7 +53,8 @@ func (it *CommEndpoint) makeContext(ctx context.Context, req contracts.Request) 
 		Context: ctx,
 		Keys:    map[string]interface{}{},
 	}
+	cc.SetValue("request", req.Data)
 	cc.SetValue("request.id", req.Id)
-	cc.SetValue("request.data", req.Data)
+
 	return cc
 }

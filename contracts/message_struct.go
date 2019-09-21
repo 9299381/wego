@@ -23,15 +23,15 @@ func ResponseSucess(data interface{}) Response {
 	}
 }
 func ResponseFaile(err error) Response {
-	errMap := strings.Split(err.Error(), ":")
-	if len(errMap) ==2 {
+	errMap := strings.Split(err.Error(), "::")
+	if len(errMap) == 2 {
 		return Response{
 			Code:    errMap[0],
 			Data:    make(map[string]interface{}),
 			Ret:     200,
 			Message: errMap[1],
 		}
-	}else{
+	} else {
 		return Response{
 			Code:    "9999",
 			Data:    make(map[string]interface{}),
@@ -41,9 +41,7 @@ func ResponseFaile(err error) Response {
 	}
 }
 
-
-
 type Payload struct {
-	Route string `json:"route"`
-	Params  map[string]interface{} `json:"params"`
+	Route  string                 `json:"route"`
+	Params map[string]interface{} `json:"params"`
 }
