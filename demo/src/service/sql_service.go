@@ -1,0 +1,24 @@
+package service
+
+import (
+	"github.com/9299381/wego/contracts"
+	"github.com/9299381/wego/demo/src/repository"
+)
+
+type SqlService struct {
+	next contracts.IService
+}
+
+func (it *SqlService) Next(srv contracts.IService) contracts.IService {
+	it.next = srv
+	return it
+}
+func (it *SqlService) Handle(ctx contracts.Context) error {
+	repo := &repository.UserRepo{Context: ctx}
+	user := repo.FetchId("1189164474851006208")
+
+	ctx.Response("user", user)
+	ctx.Response("request", ctx.Request())
+
+	return it.next.Handle(ctx)
+}
