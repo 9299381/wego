@@ -5,17 +5,17 @@ import (
 	"github.com/9299381/wego/contracts"
 )
 
-type TestJob struct {
+type TestQueue struct {
 	repo string
 	next contracts.IService
 }
 
-func (it *TestJob) Next(srv contracts.IService) contracts.IService {
+func (it *TestQueue) Next(srv contracts.IService) contracts.IService {
 	it.next = srv
 	return it
 }
 
-func (it *TestJob) Handle(ctx contracts.Context) error {
+func (it *TestQueue) Handle(ctx contracts.Context) error {
 
 	msg := make(map[string]interface{})
 	msg["aaa"] = "bbb"

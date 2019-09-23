@@ -17,5 +17,6 @@ func (it *GrpcRouter) Boot() {
 func (it *GrpcRouter) Register() {
 
 	it.Route("Two", wego.Handler("two"))
+	it.Route("One", wego.Handler("one"))
 
 }

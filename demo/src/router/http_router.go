@@ -21,7 +21,7 @@ func (it *HttpRouter) Register() {
 	it.Get("/exam/sql", wego.Handler("sql"))
 	it.Get("/exam/redis", wego.Handler("redis"))
 	it.Post("/exam/post", wego.Handler("post"))
-	it.Get("/exam/job", wego.Handler("job"))
+	it.Get("/exam/queue", wego.Handler("queue"))
 
 	it.Get("/exam/cache_set", wego.Handler("cache_set"))
 	it.Get("/exam/cache_get", wego.Handler("cache_get"))

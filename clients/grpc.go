@@ -9,11 +9,7 @@ import (
 	"log"
 )
 
-func NewGrpcClient(service string,params interface{}) *protobuf.Response {
-
-	//这个应该从consul中读取 ,定时任务更新 内存中存储
-
-	serviceAddress := "127.0.0.1:9341"
+func NewGrpcClient(serviceAddress string, service string, params interface{}) *protobuf.Response {
 	conn, err := grpc.Dial(serviceAddress, grpc.WithInsecure())
 	if err != nil {
 		log.Fatalf("did not connect: %v", err)
@@ -25,10 +21,9 @@ func NewGrpcClient(service string,params interface{}) *protobuf.Response {
 		Id:    wego.ID(),
 		Param: string(jsonParam),
 	}
-	
+
 	out := new(protobuf.Response)
 	method := "/protobuf." + service + "/Handle"
 	_ = conn.Invoke(context.Background(), method, in, out)
-
 	return out
 }

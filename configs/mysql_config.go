@@ -3,17 +3,18 @@ package configs
 import (
 	"fmt"
 	"github.com/9299381/wego"
+	"github.com/9299381/wego/args"
 	"github.com/9299381/wego/contracts"
 	"strconv"
 )
 
 type MySqlConfig struct {
 	Config
-	Driver     string
-	DataSource string
+	Driver       string
+	DataSource   string
 	MaxIdleConns int
 	MaxOpenConns int
-	ShowSQL bool
+	ShowSQL      bool
 }
 
 func (it *MySqlConfig) Load() contracts.Iconfig {
@@ -27,25 +28,24 @@ func (it *MySqlConfig) Load() contracts.Iconfig {
 		wego.Env("DB_DATABASE", "default"),
 	)
 
-	show :=false
-	if wego.Env("APP_ENV","prod") == "prod"{
-		show=true
+	show := false
+	if args.Mode != "prod" {
+		show = true
 	}
 
-
-	maxIdel, _ := strconv.Atoi(wego.Env("DB_MAX_IDLE","5"))
-	maxOpen, _ := strconv.Atoi(wego.Env("DB_MAX_OPEN","50"))
+	maxIdel, _ := strconv.Atoi(wego.Env("DB_MAX_IDLE", "5"))
+	maxOpen, _ := strconv.Atoi(wego.Env("DB_MAX_OPEN", "50"))
 
 	config := &MySqlConfig{
-		Driver:     driver,
-		DataSource: dataSource,
-		ShowSQL:show,
-		MaxIdleConns:maxIdel,
-		MaxOpenConns:maxOpen,
+		Driver:       driver,
+		DataSource:   dataSource,
+		ShowSQL:      show,
+		MaxIdleConns: maxIdel,
+		MaxOpenConns: maxOpen,
 	}
 	return config
 }
 
-func (it *MySqlConfig)Get(key string) string {
-	return it.GetKey(it,key)
+func (it *MySqlConfig) Get(key string) string {
+	return it.GetKey(it, key)
 }

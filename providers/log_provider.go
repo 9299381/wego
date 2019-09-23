@@ -2,6 +2,7 @@ package providers
 
 import (
 	"github.com/9299381/wego"
+	"github.com/9299381/wego/args"
 	"github.com/9299381/wego/configs"
 	rotatelogs "github.com/lestrrat/go-file-rotatelogs"
 	"github.com/rifflock/lfshook"
@@ -20,7 +21,7 @@ func (it *LogProvider) Boot() {
 
 func (it *LogProvider) Register() {
 	logger := logrus.New()
-	if wego.Env("APP_ENV") == "prod" {
+	if args.Mode == "prod" {
 		//写入文件
 		src, err := os.OpenFile(os.DevNull, os.O_APPEND|os.O_WRONLY, os.ModeAppend)
 		if err != nil {

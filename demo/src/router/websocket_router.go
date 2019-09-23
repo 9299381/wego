@@ -16,5 +16,5 @@ func (it *WebSocketRouter) Boot() {
 //todo 写个队列server 编解码,路由等
 
 func (it *WebSocketRouter) Register() {
-	it.Route("websocket_test", wego.Handler("two"))
+	it.Route("Two", wego.Handler("two"))
 }
