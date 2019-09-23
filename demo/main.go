@@ -9,7 +9,7 @@ import (
 
 func main() {
 	wego.Provider(&providers.BootStrap{})
-	wego.Provider(&provider.ExamProvider{})
+	wego.Provider(&provider.DemoProvider{})
 
 	wego.Router("http", &router.HttpRouter{})
 	wego.Router("grpc", &router.GrpcRouter{})

@@ -7,13 +7,13 @@ import (
 	"github.com/9299381/wego/services"
 )
 
-type ExamProvider struct {
+type DemoProvider struct {
 }
 
-func (it *ExamProvider) Boot() {
+func (it *DemoProvider) Boot() {
 }
 
-func (it *ExamProvider) Register() {
+func (it *DemoProvider) Register() {
 
 	wego.Handler("one", filters.Limit(
 		services.Chain(

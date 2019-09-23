@@ -12,9 +12,8 @@ type UserRepo struct {
 
 func (it UserRepo) FetchId(id string) model.CommUser {
 
-	user := model.CommUser{Id: id, UserName: "系统二级1111"}
+	user := model.CommUser{Id: id}
 	has, _ := wego.DB().Get(&user)
-	it.Log.Info("user_repo  fetch id")
 	it.Log.Info(user)
 	if has {
 		return user

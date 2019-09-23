@@ -15,17 +15,17 @@ func (it *HttpRouter) Boot() {
 
 func (it *HttpRouter) Register() {
 
-	it.Get("/exam/one", wego.Handler("one"))
-	it.Get("/exam/two", wego.Handler("two"))
-	it.Post("/exam/auth", wego.Handler("auth"))
-	it.Get("/exam/sql", wego.Handler("sql"))
-	it.Get("/exam/redis", wego.Handler("redis"))
-	it.Post("/exam/post", wego.Handler("post"))
-	it.Get("/exam/queue", wego.Handler("queue"))
+	it.Get("/demo/one", wego.Handler("one"))
+	it.Get("/demo/two", wego.Handler("two"))
+	it.Post("/demo/auth", wego.Handler("auth"))
+	it.Get("/demo/sql", wego.Handler("sql"))
+	it.Get("/demo/redis", wego.Handler("redis"))
+	it.Post("/demo/post", wego.Handler("post"))
+	it.Get("/demo/queue", wego.Handler("queue"))
 
-	it.Get("/exam/cache_set", wego.Handler("cache_set"))
-	it.Get("/exam/cache_get", wego.Handler("cache_get"))
-
-	it.Get("/exam/valid", wego.Handler("valid"))
+	it.Get("/demo/cache_set", wego.Handler("cache_set"))
+	it.Get("/demo/cache_get", wego.Handler("cache_get"))
+	//验证validate
+	it.Get("/demo/valid", wego.Handler("valid"))
 
 }
