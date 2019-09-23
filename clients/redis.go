@@ -13,16 +13,16 @@ MaxIdle 最大空闲连接数，即会有这么多个连接提前等待着，但
 IdleTimeout 空闲连接超时时间，
 但应该设置比redis服务器超时时间短。否则服务端超时了，客户端保持着连接也没用。
 Wait 这是个很有用的配置。如果超过最大连接，是报错，还是等待
- */
-func NewRedisPool(conf *configs.RedisConfig) *redis.Pool{
+*/
+func NewRedisPool(conf *configs.RedisConfig) *redis.Pool {
 	timeout := conf.IdleTimeout
-	redisClient:=&redis.Pool{
-		MaxActive:conf.MaxActive,
-		MaxIdle:conf.MaxIdle,
-		IdleTimeout:timeout,
-		Wait:true,
+	redisClient := &redis.Pool{
+		MaxActive:   conf.MaxActive,
+		MaxIdle:     conf.MaxIdle,
+		IdleTimeout: timeout,
+		Wait:        true,
 		Dial: func() (conn redis.Conn, err error) {
-			conn,err =redis.Dial(
+			conn, err = redis.Dial(
 				"tcp",
 				conf.Uri,
 				redis.DialPassword(conf.Auth),
@@ -30,10 +30,10 @@ func NewRedisPool(conf *configs.RedisConfig) *redis.Pool{
 				redis.DialConnectTimeout(timeout),
 				redis.DialReadTimeout(timeout),
 				redis.DialWriteTimeout(timeout),
-				)
-			if err != nil{
+			)
+			if err != nil {
 				panic(err)
-				return nil,nil
+				return nil, nil
 			}
 			return
 		},

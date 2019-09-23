@@ -9,66 +9,64 @@ import (
 )
 
 type Server struct {
-	handlers map[string] *service
-	Logger *logrus.Logger
+	handlers map[string]*service
+	Logger   *logrus.Logger
 }
 type service struct {
-	freq int
+	freq    int
 	handler *commons.CommHandler
-	params map[string]interface{}
+	params  map[string]interface{}
 }
 
 func NewServer() *Server {
 	ss := &Server{
-		handlers: make(map[string] *service),
+		handlers: make(map[string]*service),
 	}
 
 	return ss
 }
-func (it *Server) Register(name string,freq int,handler *commons.CommHandler,params map[string]interface{}){
+func (it *Server) Register(name string, freq int, handler *commons.CommHandler, params map[string]interface{}) {
 
 	it.handlers[name] = &service{
-		freq:freq,
-		handler:handler,
-		params:params,
+		freq:    freq,
+		handler: handler,
+		params:  params,
 	}
 }
 
-
-
-func (it *Server) Serve() error  {
+func (it *Server) Serve() error {
 
 	errChans := make(map[string]chan error)
-	for name,svr := range it.handlers {
+	for name, svr := range it.handlers {
 		errChans[name] = make(chan error)
 		ticker := time.NewTicker(time.Duration(svr.freq) * time.Second)
-		go func(name string,svr *service,t *time.Ticker,errChan chan error) {
+		go func(name string, svr *service, t *time.Ticker, errChan chan error) {
 			for {
 				select {
 				case <-t.C:
 					id := wego.ID()
 					log := it.Logger.WithFields(logrus.Fields{
-						"request_id" : id,
+						"request_id": id,
 					})
 					log.Info(name + ":任务开始")
-					ctx :=context.Background()
+					ctx := context.Background()
 					params := svr.params
 					params["request_id"] = id
-					resp, err := svr.handler.Handle(ctx,params)
-					if err != nil{
+					resp, err := svr.handler.Handle(ctx, params)
+					if err != nil {
 						it.Logger.Info(err.Error())
-					}else{
+					} else {
 						it.Logger.Info(resp)
 					}
 					log.Info(name + ":任务结束")
 				}
 
 			}
-		}(name,svr,ticker,errChans[name])
+		}(name, svr, ticker, errChans[name])
 	}
-	for _,errChan := range errChans{
-		e := <- errChan
-		if e != nil{
+	for _, errChan := range errChans {
+		e := <-errChan
+		if e != nil {
 			return e
 		}
 	}

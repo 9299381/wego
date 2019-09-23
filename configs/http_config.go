@@ -10,16 +10,14 @@ type HttpConfig struct {
 	HttpPort string `json:"http_port"`
 }
 
-
 func (it *HttpConfig) Load() contracts.Iconfig {
 
 	config := &HttpConfig{
-		HttpPort : ":"+ wego.Env("SERVER_HTTP_PORT","8341"),
-
+		HttpPort: ":" + wego.Env("SERVER_HTTP_PORT", "8341"),
 	}
 	return config
 }
 
-func (it *HttpConfig)Get(key string) string {
-	return it.GetKey(it,key)
+func (it *HttpConfig) Get(key string) string {
+	return it.GetKey(it, key)
 }

@@ -14,5 +14,5 @@ func TimerDecodeRequest(ctx context.Context, req interface{}) (interface{}, erro
 }
 
 func TimerEncodeResponse(_ context.Context, rsp interface{}) (interface{}, error) {
-	return rsp,nil
+	return rsp, nil
 }

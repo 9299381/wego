@@ -23,19 +23,18 @@ func NewTimerCommServer() *TimerCommServer {
 	return ss
 }
 
-func (it *TimerCommServer)Load()  {
+func (it *TimerCommServer) Load() {
 
 	//注册通用路由
 }
 
-func (it *TimerCommServer) Route(name string, freq int,endpoint endpoint.Endpoint,params map[string]interface{}) {
+func (it *TimerCommServer) Route(name string, freq int, endpoint endpoint.Endpoint, params map[string]interface{}) {
 
 	handler := &commons.CommHandler{
 		Handler: transports.NewTimer(endpoint),
 	}
-	it.Register(name,freq, handler,params)
+	it.Register(name, freq, handler, params)
 }
-
 
 func (it *TimerCommServer) Start() error {
 	return it.Serve()

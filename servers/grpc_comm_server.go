@@ -30,15 +30,14 @@ func (it *GrpcCommServer) Route(name string, endpoint endpoint.Endpoint) {
 	it.RegisterService(&sd, service)
 }
 
-
-func (it *GrpcCommServer)Load()  {
+func (it *GrpcCommServer) Load() {
 
 	//注册通用路由
 }
 
-func (it *GrpcCommServer) Start() error{
-	config:= (&configs.GrpcConfig{}).Load().(*configs.GrpcConfig)
-	wego.App.Logger.Info("Grpc Server Start ",config.GrpcPort)
+func (it *GrpcCommServer) Start() error {
+	config := (&configs.GrpcConfig{}).Load().(*configs.GrpcConfig)
+	wego.App.Logger.Info("Grpc Server Start ", config.GrpcPort)
 	lis, err := net.Listen("tcp", config.GrpcPort)
 	if err != nil {
 		return err

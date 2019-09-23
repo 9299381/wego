@@ -13,4 +13,3 @@ func NewCommand(endpoint endpoint.Endpoint) *commons.Server {
 		codecs.CommandEncodeResponse,
 	)
 }
-

@@ -1,5 +1,5 @@
 package clients
 
-func NewHttpClient()  {
-	
+func NewHttpClient() {
+
 }

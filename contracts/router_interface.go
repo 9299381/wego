@@ -1,9 +1,8 @@
 package contracts
 
-
 type IRouter interface {
-	Boot ()
+	Boot()
 	Load()
-	Register ()
-	Start () error
+	Register()
+	Start() error
 }

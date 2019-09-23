@@ -13,12 +13,12 @@ func (it *CommHandler) Handle(ctx context.Context, req interface{}) (interface{}
 	if err != nil {
 		return nil, err
 	}
-	return rsp , err
+	return rsp, err
 }
 
 //该接口的实现是为了 cronjob
 func (it *CommHandler) Run() {
-	ctx :=context.Background()
+	ctx := context.Background()
 	req := make(map[string]interface{})
 	_, _ = it.Handler.ServeHandle(ctx, req)
 }

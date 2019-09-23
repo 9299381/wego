@@ -13,16 +13,16 @@ type Server struct {
 func NewServer() *Server {
 	nyc, _ := time.LoadLocation("Asia/Shanghai")
 	ss := &Server{
-		Server:cron.New(cron.WithSeconds(), cron.WithLocation(nyc)),
+		Server: cron.New(cron.WithSeconds(), cron.WithLocation(nyc)),
 	}
 	return ss
 }
 
-func (it *Server)Register(spec string,job *commons.CommHandler)  {
+func (it *Server) Register(spec string, job *commons.CommHandler) {
 	_, _ = it.Server.AddJob(spec, job)
 }
 
-func (it *Server)Serve() error {
+func (it *Server) Serve() error {
 	it.Server.Start()
 	select {}
 }

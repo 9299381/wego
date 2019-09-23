@@ -11,7 +11,7 @@ type CommandCommServer struct {
 	*commands.Server
 }
 
-func NewCommandCommServer()  *CommandCommServer{
+func NewCommandCommServer() *CommandCommServer {
 	return &CommandCommServer{
 		Server: commands.NewServer(),
 	}
@@ -25,7 +25,7 @@ func (it *CommandCommServer) Route(name string, endpoint endpoint.Endpoint) {
 	it.Register(name, handler)
 }
 
-func (it *CommandCommServer)Load()  {
+func (it *CommandCommServer) Load() {
 
 	//注册通用路由
 }

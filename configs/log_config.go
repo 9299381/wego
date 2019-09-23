@@ -7,22 +7,20 @@ import (
 
 type LogConfig struct {
 	Config
-	LogFilePath  string `json:"log_file_path"`
+	LogFilePath string `json:"log_file_path"`
 	LogFileName string `json:"log_file_name"`
-
 }
 
 func (it *LogConfig) Load() contracts.Iconfig {
 
 	config := &LogConfig{
-		LogFilePath: wego.Env("LOG_FILE_PATH","/logs"),
-		LogFileName: wego.Env("LOG_FILE_NAME","log"),
-
+		LogFilePath: wego.Env("LOG_FILE_PATH", "/logs"),
+		LogFileName: wego.Env("LOG_FILE_NAME", "log"),
 	}
 
 	return config
 }
 
-func (it *LogConfig)Get(key string) string {
-	return it.GetKey(it,key)
+func (it *LogConfig) Get(key string) string {
+	return it.GetKey(it, key)
 }

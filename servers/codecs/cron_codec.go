@@ -16,5 +16,5 @@ func CronDecodeRequest(ctx context.Context, req interface{}) (interface{}, error
 }
 
 func CronEncodeResponse(_ context.Context, rsp interface{}) (interface{}, error) {
-	return rsp,nil
+	return rsp, nil
 }

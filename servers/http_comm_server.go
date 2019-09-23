@@ -16,7 +16,7 @@ type HttpCommServer struct {
 
 func NewHttpCommServer() *HttpCommServer {
 	return &HttpCommServer{
-		Router:mux.NewRouter(),
+		Router: mux.NewRouter(),
 	}
 }
 
@@ -31,6 +31,7 @@ func (it *HttpCommServer) Post(path string, endpoint endpoint.Endpoint) {
 		Path(path).
 		Handler(transports.NewHTTP(endpoint))
 }
+
 //
 func (it *HttpCommServer) Get(path string, endpoint endpoint.Endpoint) {
 	it.Methods("GET").
@@ -38,18 +39,17 @@ func (it *HttpCommServer) Get(path string, endpoint endpoint.Endpoint) {
 		Handler(transports.NewHTTP(endpoint))
 }
 
-func (it *HttpCommServer)Load()  {
+func (it *HttpCommServer) Load() {
 	//注册通用路由
 }
 
-
 func (it *HttpCommServer) Start() error {
-	config:= (&configs.HttpConfig{}).Load()
-	port :=config.Get("HttpPort")
-	if port != ""{
-		wego.App.Logger.Info("Http Server Start ",port)
+	config := (&configs.HttpConfig{}).Load()
+	port := config.Get("HttpPort")
+	if port != "" {
+		wego.App.Logger.Info("Http Server Start ", port)
 		handler := it.Router
-		return  http.ListenAndServe(port, handler)
+		return http.ListenAndServe(port, handler)
 	}
-	return errors.New("9999","No HttpPort Define")
+	return errors.New("9999", "No HttpPort Define")
 }

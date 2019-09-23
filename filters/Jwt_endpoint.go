@@ -20,18 +20,17 @@ func (it *JwtEndpoint) Next(next endpoint.Endpoint) contracts.IFilter {
 
 func (it *JwtEndpoint) Make() endpoint.Endpoint {
 	return func(ctx context.Context, request interface{}) (response interface{}, err error) {
-		req :=  request.(contracts.Request)
-		token :=req.Data["autoken"]
-		if token == nil || token == ""{
-			return nil ,errors.New("9999","token error")
+		req := request.(contracts.Request)
+		token := req.Data["autoken"]
+		if token == nil || token == "" {
+			return nil, errors.New("9999", "token error")
 		}
 		claim, err := jwt.NewToken().VerifyToken(token.(string))
-		if err !=nil{
-			return nil ,err
+		if err != nil {
+			return nil, err
 		}
 		req.Data["claim"] = convert.Struct2Map(claim)
 		//这里进行token的jwt认证
 		return it.next(ctx, req)
 	}
 }
-

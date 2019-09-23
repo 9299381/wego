@@ -20,7 +20,7 @@ func NewQueueCommServer() *QueueCommServer {
 	config := (&configs.QueueConfig{}).Load().(*configs.QueueConfig)
 	ss := &QueueCommServer{
 		Server: queues.NewServer(&queues.Options{
-			Prefix:   config.Prefix,
+			Prefix:      config.Prefix,
 			Listen:      config.Listen,
 			Interval:    config.Interval,
 			UseNumber:   true,
@@ -32,7 +32,6 @@ func NewQueueCommServer() *QueueCommServer {
 	return ss
 }
 
-
 func (it *QueueCommServer) Route(name string, endpoint endpoint.Endpoint) {
 
 	handler := &commons.CommHandler{
@@ -41,12 +40,10 @@ func (it *QueueCommServer) Route(name string, endpoint endpoint.Endpoint) {
 	it.Register(name, handler)
 }
 
-func (it *QueueCommServer)Load()  {
+func (it *QueueCommServer) Load() {
 
 	//注册通用路由
 }
-
-
 
 func (it *QueueCommServer) Start() error {
 	return it.Serve()

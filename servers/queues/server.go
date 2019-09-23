@@ -14,64 +14,63 @@ import (
 
 type Options struct {
 	Prefix      string
-	Listen         []string
-	Interval       time.Duration
-	Concurrency    int
-	UseNumber      bool
+	Listen      []string
+	Interval    time.Duration
+	Concurrency int
+	UseNumber   bool
 }
 
 type Server struct {
-	opts Options
-	handlers map[string]*commons.CommHandler
-	ctx         context.Context
+	opts      Options
+	handlers  map[string]*commons.CommHandler
+	ctx       context.Context
 	RedisPool *redis.Pool
-	Logger *logrus.Logger
-
+	Logger    *logrus.Logger
 }
 
 func NewServer(opts *Options) *Server {
 	//初始化,logger,redis池
-	s:=&Server{
-		opts:*opts,
-		ctx :context.Background(),
-		handlers:make(map[string]*commons.CommHandler),
+	s := &Server{
+		opts:     *opts,
+		ctx:      context.Background(),
+		handlers: make(map[string]*commons.CommHandler),
 	}
 	return s
 }
 
-func (it *Server)Register(name string,handler *commons.CommHandler)  {
+func (it *Server) Register(name string, handler *commons.CommHandler) {
 	it.handlers[name] = handler
 
 }
 
-func (it *Server)Serve() error {
-	errChan :=make(chan error)
+func (it *Server) Serve() error {
+	errChan := make(chan error)
 	quit := signals()
-	jobs:= it.poll(quit,errChan)
-	for id := 0;id<it.opts.Concurrency;id++ {
-		it.work(id,jobs,errChan)
+	jobs := it.poll(quit, errChan)
+	for id := 0; id < it.opts.Concurrency; id++ {
+		it.work(id, jobs, errChan)
 	}
 	return <-errChan
 }
 
-func (it *Server)work(id int,jobs <-chan *Job,errChan chan error){
+func (it *Server) work(id int, jobs <-chan *Job, errChan chan error) {
 	go func() {
 		for job := range jobs {
 			if handler, ok := it.handlers[job.Payload.Route]; ok {
-				ctx :=context.Background()
-				ctx = context.WithValue(ctx,"Queue",job.Queue)
-				request :=job.Payload.Params
-				response, err :=handler.Handle(ctx,request)
-				if err != nil{
+				ctx := context.Background()
+				ctx = context.WithValue(ctx, "Queue", job.Queue)
+				request := job.Payload.Params
+				response, err := handler.Handle(ctx, request)
+				if err != nil {
 					errChan <- err
 					return
 				}
-				msg :=fmt.Sprintf(
+				msg := fmt.Sprintf(
 					"Concurrency_Id:%d ,Job Response:%v",
 					id,
 					response)
 				it.Logger.Debug(msg)
-			}else{
+			} else {
 				errorLog := fmt.Sprintf(
 					"No worker for %s in queue %s with args %v",
 					job.Payload.Route,
@@ -85,13 +84,12 @@ func (it *Server)work(id int,jobs <-chan *Job,errChan chan error){
 	}()
 }
 
-
-func (it *Server) poll(quit <-chan bool,errChan chan error) <-chan *Job {
+func (it *Server) poll(quit <-chan bool, errChan chan error) <-chan *Job {
 	jobs := make(chan *Job)
 	go func() {
 		conn := it.RedisPool.Get()
 		defer conn.Close()
-		for  {
+		for {
 			select {
 			default:
 				job, err := it.getJob(conn)
@@ -104,7 +102,7 @@ func (it *Server) poll(quit <-chan bool,errChan chan error) <-chan *Job {
 					errChan <- errors.New(errorLog)
 					return
 				}
-				if job!=nil{
+				if job != nil {
 					select {
 					case jobs <- job:
 					case <-quit:
@@ -117,12 +115,12 @@ func (it *Server) poll(quit <-chan bool,errChan chan error) <-chan *Job {
 							errChan <- errors.New(errorLog)
 							return
 						}
-						arg :=fmt.Sprintf("%s_queue:%s", it.opts.Prefix, job.Queue)
+						arg := fmt.Sprintf("%s_queue:%s", it.opts.Prefix, job.Queue)
 						_ = conn.Send("LPUSH", arg, buf)
 						_ = conn.Flush()
 						return
 					}
-				}else{
+				} else {
 					it.Logger.Debugf("Sleeping for %v", it.opts.Interval)
 					it.Logger.Debugf("Waiting for %v", it.opts.Listen)
 					timeout := time.After(it.opts.Interval)
@@ -139,11 +137,11 @@ func (it *Server) poll(quit <-chan bool,errChan chan error) <-chan *Job {
 	return jobs
 }
 
-func (it *Server)getJob(conn redis.Conn) (*Job, error) {
-	for _, queue := range it.opts.Listen{
+func (it *Server) getJob(conn redis.Conn) (*Job, error) {
+	for _, queue := range it.opts.Listen {
 		it.Logger.Debugf("Checking %s", queue)
 		arg := fmt.Sprintf("%s_queue:%s", it.opts.Prefix, queue)
-		reply, err := conn.Do("LPOP",arg )
+		reply, err := conn.Do("LPOP", arg)
 		if err != nil {
 			return nil, err
 		}
@@ -162,5 +160,3 @@ func (it *Server)getJob(conn redis.Conn) (*Job, error) {
 	}
 	return nil, nil
 }
-
-

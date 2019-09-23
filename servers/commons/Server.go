@@ -6,24 +6,24 @@ import (
 	"github.com/go-kit/kit/log"
 	"github.com/go-kit/kit/transport"
 )
+
 //通用接口
 type Handler interface {
 	ServeHandle(ctx context.Context, request interface{}) (interface{}, error)
 }
+
 //请求
 type DecodeRequestFunc func(context.Context, interface{}) (request interface{}, err error)
 type EncodeRequestFunc func(context.Context, interface{}) (request interface{}, err error)
+
 //响应
 type EncodeResponseFunc func(context.Context, interface{}) (response interface{}, err error)
 type DecodeResponseFunc func(context.Context, interface{}) (response interface{}, err error)
-
 
 type BeforeFunc func(context.Context, interface{}) context.Context
 type AfterFunc func(context.Context, interface{}) context.Context
 
 type FinalizerFunc func(ctx context.Context, err error)
-
-
 
 type Server struct {
 	e            endpoint.Endpoint
@@ -36,7 +36,6 @@ type Server struct {
 }
 
 type ServerOption func(*Server)
-
 
 // ServerBefore functions are executed on the gRPC request object before the
 // request is decoded.
@@ -69,8 +68,6 @@ func ServerFinalizer(f ...FinalizerFunc) ServerOption {
 	return func(s *Server) { s.finalizer = append(s.finalizer, f...) }
 }
 
-
-
 func NewServer(
 	e endpoint.Endpoint,
 	dec DecodeRequestFunc,
@@ -89,7 +86,7 @@ func NewServer(
 	return s
 }
 
-func (s *Server)ServeHandle(ctx context.Context, req interface{}) (resp interface{}, err error) {
+func (s *Server) ServeHandle(ctx context.Context, req interface{}) (resp interface{}, err error) {
 
 	if len(s.finalizer) > 0 {
 		defer func() {
@@ -126,5 +123,3 @@ func (s *Server)ServeHandle(ctx context.Context, req interface{}) (resp interfac
 	return
 
 }
-
-

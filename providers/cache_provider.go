@@ -9,7 +9,6 @@ import (
 )
 
 type CacheProvider struct {
-
 }
 
 func (it *CacheProvider) Boot() {
@@ -20,10 +19,10 @@ func (it *CacheProvider) Boot() {
 func (it *CacheProvider) Register() {
 	size := wego.Config("cache").Get("Size")
 	value, err := strconv.Atoi(size)
-	if err == nil && value != 0{
+	if err == nil && value != 0 {
 		cache := freecache.NewCache(value)
 		//根据cache的大小进行设置
 		debug.SetGCPercent(20)
-		wego.App.Cache =cache
+		wego.App.Cache = cache
 	}
 }

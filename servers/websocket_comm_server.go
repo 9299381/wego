@@ -14,7 +14,7 @@ type WebSocketCommServer struct {
 
 func NewWebSocketCommServer() *WebSocketCommServer {
 
-	ss:= &WebSocketCommServer{
+	ss := &WebSocketCommServer{
 		Server: websockets.NewServer(),
 	}
 	ss.Server.Logger = wego.App.Logger
@@ -29,10 +29,9 @@ func (it *WebSocketCommServer) Route(name string, endpoint endpoint.Endpoint) {
 	it.Register(name, handler)
 }
 
-func (it *WebSocketCommServer)Load()  {
+func (it *WebSocketCommServer) Load() {
 	//注册通用路由
 }
-
 
 func (it *WebSocketCommServer) Start() error {
 	return it.Serve()

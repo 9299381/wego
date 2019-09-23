@@ -7,7 +7,7 @@ import (
 )
 
 func QueueServerDecodeRequest(ctx context.Context, req interface{}) (interface{}, error) {
-	id :=  wego.ID()
+	id := wego.ID()
 	return contracts.Request{
 		Id:   id,
 		Data: req.(map[string]interface{}),
@@ -15,5 +15,5 @@ func QueueServerDecodeRequest(ctx context.Context, req interface{}) (interface{}
 }
 
 func QueueServerEncodeResponse(_ context.Context, rsp interface{}) (interface{}, error) {
-	return rsp,nil
+	return rsp, nil
 }
