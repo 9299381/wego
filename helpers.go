@@ -3,6 +3,7 @@ package wego
 import (
 	"encoding/json"
 	"fmt"
+	"github.com/9299381/wego/args"
 	"github.com/9299381/wego/contracts"
 	"github.com/9299381/wego/servers/queues"
 	"github.com/9299381/wego/tools/snowflake"
@@ -12,6 +13,7 @@ import (
 	"os"
 	"os/signal"
 	"strconv"
+	"strings"
 	"syscall"
 )
 
@@ -120,8 +122,17 @@ func Router(name string, server contracts.IRouter) {
 
 //启动server
 func Start() {
+
+	servers := strings.Split(args.Server, ",")
+	routers := make(map[string]contracts.IRouter)
+
+	for _, s := range servers {
+		if ss, exist := App.routers[strings.Trim(s, " ")]; exist == true {
+			routers[s] = ss
+		}
+	}
 	errChans := make(map[string]chan error)
-	for key, router := range App.routers {
+	for key, router := range routers {
 		errChans[key] = make(chan error)
 		go func(errChan chan error, server contracts.IRouter) {
 			errChan <- server.Start()
