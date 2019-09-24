@@ -16,7 +16,7 @@ func (it *GrpcRouter) Boot() {
 //这里注册路由
 func (it *GrpcRouter) Register() {
 
-	it.Route("Two", wego.Handler("two"))
-	it.Route("One", wego.Handler("one"))
+	it.Route("demo.two", wego.Handler("two"))
+	it.Route("demo.one", wego.Handler("one"))
 
 }

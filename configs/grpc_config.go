@@ -7,14 +7,15 @@ import (
 
 type GrpcConfig struct {
 	Config
+	GrpcHost string `json:"grpc_host"`
 	GrpcPort string `json:"grpc_port"`
 }
 
 func (it *GrpcConfig) Load() contracts.Iconfig {
 	config := &GrpcConfig{
-		GrpcPort: ":" + wego.Env("SERVER_GRPC_PORT", "9341"),
+		GrpcHost: wego.Env("SERVER_GRPC_HOST", "127.0.0.1"),
+		GrpcPort: wego.Env("SERVER_GRPC_PORT", "9341"),
 	}
-
 	return config
 }
 

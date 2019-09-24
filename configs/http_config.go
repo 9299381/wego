@@ -7,13 +7,14 @@ import (
 
 type HttpConfig struct {
 	Config
+	HttpHost string `json:"http_host"`
 	HttpPort string `json:"http_port"`
 }
 
 func (it *HttpConfig) Load() contracts.Iconfig {
-
 	config := &HttpConfig{
-		HttpPort: ":" + wego.Env("SERVER_HTTP_PORT", "8341"),
+		HttpHost: wego.Env("SERVER_HTTP_HOST", "127.0.0.1"),
+		HttpPort: wego.Env("SERVER_HTTP_PORT", "8341"),
 	}
 	return config
 }

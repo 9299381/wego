@@ -16,7 +16,7 @@ type LogConfig struct {
 func (it *LogConfig) Load() contracts.Iconfig {
 
 	config := &LogConfig{
-		LogFilePath: wego.Env("LOG_FILE_PATH", "/logs"),
+		LogFilePath: wego.Env("LOG_FILE_PATH", "./logs"),
 		LogFileName: wego.Env("LOG_FILE_NAME", "log"),
 	}
 	exist, err := it.pathExists(config.LogFilePath)

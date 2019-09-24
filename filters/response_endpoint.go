@@ -24,15 +24,15 @@ func (it *ResponseEndpoint) Make() endpoint.Endpoint {
 		defer func() {
 			if err := recover(); err != nil {
 				wego.App.Logger.Info(err)
-				response = contracts.ResponseFaile(err.(error))
+				response = contracts.ResponseFailed(err.(error))
 			}
 		}()
 		if wego.App.Status == false {
-			return contracts.ResponseFaile(errors.New(constants.ErrStop)), nil
+			return contracts.ResponseFailed(errors.New(constants.ErrStop)), nil
 		}
 		response, err = it.next(ctx, request)
 		if err != nil {
-			return contracts.ResponseFaile(err), nil
+			return contracts.ResponseFailed(err), nil
 		}
 		return response, nil
 	}

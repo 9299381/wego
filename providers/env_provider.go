@@ -15,14 +15,15 @@ func (it *EnvProvider) Boot() {
 	if strings.Contains(args.Config, "env") {
 		wego.App.Env = it.ReadEnv(&readers.IniReader{})
 	}
+
 }
 
 func (it *EnvProvider) Register() {
 
 }
 
-func (it *EnvProvider) ReadEnv(reader contracts.IReader) map[string]interface{} {
-	data := reader.Read(args.Config).(map[string]map[string]interface{})
+func (it *EnvProvider) ReadEnv(reader contracts.IReader) map[string]string {
+	data := reader.Read(args.Config).(map[string]map[string]string)
 	ret, _ := data["common"]
 
 	envSection, _ := data[args.Mode]

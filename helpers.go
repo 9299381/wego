@@ -48,8 +48,8 @@ func Queue(name string, router string, params map[string]interface{}) error {
 
 func Env(key string, value ...interface{}) string {
 	ret, exist := App.Env[key]
-	if exist {
-		return ret.(string)
+	if exist && ret != "" {
+		return ret
 	} else {
 		return value[0].(string)
 	}
@@ -146,4 +146,9 @@ func Start() {
 	for _, errChan := range errChans {
 		App.Logger.Info(<-errChan)
 	}
+
+	for _, v := range App.Consul {
+		v.Deregister()
+	}
+
 }

@@ -19,7 +19,7 @@ func (it *ConsulEnvProvider) Register() {
 
 }
 
-func (it *ConsulEnvProvider) ReadConsul() map[string]interface{} {
+func (it *ConsulEnvProvider) ReadConsul() map[string]string {
 	//todo 从consul服务器读取env配置
 	return nil
 }

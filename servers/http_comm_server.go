@@ -3,8 +3,8 @@ package servers
 import (
 	"github.com/9299381/wego"
 	"github.com/9299381/wego/configs"
+	"github.com/9299381/wego/filters"
 	"github.com/9299381/wego/servers/transports"
-	"github.com/9299381/wego/tools/errors"
 	"github.com/go-kit/kit/endpoint"
 	"github.com/gorilla/mux"
 	"net/http"
@@ -40,16 +40,16 @@ func (it *HttpCommServer) Get(path string, endpoint endpoint.Endpoint) {
 }
 
 func (it *HttpCommServer) Load() {
+
 	//注册通用路由
+	it.Route("GET", "/health", (&filters.HealthEndpoint{}).Make())
+
 }
 
 func (it *HttpCommServer) Start() error {
-	config := (&configs.HttpConfig{}).Load()
-	port := config.Get("HttpPort")
-	if port != "" {
-		wego.App.Logger.Info("Http Server Start ", port)
-		handler := it.Router
-		return http.ListenAndServe(port, handler)
-	}
-	return errors.New("9999", "No HttpPort Define")
+	config := (&configs.HttpConfig{}).Load().(*configs.HttpConfig)
+	address := config.HttpHost + ":" + config.HttpPort
+	wego.App.Logger.Info("Http Server Start ", address)
+	handler := it.Router
+	return http.ListenAndServe(address, handler)
 }

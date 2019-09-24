@@ -17,7 +17,7 @@ func (it *IniReader) Read(filePath string) interface{} {
 		fmt.Println(err)
 	}
 	defer file.Close()
-	data := make(map[string]map[string]interface{})
+	data := make(map[string]map[string]string)
 	var section string
 	buf := bufio.NewReader(file)
 	for {
@@ -36,7 +36,7 @@ func (it *IniReader) Read(filePath string) interface{} {
 		case string(line[0]) == "#": //增加配置文件备注
 		case line[0] == '[' && line[len(line)-1] == ']':
 			section = strings.TrimSpace(line[1 : len(line)-1])
-			data[section] = make(map[string]interface{})
+			data[section] = make(map[string]string)
 		default:
 			i := strings.IndexAny(line, "=")
 			if i == -1 {

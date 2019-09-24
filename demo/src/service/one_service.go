@@ -26,6 +26,7 @@ func (it *OneService) Handle(ctx contracts.Context) error {
 	ctx.SetValue("k.a", "b")
 
 	//ctx.Log.Info(ctx.GetValue("k"))
+	ctx.Response("request", ctx.Request())
 
 	return it.next.Handle(ctx)
 }

@@ -9,7 +9,7 @@ import (
 	"log"
 )
 
-func NewGrpcClient(serviceAddress string, service string, params interface{}) *protobuf.Response {
+func NewGrpcClient(serviceAddress string, service string, params interface{}) (*protobuf.Response, error) {
 	conn, err := grpc.Dial(serviceAddress, grpc.WithInsecure())
 	if err != nil {
 		log.Fatalf("did not connect: %v", err)
@@ -23,7 +23,8 @@ func NewGrpcClient(serviceAddress string, service string, params interface{}) *p
 	}
 
 	out := new(protobuf.Response)
+
 	method := "/protobuf." + service + "/Handle"
-	_ = conn.Invoke(context.Background(), method, in, out)
-	return out
+	err = conn.Invoke(context.Background(), method, in, out)
+	return out, err
 }

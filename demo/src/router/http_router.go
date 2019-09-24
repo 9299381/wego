@@ -28,4 +28,6 @@ func (it *HttpRouter) Register() {
 	//验证validate
 	it.Get("/demo/valid", wego.Handler("valid"))
 
+	it.Get("/demo/consul", wego.Handler("consul"))
+
 }

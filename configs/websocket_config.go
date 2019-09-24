@@ -7,6 +7,7 @@ import (
 
 type WebSocketConfig struct {
 	Config
+	WebSocketHost string `json:"web_socket_host"`
 	WebSocketPort string `json:"web_socket_port"`
 	Path          string
 }
@@ -15,7 +16,8 @@ func (it *WebSocketConfig) Load() contracts.Iconfig {
 
 	config := &WebSocketConfig{
 		Path:          "/ws",
-		WebSocketPort: ":" + wego.Env("SERVER_WEBSOCKET_PORT", "8342"),
+		WebSocketPort: wego.Env("SERVER_WEBSOCKET_PORT", "8342"),
+		WebSocketHost: wego.Env("SERVER_WEBSOCKET_HOST", "127.0.0.1"),
 	}
 	return config
 }

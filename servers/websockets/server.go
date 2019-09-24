@@ -35,9 +35,10 @@ func (it *Server) Register(name string, handler *commons.CommHandler) {
 
 func (it *Server) Serve() error {
 	config := (&configs.WebSocketConfig{}).Load().(*configs.WebSocketConfig)
-	wego.App.Logger.Info("WebSocket Server Start ", config.WebSocketPort)
+	address := config.WebSocketHost + ":" + config.WebSocketPort
+	wego.App.Logger.Info("WebSocket Server Start ", address)
 	http.HandleFunc(config.Path, it.wsHandler)
-	return http.ListenAndServe(config.WebSocketPort, nil)
+	return http.ListenAndServe(address, nil)
 }
 
 func (it *Server) wsHandler(w http.ResponseWriter, r *http.Request) {
@@ -91,7 +92,7 @@ func (it *Server) wsHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func (it *Server) faild(message string) []byte {
-	response := contracts.ResponseFaile(errors.New(message))
+	response := contracts.ResponseFailed(errors.New(message))
 	ret, _ := json.Marshal(response)
 	return ret
 }

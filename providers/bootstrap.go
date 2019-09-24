@@ -16,6 +16,7 @@ func (it *BootStrap) Boot() {
 	wego.Provider(&MysqlProvider{})
 	wego.Provider(&RedisProvider{})
 	wego.Provider(&CacheProvider{})
+
 }
 
 func (it *BootStrap) Register() {

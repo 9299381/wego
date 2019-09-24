@@ -22,7 +22,7 @@ func ResponseSucess(data interface{}) Response {
 		Message: "请求成功",
 	}
 }
-func ResponseFaile(err error) Response {
+func ResponseFailed(err error) Response {
 	errMap := strings.Split(err.Error(), "::")
 	if len(errMap) == 2 {
 		return Response{
@@ -44,4 +44,13 @@ func ResponseFaile(err error) Response {
 type Payload struct {
 	Route  string                 `json:"route"`
 	Params map[string]interface{} `json:"params"`
+}
+
+type GateWayRequest struct {
+	Dest    string
+	Method  string
+	Id      string
+	Service string
+	Route   string
+	Data    map[string]interface{}
 }
