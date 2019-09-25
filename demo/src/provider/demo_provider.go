@@ -42,5 +42,6 @@ func (it *DemoProvider) Register() {
 	wego.Handler("valid", filters.New(services.Chain(&service.ValidService{})))
 
 	wego.Handler("consul", filters.New(services.Chain(&service.ConsulService{})))
+	wego.Handler("event", filters.New(services.Chain(&service.TestEvent{})))
 
 }

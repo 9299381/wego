@@ -35,7 +35,6 @@ func (it *Server) Register(name string, freq int, handler *commons.CommHandler, 
 }
 
 func (it *Server) Serve() error {
-
 	errChans := make(map[string]chan error)
 	for name, svr := range it.handlers {
 		errChans[name] = make(chan error)
@@ -45,10 +44,6 @@ func (it *Server) Serve() error {
 				select {
 				case <-t.C:
 					id := wego.ID()
-					log := it.Logger.WithFields(logrus.Fields{
-						"request_id": id,
-					})
-					log.Info(name + ":任务开始")
 					ctx := context.Background()
 					params := svr.params
 					params["request_id"] = id
@@ -56,11 +51,9 @@ func (it *Server) Serve() error {
 					if err != nil {
 						it.Logger.Info(err.Error())
 					} else {
-						it.Logger.Info(resp)
+						it.Logger.Info("定时任务:", resp)
 					}
-					log.Info(name + ":任务结束")
 				}
-
 			}
 		}(name, svr, ticker, errChans[name])
 	}

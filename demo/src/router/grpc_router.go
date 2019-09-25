@@ -18,5 +18,6 @@ func (it *GrpcRouter) Register() {
 
 	it.Route("demo.two", wego.Handler("two"))
 	it.Route("demo.one", wego.Handler("one"))
+	it.Route("demo.post", wego.Handler("post"))
 
 }

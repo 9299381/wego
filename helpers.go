@@ -96,6 +96,14 @@ func Cache(key string, value ...interface{}) []byte {
 	return nil
 }
 
+func Event(payload *contracts.Payload) {
+	//发送事件需要判断是否有处理器,否则不处理
+	_, isExist := App.handler[payload.Route]
+	if isExist {
+		App.Event.Push(payload)
+	}
+}
+
 func Provider(p contracts.IProvider) {
 	p.Boot()
 	p.Register()

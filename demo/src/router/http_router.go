@@ -29,5 +29,6 @@ func (it *HttpRouter) Register() {
 	it.Get("/demo/valid", wego.Handler("valid"))
 
 	it.Get("/demo/consul", wego.Handler("consul"))
+	it.Get("/demo/event", wego.Handler("event"))
 
 }

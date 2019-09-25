@@ -19,7 +19,7 @@ func init() {
 	flag.StringVar(&Mode, "mode", "dev", "开发模式")
 	flag.StringVar(&Registy, "registy", "", "consul服务注册中心")
 
-	flag.StringVar(&Server, "server", "http", "需要启动的服务器")
+	flag.StringVar(&Server, "server", "http,event", "需要启动的服务器")
 
 	flag.StringVar(&Config, "config", ".env", "环境配置")
 

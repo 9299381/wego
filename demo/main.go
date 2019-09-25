@@ -11,7 +11,7 @@ import (
 func main() {
 
 	args.Registy = "127.0.0.1:8500"
-	args.Server = "http,grpc"
+	args.Server = "http,grpc,event"
 	args.Name = "consul_demo"
 
 	wego.Provider(&providers.BootStrap{})

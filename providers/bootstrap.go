@@ -1,6 +1,8 @@
 package providers
 
-import "github.com/9299381/wego"
+import (
+	"github.com/9299381/wego"
+)
 
 type BootStrap struct {
 }
@@ -16,6 +18,8 @@ func (it *BootStrap) Boot() {
 	wego.Provider(&MysqlProvider{})
 	wego.Provider(&RedisProvider{})
 	wego.Provider(&CacheProvider{})
+
+	wego.Provider(&EventProvider{})
 
 }
 

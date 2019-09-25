@@ -1,12 +1,14 @@
 package clients
 
 import (
+	"errors"
 	"fmt"
 	"github.com/9299381/wego"
 	"github.com/9299381/wego/args"
 	"github.com/go-kit/kit/log"
 	"github.com/go-kit/kit/sd/consul"
 	"github.com/hashicorp/consul/api"
+	"math/rand"
 	"os"
 	"strconv"
 )
@@ -80,4 +82,16 @@ func getLogger() log.Logger {
 		logger = log.With(logger, "caller", log.DefaultCaller)
 	}
 	return logger
+}
+
+func GetConsulService(service string) (*api.ServiceEntry, error) {
+	//这里考虑可以从缓存中读取,10分钟过期,比如
+	client := GetConsullClient()
+	entitys, _, err := client.Service(service, "", false, &api.QueryOptions{})
+	if err != nil || len(entitys) == 0 {
+		return nil, errors.New("9999::没有找到响应的服务")
+	}
+	entity := entitys[rand.Int()%len(entitys)]
+	return entity, nil
+
 }
