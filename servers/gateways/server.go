@@ -1,4 +1,4 @@
-package gateway
+package gateways
 
 import (
 	"context"
@@ -7,11 +7,13 @@ import (
 	"github.com/9299381/wego"
 	"github.com/9299381/wego/clients"
 	"github.com/9299381/wego/configs"
+	"github.com/9299381/wego/constants"
 	"github.com/9299381/wego/contracts"
 	"github.com/go-kit/kit/endpoint"
 	"math/rand"
 	"net/http"
 	"net/http/httputil"
+	"time"
 )
 
 type Server struct {
@@ -51,6 +53,7 @@ func (it *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	key := req.Method + "_" + r.URL.Path
+
 	filter, ok := it.handlers[key]
 	if ok && filter != nil {
 		// 如果有注册管理,则注册管理处理
@@ -59,27 +62,29 @@ func (it *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		resp = it.runFilter(filter, ctx, req)
 	}
 	if !ok || resp.Data == "GATEWAY" {
-		defer func() {
-			//注意这里开始记录 外部请求结束
-			//todo 发送到内部队列 eventserver
-			//请求记录:时间,时长,url,汇总,grpc/http,异步记录数据库
-			//需要注册 gateway_event handler,来处理消息
+		var tag, host string
+		defer func(begin time.Time, tag, host *string) {
 			params := make(map[string]interface{})
+			params["url"] = key
+			params["begin"] = begin.Format(constants.YmdHis)
+			params["took"] = time.Since(begin)
+			params["tag"] = *tag
+			params["host"] = *host
 			payload := &contracts.Payload{
-				Route:  "gateway_event",
+				Route:  wego.Env("GATEWAY_EVENT_HANDLER", "GATEWAY_EVENT_HANDLER"),
 				Params: params,
 			}
 			wego.Event(payload)
 
-		}()
+		}(time.Now(), &tag, &host)
 		//服务发现
 		entity, err := clients.GetConsulService(req.Service)
 		if err != nil {
 			resp = contracts.ResponseFailed(err)
 			return
 		}
-		tag := entity.Service.Tags[rand.Int()%len(entity.Service.Tags)]
-		host := fmt.Sprintf("%s:%d", entity.Service.Address, entity.Service.Port)
+		tag = entity.Service.Tags[rand.Int()%len(entity.Service.Tags)]
+		host = fmt.Sprintf("%s:%d", entity.Service.Address, entity.Service.Port)
 		if tag == "http" {
 			//
 			director := func(dr *http.Request) {

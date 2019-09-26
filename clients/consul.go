@@ -13,8 +13,9 @@ import (
 	"strconv"
 )
 
-func NewConsulHttpRegister(name, host, port string) *consul.Registrar {
-
+func NewConsulHttpRegister(service, host, port string) *consul.Registrar {
+	//注销掉重复的
+	serviceDeregister(service, host, port)
 	check := api.AgentServiceCheck{
 		HTTP:     "http://" + host + ":" + port + "/health",
 		Interval: "10s",
@@ -23,8 +24,8 @@ func NewConsulHttpRegister(name, host, port string) *consul.Registrar {
 	}
 	p, _ := strconv.Atoi(port)
 	reg := api.AgentServiceRegistration{
-		ID:      name + "_" + wego.ID(),
-		Name:    name,
+		ID:      service + "_" + wego.ID(),
+		Name:    service,
 		Address: host,
 		Port:    p,
 		Tags:    []string{"http"},
@@ -35,8 +36,9 @@ func NewConsulHttpRegister(name, host, port string) *consul.Registrar {
 	return registy
 
 }
-func NewConsulGrpcRegister(name, host, port string) *consul.Registrar {
-
+func NewConsulGrpcRegister(service, host, port string) *consul.Registrar {
+	//注销掉重复的
+	serviceDeregister(service, host, port)
 	p, _ := strconv.Atoi(port)
 	check := api.AgentServiceCheck{
 		GRPC:     fmt.Sprintf("%s:%d/%s", host, p, "health"),
@@ -45,8 +47,8 @@ func NewConsulGrpcRegister(name, host, port string) *consul.Registrar {
 		Notes:    "Consul check service health status.",
 	}
 	reg := api.AgentServiceRegistration{
-		ID:      name + "_" + wego.ID(),
-		Name:    name,
+		ID:      service + "_" + wego.ID(),
+		Name:    service,
 		Address: host,
 		Port:    p,
 		Tags:    []string{"grpc"},
@@ -71,6 +73,24 @@ func GetConsullClient() consul.Client {
 		client = consul.NewClient(consulClient)
 	}
 	return client
+}
+
+func serviceDeregister(service, host, port string) {
+	client := GetConsullClient()
+	entitys, _, err := client.Service(service, "", false, &api.QueryOptions{})
+	if err == nil {
+		for _, entity := range entitys {
+			str1 := fmt.Sprintf("%s:%d", entity.Service.Address, entity.Service.Port)
+			str2 := fmt.Sprintf("%s:%s", host, port)
+			if str1 == str2 {
+				r := &api.AgentServiceRegistration{
+					ID:   entity.Service.ID,
+					Name: service,
+				}
+				_ = client.Deregister(r)
+			}
+		}
+	}
 }
 
 func getLogger() log.Logger {

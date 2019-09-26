@@ -2,17 +2,17 @@ package servers
 
 import (
 	"github.com/9299381/wego/filters"
-	"github.com/9299381/wego/servers/gateway"
+	"github.com/9299381/wego/servers/gateways"
 	"github.com/go-kit/kit/endpoint"
 )
 
 type GateWayCommServer struct {
-	*gateway.Server
+	*gateways.Server
 }
 
 func NewGateWayCommServer() *GateWayCommServer {
 	return &GateWayCommServer{
-		Server: gateway.NewServer(),
+		Server: gateways.NewServer(),
 	}
 }
 

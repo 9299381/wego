@@ -4,6 +4,7 @@ import (
 	"github.com/9299381/wego"
 	"github.com/9299381/wego/args"
 	"github.com/9299381/wego/configs"
+	"github.com/9299381/wego/constants"
 	rotatelogs "github.com/lestrrat/go-file-rotatelogs"
 	"github.com/rifflock/lfshook"
 	"github.com/sirupsen/logrus"
@@ -36,7 +37,7 @@ func (it *LogProvider) Register() {
 		src := os.Stdout
 		logger.SetOutput(src)
 		logger.SetFormatter(&logrus.TextFormatter{
-			TimestampFormat: "2006-01-02 15:04:05",
+			TimestampFormat: constants.YmdHis,
 		})
 		logger.SetLevel(logrus.DebugLevel)
 
@@ -65,6 +66,6 @@ func (it *LogProvider) getLogHook() *lfshook.LfsHook {
 		logrus.PanicLevel: logWriter,
 	}
 	return lfshook.NewHook(writeMap, &logrus.JSONFormatter{
-		TimestampFormat: "2006-01-02 15:04:05",
+		TimestampFormat: constants.YmdHis,
 	})
 }
