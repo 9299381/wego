@@ -2,12 +2,12 @@ package codecs
 
 import (
 	"context"
-	"github.com/9299381/wego"
 	"github.com/9299381/wego/contracts"
+	"github.com/9299381/wego/tools/idwork"
 )
 
 func WebSocketDecodeRequest(ctx context.Context, req interface{}) (interface{}, error) {
-	id := wego.ID()
+	id := idwork.ID()
 	return contracts.Request{
 		Id:   id,
 		Data: req.(map[string]interface{}),

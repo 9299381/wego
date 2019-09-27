@@ -2,9 +2,10 @@ package filters
 
 import (
 	"context"
+	"errors"
+	"github.com/9299381/wego/constants"
 	"github.com/9299381/wego/contracts"
 	"github.com/9299381/wego/tools/convert"
-	"github.com/9299381/wego/tools/errors"
 	"github.com/9299381/wego/tools/jwt"
 	"github.com/go-kit/kit/endpoint"
 )
@@ -21,9 +22,9 @@ func (it *JwtEndpoint) Next(next endpoint.Endpoint) contracts.IFilter {
 func (it *JwtEndpoint) Make() endpoint.Endpoint {
 	return func(ctx context.Context, request interface{}) (response interface{}, err error) {
 		req := request.(contracts.Request)
-		token := req.Data["autoken"]
+		token := req.Data["authToken"]
 		if token == nil || token == "" {
-			return nil, errors.New("9999", "token error")
+			return nil, errors.New(constants.ErrNoToken)
 		}
 		claim, err := jwt.NewToken().VerifyToken(token.(string))
 		if err != nil {

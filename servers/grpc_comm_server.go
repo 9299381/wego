@@ -2,8 +2,9 @@ package servers
 
 import (
 	"context"
-	"github.com/9299381/wego"
 	"github.com/9299381/wego/configs"
+	"github.com/9299381/wego/contracts"
+	"github.com/9299381/wego/loggers"
 	"github.com/9299381/wego/servers/transports"
 	"github.com/9299381/wego/servers/transports/protobuf"
 	"github.com/go-kit/kit/endpoint"
@@ -15,12 +16,15 @@ import (
 
 type GrpcCommServer struct {
 	*grpc.Server
+	Logger contracts.ILogger
 }
 
 func NewGrpcCommServer() *GrpcCommServer {
-	return &GrpcCommServer{
+	ss := &GrpcCommServer{
 		Server: grpc.NewServer(),
 	}
+	ss.Logger = loggers.Log
+	return ss
 }
 func (it *GrpcCommServer) Route(name string, endpoint endpoint.Endpoint) {
 
@@ -38,9 +42,9 @@ func (it *GrpcCommServer) Load() {
 }
 
 func (it *GrpcCommServer) Start() error {
-	config := (&configs.GrpcConfig{}).Load().(*configs.GrpcConfig)
+	config := (&configs.GrpcConfig{}).Load()
 	address := config.GrpcHost + ":" + config.GrpcPort
-	wego.App.Logger.Info("Grpc Server Start ", address)
+	it.Logger.Info("Grpc Server Start ", address)
 	lis, err := net.Listen("tcp", address)
 	if err != nil {
 		return err

@@ -6,6 +6,7 @@ import (
 	"github.com/9299381/wego"
 	"github.com/9299381/wego/constants"
 	"github.com/9299381/wego/contracts"
+	"github.com/9299381/wego/loggers"
 	"github.com/go-kit/kit/endpoint"
 )
 
@@ -23,7 +24,7 @@ func (it *ResponseEndpoint) Make() endpoint.Endpoint {
 		//全局扑捉错误
 		defer func() {
 			if err := recover(); err != nil {
-				wego.App.Logger.Info(err)
+				loggers.Log.Info(err)
 				response = contracts.ResponseFailed(err.(error))
 			}
 		}()

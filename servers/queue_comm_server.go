@@ -1,8 +1,8 @@
 package servers
 
 import (
-	"github.com/9299381/wego"
 	"github.com/9299381/wego/configs"
+	"github.com/9299381/wego/loggers"
 	"github.com/9299381/wego/servers/commons"
 	"github.com/9299381/wego/servers/queues"
 	"github.com/9299381/wego/servers/transports"
@@ -17,7 +17,7 @@ type QueueCommServer struct {
 }
 
 func NewQueueCommServer() *QueueCommServer {
-	config := (&configs.QueueConfig{}).Load().(*configs.QueueConfig)
+	config := (&configs.QueueConfig{}).Load()
 	ss := &QueueCommServer{
 		Server: queues.NewServer(&queues.Options{
 			Prefix:      config.Prefix,
@@ -27,8 +27,7 @@ func NewQueueCommServer() *QueueCommServer {
 			Concurrency: config.Concurrency,
 		}),
 	}
-	ss.Server.RedisPool = wego.App.Redis
-	ss.Server.Logger = wego.App.Logger
+	ss.Logger = loggers.Log
 	return ss
 }
 

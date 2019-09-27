@@ -5,8 +5,9 @@ import (
 	"encoding/base64"
 	"encoding/hex"
 	"encoding/json"
+	"errors"
 	"github.com/9299381/wego/configs"
-	"github.com/9299381/wego/tools/errors"
+	"github.com/9299381/wego/constants"
 	"strconv"
 	"strings"
 	"time"
@@ -21,7 +22,7 @@ func NewToken() *Token {
 	token := &Token{
 		Claims: &Claims{},
 	}
-	token.config = (&configs.TokenConfig{}).Load().(*configs.TokenConfig)
+	token.config = (&configs.TokenConfig{}).Load()
 	return token
 }
 
@@ -56,7 +57,7 @@ func (it *Token) GetToken() string {
 func (it *Token) VerifyToken(sign string) (*Claims, error) {
 	m := strings.Split(sign, ".")
 	if len(m) < 1 {
-		return nil, errors.New("6100", "格式错误,请重新登陆")
+		return nil, errors.New(constants.ErrTokenFmt)
 	}
 	jsonClaim, decodeErr := base64.StdEncoding.DecodeString(m[0])
 	if decodeErr != nil {
@@ -69,11 +70,11 @@ func (it *Token) VerifyToken(sign string) (*Claims, error) {
 	}
 
 	if claims.Exp < time.Now().Unix() {
-		return nil, errors.New("6200", "登陆过期,请重新登陆")
+		return nil, errors.New(constants.ErrTokenExp)
 	}
 
 	if m[1] != it.getSign(claims) {
-		return nil, errors.New("6300", "签名错误,请重新登陆")
+		return nil, errors.New(constants.ErrTokenSign)
 	}
 	return claims, nil
 }

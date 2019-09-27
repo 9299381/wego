@@ -13,8 +13,6 @@ func (it *CronRouter) Boot() {
 	it.CronCommServer = servers.NewCronCommServer()
 }
 
-//todo 写个队列server 编解码,路由等
-
 func (it *CronRouter) Register() {
 
 	it.Route("*/5 * * * * *", wego.Handler("one"))

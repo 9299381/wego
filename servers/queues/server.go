@@ -6,9 +6,9 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
+	"github.com/9299381/wego/contracts"
 	"github.com/9299381/wego/servers/commons"
 	"github.com/gomodule/redigo/redis"
-	"github.com/sirupsen/logrus"
 	"time"
 )
 
@@ -25,7 +25,7 @@ type Server struct {
 	handlers  map[string]*commons.CommHandler
 	ctx       context.Context
 	RedisPool *redis.Pool
-	Logger    *logrus.Logger
+	Logger    contracts.ILogger
 }
 
 func NewServer(opts *Options) *Server {

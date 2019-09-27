@@ -4,8 +4,6 @@ import (
 	"github.com/9299381/wego/args"
 	"github.com/9299381/wego/clients"
 	"github.com/9299381/wego/contracts"
-	stdconsul "github.com/hashicorp/consul/api"
-	"math/rand"
 )
 
 type ConsulService struct {
@@ -19,19 +17,12 @@ func (it *ConsulService) Next(srv contracts.IService) contracts.IService {
 
 func (it *ConsulService) Handle(ctx contracts.Context) error {
 
-	client := clients.GetConsullClient()
-	entitys, meta, err := client.Service(args.Name, "", false, &stdconsul.QueryOptions{})
-	if err != nil {
-		panic(err)
-	}
-	entity := entitys[rand.Int()%len(entitys)]
-
+	entity, _ := clients.GetConsulService(args.Name)
 	ctx.Log.Info(entity.Service.Service)
 	ctx.Log.Info(entity.Service.Address)
 	ctx.Log.Info(entity.Service.Port)
-	tag := entity.Service.Tags[rand.Int()%len(entity.Service.Tags)]
+	tag := entity.Service.Tags[0]
 	ctx.Log.Info(tag)
-	ctx.Log.Info(meta)
 
 	return it.next.Handle(ctx)
 

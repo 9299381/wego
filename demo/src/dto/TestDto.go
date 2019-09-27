@@ -27,7 +27,6 @@ func (it *TestDto) CheckDesc(v *validations.Validation) {
 	if strings.Index(it.Desc, "desc") != -1 {
 		_ = v.SetError("Desc", "名称里不能含有 desc")
 	}
-
 }
 
 //最后执行

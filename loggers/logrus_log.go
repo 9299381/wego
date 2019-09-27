@@ -1,7 +1,7 @@
-package providers
+package loggers
 
 import (
-	"github.com/9299381/wego"
+	"errors"
 	"github.com/9299381/wego/args"
 	"github.com/9299381/wego/configs"
 	"github.com/9299381/wego/constants"
@@ -13,15 +13,8 @@ import (
 	"time"
 )
 
-type LogProvider struct {
-}
-
-func (it *LogProvider) Boot() {
-	wego.Config("log", &configs.LogConfig{})
-}
-
-func (it *LogProvider) Register() {
-	logger := logrus.New()
+func newLogrus() *logrus.Logger {
+	var logger = logrus.New()
 	if args.Mode == "prod" {
 		//写入文件
 		src, err := os.OpenFile(os.DevNull, os.O_APPEND|os.O_WRONLY, os.ModeAppend)
@@ -31,7 +24,7 @@ func (it *LogProvider) Register() {
 		logger.SetOutput(src)
 		//设置日志级别
 		logger.SetLevel(logrus.InfoLevel)
-		logger.AddHook(it.getLogHook())
+		logger.AddHook(getLogHook())
 
 	} else {
 		src := os.Stdout
@@ -40,15 +33,27 @@ func (it *LogProvider) Register() {
 			TimestampFormat: constants.YmdHis,
 		})
 		logger.SetLevel(logrus.DebugLevel)
-
 	}
-	wego.App.Logger = logger
-
+	return logger
 }
-func (it *LogProvider) getLogHook() *lfshook.LfsHook {
-	config := wego.Config("log").(*configs.LogConfig)
+
+func getLogHook() *lfshook.LfsHook {
+	config := (&configs.LogConfig{}).Load()
 	logFilePath := config.LogFilePath
 	logFileName := config.LogFileName
+
+	//这里应该放到log中
+	exist, err := pathExists(logFilePath)
+	if err != nil {
+		panic(errors.New("9999::日志目录配置有问题"))
+	}
+	if !exist {
+		err := os.Mkdir(config.LogFilePath, os.ModePerm)
+		if err != nil {
+			panic(errors.New("9999::创建日志目录失败"))
+		}
+	}
+
 	//日志文件
 	fileName := path.Join(logFilePath, logFileName)
 	logWriter, _ := rotatelogs.New(
@@ -68,4 +73,15 @@ func (it *LogProvider) getLogHook() *lfshook.LfsHook {
 	return lfshook.NewHook(writeMap, &logrus.JSONFormatter{
 		TimestampFormat: constants.YmdHis,
 	})
+}
+
+func pathExists(path string) (bool, error) {
+	_, err := os.Stat(path)
+	if err == nil {
+		return true, nil
+	}
+	if os.IsNotExist(err) {
+		return false, nil
+	}
+	return false, err
 }

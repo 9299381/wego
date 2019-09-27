@@ -1,7 +1,7 @@
 package service
 
 import (
-	"github.com/9299381/wego"
+	"github.com/9299381/wego/cache"
 	"github.com/9299381/wego/contracts"
 )
 
@@ -19,7 +19,7 @@ func (it *CacheSetServioce) Handle(ctx contracts.Context) error {
 	v := make(map[string]interface{})
 	v["aaa"] = "bbb"
 	v["ccc"] = "ddd"
-	wego.Cache("aaaaa", v, 60)
+	_ = cache.Set("aaaaa", v, 60)
 
 	return it.next.Handle(ctx)
 }

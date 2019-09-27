@@ -2,7 +2,6 @@ package contracts
 
 import (
 	"context"
-	"github.com/sirupsen/logrus"
 	"strings"
 	"time"
 )
@@ -10,7 +9,7 @@ import (
 type Context struct {
 	context.Context
 	Keys map[string]interface{}
-	Log  *logrus.Entry
+	Log  ILogger
 }
 
 func (c *Context) reset() {

@@ -5,8 +5,8 @@ import (
 	"context"
 	"encoding/json"
 	"errors"
-	"github.com/9299381/wego"
 	"github.com/9299381/wego/contracts"
+	"github.com/9299381/wego/tools/idwork"
 	"io"
 	"io/ioutil"
 	"mime"
@@ -32,15 +32,15 @@ func decodeRequest(_ context.Context, r *http.Request) (req *contracts.GateWayRe
 		data[k] = v[0]
 	}
 	if _, ok := vars["request_id"]; ok == false {
-		data["request_id"] = wego.ID()
+		data["request_id"] = idwork.ID()
 	}
 	if strings.Index(r.RemoteAddr, "::") > 0 {
 		data["client_ip"] = "127.0.0.1"
 	} else {
 		data["client_ip"] = r.RemoteAddr
 	}
-	if autoken := r.Header.Get("autoken"); autoken != "" {
-		data["autoken"] = autoken
+	if authToken := r.Header.Get("authToken"); authToken != "" {
+		data["authToken"] = authToken
 	}
 	req = parseUrl(r)
 	req.Data = data

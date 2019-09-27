@@ -4,20 +4,18 @@ import (
 	"context"
 	"encoding/json"
 	"errors"
-	"github.com/9299381/wego"
 	"github.com/9299381/wego/configs"
 	"github.com/9299381/wego/constants"
 	"github.com/9299381/wego/contracts"
 	"github.com/9299381/wego/servers/commons"
 	"github.com/gorilla/websocket"
-	"github.com/sirupsen/logrus"
 	"net/http"
 )
 
 type Server struct {
 	handlers map[string]*commons.CommHandler
 	ctx      context.Context
-	Logger   *logrus.Logger
+	Logger   contracts.ILogger
 }
 
 func NewServer() *Server {
@@ -34,9 +32,9 @@ func (it *Server) Register(name string, handler *commons.CommHandler) {
 }
 
 func (it *Server) Serve() error {
-	config := (&configs.WebSocketConfig{}).Load().(*configs.WebSocketConfig)
+	config := (&configs.WebSocketConfig{}).Load()
 	address := config.WebSocketHost + ":" + config.WebSocketPort
-	wego.App.Logger.Info("WebSocket Server Start ", address)
+	it.Logger.Info("WebSocket Server Start ", address)
 	http.HandleFunc(config.Path, it.wsHandler)
 	return http.ListenAndServe(address, nil)
 }

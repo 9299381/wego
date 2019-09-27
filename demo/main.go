@@ -6,6 +6,7 @@ import (
 	"github.com/9299381/wego/demo/src/provider"
 	"github.com/9299381/wego/demo/src/router"
 	"github.com/9299381/wego/providers"
+	"github.com/9299381/wego/servers"
 )
 
 func main() {
@@ -13,8 +14,10 @@ func main() {
 	args.Registy = "127.0.0.1:8500"
 	args.Server = "http,grpc,event"
 	args.Name = "consul_demo"
+	args.Mode = "dev"
+	//服务注册
+	wego.Provider(&providers.ConsulRegistyProvider{})
 
-	wego.Provider(&providers.BootStrap{})
 	wego.Provider(&provider.DemoProvider{})
 
 	wego.Router("http", &router.HttpRouter{})
@@ -24,6 +27,9 @@ func main() {
 	wego.Router("timer", &router.TimerRouter{})
 	wego.Router("cron", &router.CronRouter{})
 	wego.Router("websocket", &router.WebSocketRouter{})
+
+	//内置加载事件服务,无需路由,直接调用 filter handler
+	wego.Router("event", servers.NewEventCommServer())
 
 	wego.Start()
 

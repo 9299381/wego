@@ -1,7 +1,8 @@
-package snowflake
+package idwork
 
 import (
 	"errors"
+	"github.com/9299381/wego/constants"
 	"strconv"
 	"sync"
 	"time"
@@ -10,7 +11,7 @@ import (
 var once sync.Once
 var ins *snowflake
 
-func GetID(server int64) string {
+func getID(server int64) string {
 	n := getIns(server)
 	return n.nextId()
 
@@ -60,7 +61,7 @@ func newNode(server int64) (*snowflake, error) {
 }
 func (it *snowflake) epochGen() int64 {
 	start := "2010-01-01 00:00:00"
-	layout := "2006-01-02 15:04:05"
+	layout := constants.YmdHis
 	loc, _ := time.LoadLocation("Local")
 	theTime, _ := time.ParseInLocation(layout, start, loc)
 	return theTime.UnixNano() / 1000000

@@ -19,21 +19,66 @@
     5 timer
     6 command
     7 redis queue
+    8 内部event server
+    9 gateway server
 ~~~~
+举例
+~~~~    
+    //经过jwt认证后的用户id,和name
+	fmt.Println(ctx.Request("claim.Id"))
+	fmt.Println(ctx.GetValue("request.claim.Name"))
+    //cache使用
+    v, _ := cache.Get("aaaaa")
+	v := make(map[string]interface{})
+	v["aaa"] = "bbb"
+	v["ccc"] = "ddd"
+	_ = cache.Set("aaaaa", v, 60)
+	//日志使用
+	ctx.Log.Info("one....")
+	ctx.Log.Infof(format,arg...)
+	//请求参数
+	ctx.Request("claim.Id")
+	//返回值
+	ctx.Response("aa.bb", "cc")
+	ctx.Response("aa.cc", "dd")
+	//redis使用
+    client := clients.Redis() //从pool中获取一个链接
+    defer client.Close()      //延时释放链接,本方法执行完毕时释放
+    _, _ = client.Do("SET", "go_key", "value")
+    //mysql使用
+    user := model.CommUser{Id: id}
+    has, _ := clients.DB().Get(&user)
+    //event使用
+	params := map[string]interface{}{}
+	payload := &contracts.Payload{
+		Route:  "two", ->接收处理的handler
+		Params: params,
+	}
+	events.Fire(payload)
+	//redis queue使用 默认db->1
+    msg := make(map[string]interface{})
+    msg["aaa"] = "bbb"
+    err := queues.Fire(
+        "demo1",     ->发送的redis 队列
+        "queue_test",  ->侦听队列的server需要处理的路由handler
+        msg,
+    )
+    //远程服务调用,// 为现有php模式而封装
+    params:=make(map[string]interface{})
+    params["test_rpc_post"] = "test_rpc_post"
+    resp := clients.
+        Micro("consul_demo").    //服务的名称
+        Service("demo.post").    //服务的注册的handler
+        Params(params).
+        Run()
+    该方法会从consul中获取注册的服务,并随机选择一个进行请求,支持grpc和http post
+    http post 对应的远端路由为 http:/host+port/demo/post
+~~~~
+
 # 采用组件:
 ~~~~
 	github.com/cespare/xxhash
-	github.com/coocood/freecache  内存cache
-	        //set
-	    	v := make(map[string]interface{})
-        	v["aaa"] = "bbb"
-        	v["ccc"] = "ddd"
-        	wego.Cache("aaaaa",v,60)
-        	//get
-            v:=wego.Cache("aaaaa")
-            d := make(map[string]interface{})
-            err:=json.Unmarshal(v,&d)
-        	
+	github.com/coocood/freecache  内存cache	
 	github.com/fastly/go-utils 
 	github.com/go-kit/kit  //核心组件
 	github.com/go-logfmt/logfmt   格式化输出
@@ -57,14 +102,22 @@
 	github.com/tebeka/strftime  
 	google.golang.org/grpc           grpc服务
 	gopkg.in/check.v1  
+    github.com/hashicorp/consul v1.6.1 //  consul http grpc 服务注册,发现
+    github.com/hashicorp/consul/api v1.2.0
 ~~~~
 
 # 样例
 
 main
 ~~~~
-	wego.Provider(&providers.BootStrap{})
+    //如果参数配置了registy,则自动进行consul的服务注册 grpc http 都可
+	//例如go run main.go -name=test_service  -registy=127.0.0.1:8500 -server=grpc
+	wego.Provider(&providers.ConsulRegistyProvider{})
+    
+    //这里注册自己的handler
 	wego.Provider(&provider.ExamProvider{})
+	
+	//下面的server,根据启动args参数决定
 	wego.Router("grpc",&router.GrpcRouter{})
 	wego.Router("http",&router.HttpRouter{})
 	wego.Router("queue",&router.QueueRouter{})
@@ -72,6 +125,10 @@ main
 	wego.Router("websocket",&router.WebSocketRouter{})
 	wego.Router("timer",&router.TimerRouter{})
 	wego.Router("cron",&router.CronRouter{})
+	
+	//内置加载事件服务,无需路由,直接调用  handler
+    wego.Router("event", servers.NewEventCommServer())
+	
 	wego.Start()
 ~~~~
 ExamProvider
@@ -114,7 +171,7 @@ GrpcRouter
 RedisService
 ~~~~
 func (it *RedisService)Handle(ctx contracts.Context) error  {
-	client := wego.Redis() //从pool中获取一个链接
+	client := clients.Redis() //从pool中获取一个链接
 	defer client.Close()   //延时释放链接,本方法执行完毕时释放
 	_, _ = client.Do("SET", "go_key", "value")
 	res,_ :=redis.String(client.Do("GET","go_key"))
@@ -140,13 +197,55 @@ func (it *SqlService)Handle(ctx contracts.Context) error  {
 	return it.next.Handle(ctx)
 }
 ~~~~
+struct validations 由 beego的validations 修改而来
+github.com/astaxie/beego/validation
+~~~~
+	req := ctx.Request()
+	st := &dto.TestDto{}
+	err := convert.Map2Struct(req, st)
+	if err != nil {
+		return err
+	}
+	err = validations.Valid(st)
 
+type TestDto struct {
+	Name string `json:"name" valid:"Required;MinSize(1);MaxSize(5)"`
+	Age  int    `json:"age" valid:"Required"`
+	//Name   string `json:"name" valid:"Required;Match(/^wego.*/)"` // Name 不能为空并且以 wego 开头
+	////有问题
+	//Age    string    `json:"age" valid:"Range(1, 140)"` // 1 <= Age <= 140，超出此范围即为不合法
+	//Email  string `json:"email" valid:"Email; MaxSize(100)"` // Email 字段需要符合邮箱格式，并且最大长度不能大于 100 个字符
+	//Mobile string `json:"mobile" valid:"Mobile"` // Mobile 必须为正确的手机号
+	//IP     string `json:"ip" valid:"IP"` // IP 必须为一个正确的 IPv4 地址
+	Desc string `json:"desc" valid:"Required;Custom(CheckDesc)"` //自定义处理
+}
+
+//自定义方法
+func (it *TestDto) CheckDesc(v *validations.Validation) {
+	if strings.Index(it.Desc, "desc") != -1 {
+		_ = v.SetError("Desc", "名称里不能含有 desc")
+	}
+}
+
+//全部通过后最后执行
+func (it *TestDto) Finish(v *validations.Validation) {
+	if strings.Index(it.Name, "admin") != -1 {
+		// 通过 SetError 设置 Name 的错误信息，HasErrors 将会返回 true
+		_ = v.SetError("Name", "名称里不能含有 admin")
+	}
+}
+
+
+~~~~
 snowflake id生成器
 ~~~~
-    wego.ID()
+    idwork.ID()
 ~~~~
 
 command
 ~~~~
     main -cmd="注册的路由" -args="json参数"
 ~~~~
+
+
+

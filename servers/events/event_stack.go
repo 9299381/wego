@@ -1,52 +1,53 @@
-package contracts
+package events
 
 import (
 	"container/list"
+	"github.com/9299381/wego/contracts"
 	"sync"
 )
 
-type EventStack struct {
+type eventStack struct {
 	stacks *list.List
 	lock   *sync.RWMutex
 }
 
-func NewEvent() *EventStack {
+func newEventStack() *eventStack {
 
-	return &EventStack{
+	return &eventStack{
 		stacks: list.New(),
 		lock:   &sync.RWMutex{},
 	}
 }
 
-func (it *EventStack) Push(elem *Payload) {
+func (it *eventStack) Push(elem *contracts.Payload) {
 	it.lock.Lock()
 	defer it.lock.Unlock()
 	it.stacks.PushBack(elem)
 }
 
-func (it *EventStack) Pop() *Payload {
+func (it *eventStack) Pop() *contracts.Payload {
 	it.lock.Lock()
 	defer it.lock.Unlock()
 	elem := it.stacks.Front()
 	if elem != nil {
 		it.stacks.Remove(elem)
-		return elem.Value.(*Payload)
+		return elem.Value.(*contracts.Payload)
 	}
 	return nil
 }
 
-func (it *EventStack) First() *Payload {
+func (it *eventStack) First() *contracts.Payload {
 	elem := it.stacks.Back()
 	if elem != nil {
-		return elem.Value.(*Payload)
+		return elem.Value.(*contracts.Payload)
 	}
 	return nil
 }
 
-func (it *EventStack) Len() int {
+func (it *eventStack) Len() int {
 	return it.stacks.Len()
 }
 
-func (it *EventStack) Empty() bool {
+func (it *eventStack) Empty() bool {
 	return it.stacks.Len() == 0
 }

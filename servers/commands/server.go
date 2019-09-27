@@ -3,14 +3,15 @@ package commands
 import (
 	"context"
 	"errors"
-	"github.com/9299381/wego"
 	"github.com/9299381/wego/args"
 	"github.com/9299381/wego/constants"
+	"github.com/9299381/wego/contracts"
 	"github.com/9299381/wego/servers/commons"
 )
 
 type Server struct {
 	handlers map[string]*commons.CommHandler
+	Logger   contracts.ILogger
 }
 
 func NewServer() *Server {
@@ -38,7 +39,7 @@ func (it *Server) Serve() error {
 		if err != nil {
 			return err
 		}
-		wego.App.Logger.Info(response)
+		it.Logger.Info(response)
 	}
 	return nil
 }

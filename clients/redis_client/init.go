@@ -1,4 +1,4 @@
-package clients
+package redis_client
 
 import (
 	"github.com/9299381/wego/configs"
@@ -14,9 +14,20 @@ IdleTimeout 空闲连接超时时间，
 但应该设置比redis服务器超时时间短。否则服务端超时了，客户端保持着连接也没用。
 Wait 这是个很有用的配置。如果超过最大连接，是报错，还是等待
 */
-func NewRedisPool(conf *configs.RedisConfig) *redis.Pool {
+
+var pool *redis.Pool
+
+func init() {
+	newRedisPool()
+}
+func Get() redis.Conn {
+	return pool.Get()
+}
+
+func newRedisPool() {
+	conf := (&configs.RedisConfig{}).Load()
 	timeout := conf.IdleTimeout
-	redisClient := &redis.Pool{
+	pool = &redis.Pool{
 		MaxActive:   conf.MaxActive,
 		MaxIdle:     conf.MaxIdle,
 		IdleTimeout: timeout,
@@ -43,5 +54,4 @@ func NewRedisPool(conf *configs.RedisConfig) *redis.Pool {
 		},
 	}
 
-	return redisClient
 }

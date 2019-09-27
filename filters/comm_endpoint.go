@@ -2,8 +2,8 @@ package filters
 
 import (
 	"context"
-	"github.com/9299381/wego"
 	"github.com/9299381/wego/contracts"
+	"github.com/9299381/wego/loggers"
 	"github.com/go-kit/kit/endpoint"
 	"github.com/sirupsen/logrus"
 )
@@ -26,7 +26,7 @@ func (it *CommEndpoint) Make() endpoint.Endpoint {
 		err = it.Service.Handle(cc)
 		if err != nil {
 			cc.Log.Info(err.Error())
-			return nil, err
+			return contracts.ResponseFailed(err), nil
 		} else {
 			return contracts.ResponseSucess(cc.GetValue("response")), nil
 		}
@@ -34,14 +34,12 @@ func (it *CommEndpoint) Make() endpoint.Endpoint {
 }
 
 func (it *CommEndpoint) makeLog(ctx contracts.Context, req contracts.Request) *logrus.Entry {
-	logger := wego.App.Logger
 	//初始化日志字段,放到context中
-
 	ip := (req.Data)["client_ip"]
 	if ip == nil {
 		ip = "LAN"
 	}
-	entity := logger.WithFields(logrus.Fields{
+	entity := loggers.Log.WithFields(logrus.Fields{
 		"request_id": req.Id,
 		"client_ip":  ip,
 	})

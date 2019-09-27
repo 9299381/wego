@@ -2,15 +2,15 @@ package timers
 
 import (
 	"context"
-	"github.com/9299381/wego"
+	"github.com/9299381/wego/contracts"
 	"github.com/9299381/wego/servers/commons"
-	"github.com/sirupsen/logrus"
+	"github.com/9299381/wego/tools/idwork"
 	"time"
 )
 
 type Server struct {
 	handlers map[string]*service
-	Logger   *logrus.Logger
+	Logger   contracts.ILogger
 }
 type service struct {
 	freq    int
@@ -43,7 +43,7 @@ func (it *Server) Serve() error {
 			for {
 				select {
 				case <-t.C:
-					id := wego.ID()
+					id := idwork.ID()
 					ctx := context.Background()
 					params := svr.params
 					params["request_id"] = id

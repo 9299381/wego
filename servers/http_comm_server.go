@@ -1,9 +1,10 @@
 package servers
 
 import (
-	"github.com/9299381/wego"
 	"github.com/9299381/wego/configs"
+	"github.com/9299381/wego/contracts"
 	"github.com/9299381/wego/filters"
+	"github.com/9299381/wego/loggers"
 	"github.com/9299381/wego/servers/transports"
 	"github.com/go-kit/kit/endpoint"
 	"github.com/gorilla/mux"
@@ -12,12 +13,15 @@ import (
 
 type HttpCommServer struct {
 	*mux.Router
+	Logger contracts.ILogger
 }
 
 func NewHttpCommServer() *HttpCommServer {
-	return &HttpCommServer{
+	ss := &HttpCommServer{
 		Router: mux.NewRouter(),
 	}
+	ss.Logger = loggers.Log
+	return ss
 }
 
 func (it *HttpCommServer) Route(method string, path string, endpoint endpoint.Endpoint) {
@@ -47,9 +51,9 @@ func (it *HttpCommServer) Load() {
 }
 
 func (it *HttpCommServer) Start() error {
-	config := (&configs.HttpConfig{}).Load().(*configs.HttpConfig)
+	config := (&configs.HttpConfig{}).Load()
 	address := config.HttpHost + ":" + config.HttpPort
-	wego.App.Logger.Info("Http Server Start ", address)
+	it.Logger.Info("Http Server Start ", address)
 	handler := it.Router
 	return http.ListenAndServe(address, handler)
 }

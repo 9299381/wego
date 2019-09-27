@@ -4,8 +4,8 @@ import (
 	"context"
 	"encoding/json"
 	"errors"
-	"github.com/9299381/wego"
 	"github.com/9299381/wego/contracts"
+	"github.com/9299381/wego/tools/idwork"
 )
 
 func CommandDecodeRequest(ctx context.Context, req interface{}) (interface{}, error) {
@@ -15,7 +15,7 @@ func CommandDecodeRequest(ctx context.Context, req interface{}) (interface{}, er
 		return nil, errors.New("args参数json解析错误")
 	}
 	return contracts.Request{
-		Id:   wego.ID(),
+		Id:   idwork.ID(),
 		Data: mapResult,
 	}, nil
 }

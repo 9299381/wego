@@ -1,15 +1,16 @@
 package clients
 
 import (
+	"encoding/json"
 	"errors"
 	"fmt"
-	"github.com/9299381/wego"
 	"github.com/9299381/wego/args"
-	"github.com/go-kit/kit/log"
+	"github.com/9299381/wego/cache"
+	"github.com/9299381/wego/loggers"
+	"github.com/9299381/wego/tools/idwork"
 	"github.com/go-kit/kit/sd/consul"
 	"github.com/hashicorp/consul/api"
 	"math/rand"
-	"os"
 	"strconv"
 )
 
@@ -24,14 +25,14 @@ func NewConsulHttpRegister(service, host, port string) *consul.Registrar {
 	}
 	p, _ := strconv.Atoi(port)
 	reg := api.AgentServiceRegistration{
-		ID:      service + "_" + wego.ID(),
+		ID:      service + "_" + idwork.ID(),
 		Name:    service,
 		Address: host,
 		Port:    p,
 		Tags:    []string{"http"},
 		Check:   &check,
 	}
-	registy := consul.NewRegistrar(GetConsullClient(), &reg, getLogger())
+	registy := consul.NewRegistrar(getConsullClient(), &reg, loggers.NewKitLog())
 	registy.Register()
 	return registy
 
@@ -47,36 +48,58 @@ func NewConsulGrpcRegister(service, host, port string) *consul.Registrar {
 		Notes:    "Consul check service health status.",
 	}
 	reg := api.AgentServiceRegistration{
-		ID:      service + "_" + wego.ID(),
+		ID:      service + "_" + idwork.ID(),
 		Name:    service,
 		Address: host,
 		Port:    p,
 		Tags:    []string{"grpc"},
 		Check:   &check,
 	}
-	registy := consul.NewRegistrar(GetConsullClient(), &reg, getLogger())
+	registy := consul.NewRegistrar(getConsullClient(), &reg, loggers.NewKitLog())
 	registy.Register()
 	return registy
 
 }
 
-func GetConsullClient() consul.Client {
+func GetConsulService(service string) (entity *api.ServiceEntry, err error) {
+	//这里考虑可以从缓存中读取,10分钟过期,比如
+	var entitys []*api.ServiceEntry
+	c, _ := cache.Get("consul_entitys")
+	if c != nil {
+		entitys = []*api.ServiceEntry{}
+		err = json.Unmarshal(c, &entitys)
+		if err != nil {
+			panic(err)
+			return
+		}
+	} else {
+		client := getConsullClient()
+		entitys, _, err = client.Service(service, "", false, &api.QueryOptions{})
+		if err != nil || len(entitys) == 0 {
+			err = errors.New("9999::没有找到响应的服务")
+			return
+		}
+		_ = cache.Set("consul_entitys", entitys, 60)
+	}
+	//随机取一个
+	entity = entitys[rand.Int()%len(entitys)]
+	return
+
+}
+
+func getConsullClient() consul.Client {
 	var client consul.Client
 	{
 		config := api.DefaultConfig()
 		config.Address = args.Registy
-		consulClient, err := api.NewClient(config)
-		if err != nil {
-			fmt.Println("create consul client error:", err)
-			os.Exit(1)
-		}
+		consulClient, _ := api.NewClient(config)
 		client = consul.NewClient(consulClient)
 	}
 	return client
 }
 
 func serviceDeregister(service, host, port string) {
-	client := GetConsullClient()
+	client := getConsullClient()
 	entitys, _, err := client.Service(service, "", false, &api.QueryOptions{})
 	if err == nil {
 		for _, entity := range entitys {
@@ -91,27 +114,4 @@ func serviceDeregister(service, host, port string) {
 			}
 		}
 	}
-}
-
-func getLogger() log.Logger {
-
-	var logger log.Logger
-	{
-		logger = log.NewLogfmtLogger(os.Stderr)
-		logger = log.With(logger, "ts", log.DefaultTimestampUTC)
-		logger = log.With(logger, "caller", log.DefaultCaller)
-	}
-	return logger
-}
-
-func GetConsulService(service string) (*api.ServiceEntry, error) {
-	//这里考虑可以从缓存中读取,10分钟过期,比如
-	client := GetConsullClient()
-	entitys, _, err := client.Service(service, "", false, &api.QueryOptions{})
-	if err != nil || len(entitys) == 0 {
-		return nil, errors.New("9999::没有找到响应的服务")
-	}
-	entity := entitys[rand.Int()%len(entitys)]
-	return entity, nil
-
 }

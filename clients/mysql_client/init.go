@@ -1,4 +1,4 @@
-package clients
+package mysql_client
 
 import (
 	"github.com/9299381/wego/configs"
@@ -6,7 +6,17 @@ import (
 	"github.com/go-xorm/xorm"
 )
 
-func NewMySql(conf *configs.MySqlConfig) (db *xorm.Engine) {
+var db *xorm.Engine
+
+func init() {
+	newMySql()
+}
+
+func Get() *xorm.Engine {
+	return db
+}
+func newMySql() {
+	conf := (&configs.MySqlConfig{}).Load()
 	db, _ = xorm.NewEngine(
 		conf.Driver,
 		conf.DataSource,
@@ -14,6 +24,4 @@ func NewMySql(conf *configs.MySqlConfig) (db *xorm.Engine) {
 	db.SetMaxIdleConns(conf.MaxIdleConns)
 	db.SetMaxOpenConns(conf.MaxOpenConns)
 	db.ShowSQL(false)
-
-	return
 }

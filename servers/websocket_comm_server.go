@@ -1,7 +1,7 @@
 package servers
 
 import (
-	"github.com/9299381/wego"
+	"github.com/9299381/wego/loggers"
 	"github.com/9299381/wego/servers/commons"
 	"github.com/9299381/wego/servers/transports"
 	"github.com/9299381/wego/servers/websockets"
@@ -17,7 +17,7 @@ func NewWebSocketCommServer() *WebSocketCommServer {
 	ss := &WebSocketCommServer{
 		Server: websockets.NewServer(),
 	}
-	ss.Server.Logger = wego.App.Logger
+	ss.Logger = loggers.Log
 	return ss
 }
 

@@ -3,8 +3,8 @@ package codecs
 import (
 	"context"
 	"encoding/json"
-	"github.com/9299381/wego"
 	"github.com/9299381/wego/contracts"
+	"github.com/9299381/wego/tools/idwork"
 	"net/http"
 	"strings"
 )
@@ -18,7 +18,7 @@ func HttpFormDecodeRequest(_ context.Context, r *http.Request) (interface{}, err
 	requestId, ok := vars["request_id"]
 	if ok == false {
 		requestId = make([]string, 1)
-		requestId[0] = wego.ID()
+		requestId[0] = idwork.ID()
 	}
 	data := make(map[string]interface{})
 	for k, v := range vars {
@@ -29,8 +29,8 @@ func HttpFormDecodeRequest(_ context.Context, r *http.Request) (interface{}, err
 	} else {
 		data["client_ip"] = r.RemoteAddr
 	}
-	if autoken := r.Header.Get("autoken"); autoken != "" {
-		data["autoken"] = autoken
+	if authToken := r.Header.Get("authToken"); authToken != "" {
+		data["authToken"] = authToken
 	}
 
 	return contracts.Request{

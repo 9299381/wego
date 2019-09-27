@@ -11,6 +11,11 @@ import (
 type IniReader struct {
 }
 
+func (it *IniReader) New() *IniReader {
+	//这里可以做一些初始化
+	return it
+}
+
 func (it *IniReader) Read(filePath string) interface{} {
 	file, err := os.Open(filePath)
 	if err != nil {

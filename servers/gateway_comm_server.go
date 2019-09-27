@@ -2,6 +2,7 @@ package servers
 
 import (
 	"github.com/9299381/wego/filters"
+	"github.com/9299381/wego/loggers"
 	"github.com/9299381/wego/servers/gateways"
 	"github.com/go-kit/kit/endpoint"
 )
@@ -11,9 +12,11 @@ type GateWayCommServer struct {
 }
 
 func NewGateWayCommServer() *GateWayCommServer {
-	return &GateWayCommServer{
+	ss := &GateWayCommServer{
 		Server: gateways.NewServer(),
 	}
+	ss.Logger = loggers.Log
+	return ss
 }
 
 func (it *GateWayCommServer) Route(method, path string, endpoint endpoint.Endpoint) {

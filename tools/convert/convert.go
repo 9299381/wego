@@ -1,11 +1,14 @@
 package convert
 
 import (
+	"encoding/json"
 	"errors"
 	"github.com/9299381/wego/constants"
 	"github.com/9299381/wego/validations"
 	"github.com/mitchellh/mapstructure"
+	"net/url"
 	"reflect"
+	"strconv"
 )
 
 func Struct2Map(obj interface{}) map[string]interface{} {
@@ -33,4 +36,22 @@ func Map2Struct(req, obj interface{}) error {
 		return err
 	}
 	return nil
+}
+
+func FormEncode(params map[string]interface{}) url.Values {
+	data := url.Values{}
+	for k, param := range params {
+		paramsType := reflect.TypeOf(param)
+		switch paramsType.String() {
+		case "string":
+			data.Set(k, param.(string))
+		case "int":
+			data.Set(k, strconv.Itoa(param.(int)))
+		default:
+			str, _ := json.Marshal(param)
+			data.Set(k, string(str))
+
+		}
+	}
+	return data
 }

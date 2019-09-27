@@ -1,6 +1,8 @@
 package services
 
-import "github.com/9299381/wego/contracts"
+import (
+	"github.com/9299381/wego/contracts"
+)
 
 type CommService struct {
 }

@@ -2,13 +2,14 @@ package events
 
 import (
 	"context"
-	"github.com/9299381/wego"
 	"github.com/9299381/wego/contracts"
+	"github.com/9299381/wego/tools/idwork"
 	"time"
 )
 
 type Server struct {
 	Ticker *time.Ticker
+	Logger contracts.ILogger
 }
 
 func NewServer() *Server {
@@ -22,7 +23,7 @@ func (it *Server) Serve() error {
 	it.runEvent(events, errChan)
 	err := <-errChan
 	if err != nil {
-		wego.App.Logger.Info(err)
+		it.Logger.Info(err)
 	}
 	return nil
 }
@@ -34,7 +35,7 @@ func (it *Server) getEvent() <-chan *contracts.Payload {
 		for {
 			select {
 			case <-it.Ticker.C:
-				event := wego.App.Event.Pop()
+				event := Event.Pop()
 				if event != nil {
 					select {
 					case events <- event:
@@ -48,19 +49,19 @@ func (it *Server) getEvent() <-chan *contracts.Payload {
 func (it *Server) runEvent(events <-chan *contracts.Payload, errChan chan error) {
 	go func(errChan chan error) {
 		for event := range events {
-			endpoint := wego.Handler(event.Route)
-			if endpoint != nil {
+			filter, ok := Handlers[event.Route]
+			if ok {
 				ctx := context.Background()
-				id := wego.ID()
+				id := idwork.ID()
 				request := contracts.Request{
 					Id:   id,
 					Data: event.Params,
 				}
-				resp, err := endpoint(ctx, request)
+				resp, err := filter(ctx, request)
 				if err != nil {
 					errChan <- err
 				} else {
-					wego.App.Logger.Info("事件结果:", resp)
+					it.Logger.Info("事件结果:", resp)
 				}
 			}
 		}

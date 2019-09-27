@@ -2,15 +2,13 @@ package gateways
 
 import (
 	"context"
-	"encoding/json"
 	"fmt"
-	"github.com/9299381/wego"
 	"github.com/9299381/wego/clients"
 	"github.com/9299381/wego/configs"
 	"github.com/9299381/wego/constants"
 	"github.com/9299381/wego/contracts"
+	"github.com/9299381/wego/servers/events"
 	"github.com/go-kit/kit/endpoint"
-	"math/rand"
 	"net/http"
 	"net/http/httputil"
 	"time"
@@ -18,6 +16,7 @@ import (
 
 type Server struct {
 	handlers map[string]endpoint.Endpoint
+	Logger   contracts.ILogger
 }
 
 func NewServer() *Server {
@@ -33,9 +32,9 @@ func (it *Server) Register(method, path string, endpoint endpoint.Endpoint) {
 }
 
 func (it *Server) Serve() error {
-	config := (&configs.HttpConfig{}).Load().(*configs.HttpConfig)
+	config := (&configs.HttpConfig{}).Load()
 	address := config.HttpHost + ":" + config.HttpPort
-	wego.App.Logger.Info("Http Server Start ", address)
+	it.Logger.Info("Http Server Start ", address)
 	handler := it
 	return http.ListenAndServe(address, handler)
 }
@@ -61,32 +60,21 @@ func (it *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		// gateway_endpoint负责返回GATEWAY,h或者error
 		resp = it.runFilter(filter, ctx, req)
 	}
+	//todo 还需要处理下经过后返回
 	if !ok || resp.Data == "GATEWAY" {
 		var tag, host string
-		defer func(begin time.Time, tag, host *string) {
-			params := make(map[string]interface{})
-			params["url"] = key
-			params["begin"] = begin.Format(constants.YmdHis)
-			params["took"] = time.Since(begin)
-			params["tag"] = *tag
-			params["host"] = *host
-			payload := &contracts.Payload{
-				Route:  wego.Env("GATEWAY_EVENT_HANDLER", "GATEWAY_EVENT_HANDLER"),
-				Params: params,
-			}
-			wego.Event(payload)
+		defer it.fireEvent(time.Now(), &key, &tag, &host)
 
-		}(time.Now(), &tag, &host)
 		//服务发现
 		entity, err := clients.GetConsulService(req.Service)
 		if err != nil {
 			resp = contracts.ResponseFailed(err)
 			return
 		}
-		tag = entity.Service.Tags[rand.Int()%len(entity.Service.Tags)]
+
+		tag = entity.Service.Tags[0]
 		host = fmt.Sprintf("%s:%d", entity.Service.Address, entity.Service.Port)
 		if tag == "http" {
-			//
 			director := func(dr *http.Request) {
 				dr.URL.Scheme = "http"
 				dr.URL.Host = host
@@ -98,22 +86,7 @@ func (it *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 			return
 
 		} else if tag == "grpc" {
-			gc, err := clients.NewGrpcClient(host, req.Route, req.Data)
-			if err != nil {
-				resp = contracts.ResponseFailed(err)
-			} else {
-				m := make(map[string]interface{})
-				err := json.Unmarshal([]byte(gc.GetData()), &m)
-				m["gateway"] = "grpc"
-				if err != nil {
-					resp = contracts.ResponseFailed(err)
-				} else {
-					resp.Code = gc.GetCode()
-					resp.Ret = 200
-					resp.Data = m
-					resp.Message = gc.GetMsg()
-				}
-			}
+			resp = clients.NewGrpcCall(host, req.Route, req.Data)
 		}
 	}
 	err = encodeResponse(ctx, w, resp)
@@ -133,4 +106,17 @@ func (it *Server) runFilter(filter endpoint.Endpoint, ctx context.Context, req *
 	} else {
 		return filterResp.(contracts.Response)
 	}
+}
+func (it *Server) fireEvent(begin time.Time, key, tag, host *string) {
+	params := make(map[string]interface{})
+	params["url"] = key
+	params["begin"] = begin.Format(constants.YmdHis)
+	params["took"] = time.Since(begin)
+	params["tag"] = *tag
+	params["host"] = *host
+	payload := &contracts.Payload{
+		Route:  configs.Env("GATEWAY_EVENT_HANDLER", "GATEWAY_EVENT_HANDLER"),
+		Params: params,
+	}
+	events.Fire(payload)
 }

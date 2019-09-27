@@ -1,7 +1,7 @@
 package servers
 
 import (
-	"github.com/9299381/wego"
+	"github.com/9299381/wego/loggers"
 	"github.com/9299381/wego/servers/commons"
 	"github.com/9299381/wego/servers/timers"
 	"github.com/9299381/wego/servers/transports"
@@ -19,7 +19,7 @@ func NewTimerCommServer() *TimerCommServer {
 	ss := &TimerCommServer{
 		Server: timers.NewServer(),
 	}
-	ss.Logger = wego.App.Logger
+	ss.Logger = loggers.Log
 	return ss
 }
 

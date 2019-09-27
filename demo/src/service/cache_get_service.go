@@ -2,7 +2,7 @@ package service
 
 import (
 	"encoding/json"
-	"github.com/9299381/wego"
+	"github.com/9299381/wego/cache"
 	"github.com/9299381/wego/contracts"
 )
 
@@ -17,7 +17,7 @@ func (it *CacheGetServioce) Next(srv contracts.IService) contracts.IService {
 
 func (it *CacheGetServioce) Handle(ctx contracts.Context) error {
 
-	v := wego.Cache("aaaaa")
+	v, _ := cache.Get("aaaaa")
 	d := make(map[string]interface{})
 	err := json.Unmarshal(v, &d)
 	if err != nil {

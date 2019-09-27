@@ -1,14 +1,11 @@
 package configs
 
 import (
-	"github.com/9299381/wego"
-	"github.com/9299381/wego/contracts"
 	"strconv"
 	"time"
 )
 
 type RedisConfig struct {
-	Config
 	Uri         string
 	Auth        string
 	Db          int
@@ -17,23 +14,19 @@ type RedisConfig struct {
 	IdleTimeout time.Duration
 }
 
-func (it *RedisConfig) Load() contracts.Iconfig {
+func (it *RedisConfig) Load() *RedisConfig {
 
-	db, _ := strconv.Atoi(wego.Env("REDIS_DB", "0"))
-	maxActive, _ := strconv.Atoi(wego.Env("REDIS_MAX_ACTIVE", "50"))
-	maxIdle, _ := strconv.Atoi(wego.Env("REDIS_MAX_IDLE", "5"))
-	timeout, _ := strconv.Atoi(wego.Env("REDIS_TIMEOUT", "10"))
+	db, _ := strconv.Atoi(Env("REDIS_DB", "0"))
+	maxActive, _ := strconv.Atoi(Env("REDIS_MAX_ACTIVE", "50"))
+	maxIdle, _ := strconv.Atoi(Env("REDIS_MAX_IDLE", "5"))
+	timeout, _ := strconv.Atoi(Env("REDIS_TIMEOUT", "10"))
 	config := &RedisConfig{
-		Uri:         wego.Env("REDIS_URI", "127.0.0.1:6937"),
-		Auth:        wego.Env("REDIS_AUTH", "password"),
+		Uri:         Env("REDIS_URI", "127.0.0.1:6937"),
+		Auth:        Env("REDIS_AUTH", "password"),
 		Db:          db,
 		MaxActive:   maxActive,
 		MaxIdle:     maxIdle,
 		IdleTimeout: time.Duration(timeout) * time.Second,
 	}
 	return config
-}
-
-func (it *RedisConfig) Get(key string) string {
-	return it.GetKey(it, key)
 }

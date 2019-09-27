@@ -13,8 +13,6 @@ func (it *WebSocketRouter) Boot() {
 	it.WebSocketCommServer = servers.NewWebSocketCommServer()
 }
 
-//todo 写个队列server 编解码,路由等
-
 func (it *WebSocketRouter) Register() {
 	it.Route("Two", wego.Handler("two"))
 }

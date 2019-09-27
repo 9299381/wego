@@ -1,27 +1,17 @@
 package configs
 
-import (
-	"github.com/9299381/wego"
-	"github.com/9299381/wego/contracts"
-)
-
 type WebSocketConfig struct {
-	Config
 	WebSocketHost string `json:"web_socket_host"`
 	WebSocketPort string `json:"web_socket_port"`
 	Path          string
 }
 
-func (it *WebSocketConfig) Load() contracts.Iconfig {
+func (it *WebSocketConfig) Load() *WebSocketConfig {
 
 	config := &WebSocketConfig{
 		Path:          "/ws",
-		WebSocketPort: wego.Env("SERVER_WEBSOCKET_PORT", "8342"),
-		WebSocketHost: wego.Env("SERVER_WEBSOCKET_HOST", "127.0.0.1"),
+		WebSocketPort: Env("SERVER_WEBSOCKET_PORT", "8342"),
+		WebSocketHost: Env("SERVER_WEBSOCKET_HOST", "127.0.0.1"),
 	}
 	return config
-}
-
-func (it *WebSocketConfig) Get(key string) string {
-	return it.GetKey(it, key)
 }

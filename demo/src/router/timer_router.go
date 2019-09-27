@@ -13,8 +13,6 @@ func (it *TimerRouter) Boot() {
 	it.TimerCommServer = servers.NewTimerCommServer()
 }
 
-//todo 写个队列server 编解码,路由等
-
 func (it *TimerRouter) Register() {
 
 	params := make(map[string]interface{})

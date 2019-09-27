@@ -1,8 +1,8 @@
 package service
 
 import (
-	"github.com/9299381/wego"
 	"github.com/9299381/wego/contracts"
+	"github.com/9299381/wego/servers/events"
 )
 
 type TestEvent struct {
@@ -22,7 +22,7 @@ func (it *TestEvent) Handle(ctx contracts.Context) error {
 		Route:  "two",
 		Params: params,
 	}
-	wego.Event(payload)
+	events.Fire(payload)
 
 	return it.next.Handle(ctx)
 }
