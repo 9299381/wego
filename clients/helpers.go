@@ -1,18 +1,18 @@
 package clients
 
 import (
-	"github.com/9299381/wego/clients/mysql_client"
-	"github.com/9299381/wego/clients/redis_client"
+	"github.com/9299381/wego/clients/mysql"
+	"github.com/9299381/wego/clients/redis"
 	"github.com/go-xorm/xorm"
-	"github.com/gomodule/redigo/redis"
+	redigo "github.com/gomodule/redigo/redis"
 )
 
 func DB() *xorm.Engine {
-	return mysql_client.Get()
+	return mysql.Get()
 }
 
-func Redis() redis.Conn {
-	return redis_client.Get()
+func Redis() redigo.Conn {
+	return redis.Get()
 }
 
 // 为统一php模式而封装

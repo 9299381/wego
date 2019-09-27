@@ -44,6 +44,7 @@ func (it *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	var resp contracts.Response
+	var data map[string]interface{}
 	//通过编解码 进行 路由路由处理
 	ctx := r.Context()
 	req, err := decodeRequest(ctx, r)
@@ -52,16 +53,19 @@ func (it *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	key := req.Method + "_" + r.URL.Path
-
 	filter, ok := it.handlers[key]
 	if ok && filter != nil {
 		// 如果有注册管理,则注册管理处理
 		//注意filter的endpoint可以只过滤,不进行service处理,
 		// gateway_endpoint负责返回GATEWAY,h或者error
 		resp = it.runFilter(filter, ctx, req)
+		data, ok = resp.Data.(map[string]interface{})
+		if ok && data != nil {
+			req.Data = data
+		}
 	}
 	//todo 还需要处理下经过后返回
-	if !ok || resp.Data == "GATEWAY" {
+	if !ok || req.Data["GATEWAY"] == "GATEWAY" {
 		var tag, host string
 		defer it.fireEvent(time.Now(), &key, &tag, &host)
 

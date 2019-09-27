@@ -26,7 +26,7 @@ func (it *JwtEndpoint) Make() endpoint.Endpoint {
 		if token == nil || token == "" {
 			return nil, errors.New(constants.ErrNoToken)
 		}
-		claim, err := jwt.NewToken().VerifyToken(token.(string))
+		claim, err := jwt.New().VerifyToken(token.(string))
 		if err != nil {
 			return nil, err
 		}

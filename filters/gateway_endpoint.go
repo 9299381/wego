@@ -17,10 +17,23 @@ func (it *GateWayEndpoint) Next(next endpoint.Endpoint) contracts.IFilter {
 
 func (it *GateWayEndpoint) Make() endpoint.Endpoint {
 	return func(ctx context.Context, request interface{}) (response interface{}, err error) {
-		//req := request.(contracts.Request)
-		//req.Data["GATEWAY"] = "GATEWAY"
-		//return contracts.ResponseSucess(req.Data), nil
-		return contracts.ResponseSucess("GATEWAY"), nil
-
+		req := request.(contracts.Request)
+		req.Data["GATEWAY"] = "GATEWAY"
+		if it.next == nil {
+			response = contracts.ResponseSucess(req.Data)
+		} else {
+			response, err = it.next(ctx, req)
+			res := response.(contracts.Response)
+			if res.Code == "0000" {
+				m, b := res.Data.(map[string]interface{})
+				if b && m != nil {
+					for k, v := range m {
+						req.Data[k] = v
+					}
+					response = contracts.ResponseSucess(req.Data)
+				}
+			}
+		}
+		return
 	}
 }

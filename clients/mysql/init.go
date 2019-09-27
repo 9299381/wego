@@ -1,4 +1,4 @@
-package mysql_client
+package mysql
 
 import (
 	"github.com/9299381/wego/configs"

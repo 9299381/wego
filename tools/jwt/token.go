@@ -18,7 +18,7 @@ type Token struct {
 	config *configs.TokenConfig
 }
 
-func NewToken() *Token {
+func New() *Token {
 	token := &Token{
 		Claims: &Claims{},
 	}

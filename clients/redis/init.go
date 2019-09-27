@@ -1,4 +1,4 @@
-package redis_client
+package redis
 
 import (
 	"github.com/9299381/wego/configs"
