@@ -15,19 +15,19 @@ IdleTimeout 空闲连接超时时间，
 Wait 这是个很有用的配置。如果超过最大连接，是报错，还是等待
 */
 
-var pool *redis.Pool
+var Pool *redis.Pool
 
 func init() {
 	newRedisPool()
 }
 func Get() redis.Conn {
-	return pool.Get()
+	return Pool.Get()
 }
 
 func newRedisPool() {
 	conf := (&configs.RedisConfig{}).Load()
 	timeout := conf.IdleTimeout
-	pool = &redis.Pool{
+	Pool = &redis.Pool{
 		MaxActive:   conf.MaxActive,
 		MaxIdle:     conf.MaxIdle,
 		IdleTimeout: timeout,

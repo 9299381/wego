@@ -15,6 +15,10 @@ func Redis() redigo.Conn {
 	return redis.Get()
 }
 
+func RedisPool() *redigo.Pool {
+	return redis.Pool
+}
+
 // 为统一php模式而封装
 // micro -> service,  service ->route
 func Micro(micro string) *microService {

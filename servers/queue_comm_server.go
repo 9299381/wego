@@ -1,6 +1,7 @@
 package servers
 
 import (
+	"github.com/9299381/wego/clients"
 	"github.com/9299381/wego/configs"
 	"github.com/9299381/wego/loggers"
 	"github.com/9299381/wego/servers/commons"
@@ -27,6 +28,7 @@ func NewQueueCommServer() *QueueCommServer {
 			Concurrency: config.Concurrency,
 		}),
 	}
+	ss.RedisPool = clients.RedisPool()
 	ss.Logger = loggers.Log
 	return ss
 }

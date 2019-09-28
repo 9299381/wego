@@ -3,6 +3,7 @@ package clients
 import (
 	"context"
 	"encoding/json"
+	"errors"
 	"github.com/9299381/wego/contracts"
 	"github.com/9299381/wego/servers/transports/protobuf"
 	"github.com/9299381/wego/tools/idwork"
@@ -33,7 +34,7 @@ func NewGrpcClient(serviceAddress string, service string, params map[string]inte
 func NewGrpcCall(host, service string, params map[string]interface{}) (ret contracts.Response) {
 	resp, err := NewGrpcClient(host, service, params)
 	if err != nil {
-		ret = contracts.ResponseFailed(err)
+		ret = contracts.ResponseFailed(errors.New("没有响应的服务:" + service))
 	} else {
 		m := make(map[string]interface{})
 		m["call_method"] = "grpc"

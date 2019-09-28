@@ -217,7 +217,7 @@ func (c *Context) getKeyFromMap(keyMap []string, valueMap interface{}) (ret inte
 	return
 }
 func (c *Context) modifyValue(keyMap []string, pos int, value interface{}) {
-	//注意这里的ret为指针,修改其值则c.key中值发生变化
+	//注意这里的ret为指针,修改其值则c.key中值发生变化//todo
 	ret, ok := c.getKeyFromMap(keyMap[:pos], c.Keys).(map[string]interface{})
 	if ok {
 		for v, k := range c.setKeyToMap(keyMap[pos:], value) {

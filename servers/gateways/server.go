@@ -2,6 +2,7 @@ package gateways
 
 import (
 	"context"
+	"errors"
 	"fmt"
 	"github.com/9299381/wego/clients"
 	"github.com/9299381/wego/configs"
@@ -44,12 +45,12 @@ func (it *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	var resp contracts.Response
-	var data map[string]interface{}
 	//通过编解码 进行 路由路由处理
 	ctx := r.Context()
 	req, err := decodeRequest(ctx, r)
 	if err != nil {
 		resp = contracts.ResponseFailed(err)
+		_ = encodeResponse(ctx, w, resp)
 		return
 	}
 	key := req.Method + "_" + r.URL.Path
@@ -59,13 +60,17 @@ func (it *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		//注意filter的endpoint可以只过滤,不进行service处理,
 		// gateway_endpoint负责返回GATEWAY,h或者error
 		resp = it.runFilter(filter, ctx, req)
-		data, ok = resp.Data.(map[string]interface{})
-		if ok && data != nil {
+		data, exist := resp.Data.(map[string]interface{})
+		if exist && data != nil {
 			req.Data = data
 		}
 	}
-	//todo 还需要处理下经过后返回
 	if !ok || req.Data["GATEWAY"] == "GATEWAY" {
+		if req.Service == "" {
+			resp = contracts.ResponseFailed(errors.New("9999:没有响应的服务"))
+			_ = encodeResponse(ctx, w, resp)
+			return
+		}
 		var tag, host string
 		defer it.fireEvent(time.Now(), &key, &tag, &host)
 
@@ -73,9 +78,9 @@ func (it *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		entity, err := clients.GetConsulService(req.Service)
 		if err != nil {
 			resp = contracts.ResponseFailed(err)
+			_ = encodeResponse(ctx, w, resp)
 			return
 		}
-
 		tag = entity.Service.Tags[0]
 		host = fmt.Sprintf("%s:%d", entity.Service.Address, entity.Service.Port)
 		if tag == "http" {
@@ -89,15 +94,13 @@ func (it *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 			gateway.ServeHTTP(w, r)
 			return
 
-		} else if tag == "grpc" {
+		} else if tag == "grpc" && req.Route != "" {
 			resp = clients.NewGrpcCall(host, req.Route, req.Data)
+			_ = encodeResponse(ctx, w, resp)
+			return
 		}
 	}
-	err = encodeResponse(ctx, w, resp)
-	if err != nil {
-		panic(err)
-		return
-	}
+	_ = encodeResponse(ctx, w, resp)
 }
 
 func (it *Server) runFilter(filter endpoint.Endpoint, ctx context.Context, req *contracts.GateWayRequest) contracts.Response {

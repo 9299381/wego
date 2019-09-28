@@ -113,11 +113,7 @@ func parseUrl(r *http.Request) *contracts.GateWayRequest {
 		dest = r.URL.Path
 	} else {
 		service = pathArray[1]
-		route = ""
-		for _, v := range pathArray[2:] {
-			route += v + "."
-		}
-		route = route[:len(route)-1]
+		route = strings.Join(pathArray[2:], ".")
 		dest = "/" + strings.Join(pathArray[2:], "/")
 	}
 	return &contracts.GateWayRequest{
