@@ -22,7 +22,8 @@ func (it *TwoService) Handle(ctx contracts.Context) error {
 	ctx.Response("aa.bb", "aa")
 	ctx.Response("aa.cc", "cc")
 
-	ctx.Response("request.two", ctx.Request())
+	ctx.Response("request", ctx.Request())
+	ctx.Response("request.one", "one")
 
 	ctx.Log.Info(ctx.Request())
 	//if ctx.Request("a").(string) == "a" {

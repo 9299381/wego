@@ -28,7 +28,7 @@ func (it *OneService) Handle(ctx contracts.Context) error {
 	ctx.Log.Info(ctx.GetValue("k"))
 
 	ctx.Response("aa.bb", "cc")
-	ctx.Response("request.one", ctx.Request())
+	ctx.Response("request", ctx.Request())
 
 	return it.next.Handle(ctx)
 }

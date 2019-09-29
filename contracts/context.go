@@ -179,8 +179,7 @@ func (c *Context) setKeyToMap(keyMap []string, value interface{}) (ret map[strin
 	ret = make(map[string]interface{})
 	if len(keyMap) == 1 {
 		ret[keyMap[0]] = value
-
-	} else {
+	} else if len(keyMap) > 1 {
 		ret[keyMap[0]] = c.setKeyToMap(keyMap[1:], value)
 	}
 	return
@@ -190,14 +189,14 @@ func (c *Context) setKeyToMap(keyMap []string, value interface{}) (ret map[strin
 获取有值的位置
 */
 func (c *Context) getPos(keyMap []string) (pos int) {
-	len := len(keyMap)
+	l := len(keyMap)
 	pos = 0
 	//是否有值,如果有值应该叠加上,从最后开始
-	for i := 0; i < len; i++ {
-		newMap := keyMap[:len-i]
+	for i := 0; i < l; i++ {
+		newMap := keyMap[:l-i]
 		old := c.getKeyFromMap(newMap, c.Keys)
 		if old != nil {
-			pos = len - i
+			pos = l - i
 			break
 		}
 	}
@@ -207,23 +206,29 @@ func (c *Context) getPos(keyMap []string) (pos int) {
 func (c *Context) getKeyFromMap(keyMap []string, valueMap interface{}) (ret interface{}) {
 	m, ok := valueMap.(map[string]interface{})
 	if ok {
-		value, _ := m[keyMap[0]]
-		if len(keyMap) == 1 {
-			ret = value
+		if len(keyMap) == 0 {
+			ret = nil
+		} else if len(keyMap) == 1 {
+			ret = m[keyMap[0]]
 		} else {
-			ret = c.getKeyFromMap(keyMap[1:], value)
+			ret = c.getKeyFromMap(keyMap[1:], m[keyMap[0]])
 		}
 	}
 	return
 }
 func (c *Context) modifyValue(keyMap []string, pos int, value interface{}) {
-	//注意这里的ret为指针,修改其值则c.key中值发生变化//todo
+	//在函数调用时，像切片（slice）、字典（map）、
+	// 接口（interface）、通道（channel）这样的引用类型都是默认使用引用传递
+	// （即使没有显式的指出指针）。
 	ret, ok := c.getKeyFromMap(keyMap[:pos], c.Keys).(map[string]interface{})
 	if ok {
 		for v, k := range c.setKeyToMap(keyMap[pos:], value) {
+			//注意这里的ret为指针,修改其值则c.key中值发生变化
 			ret[v] = k
 		}
 	} else {
-		c.modifyValue(keyMap, pos-1, value)
+		if pos > 1 {
+			c.modifyValue(keyMap, pos-1, value)
+		}
 	}
 }
