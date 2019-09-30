@@ -22,7 +22,7 @@ type Server struct {
 
 func NewServer() *Server {
 	ss := &Server{
-		handlers: map[string]endpoint.Endpoint{},
+		handlers: make(map[string]endpoint.Endpoint),
 	}
 	return ss
 }

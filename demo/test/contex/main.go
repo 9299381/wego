@@ -7,7 +7,7 @@ import (
 
 func main() {
 	ctx := &contracts.Context{
-		Keys: map[string]interface{}{},
+		Keys: make(map[string]interface{}),
 	}
 
 	ctx.SetValue("a", "1")

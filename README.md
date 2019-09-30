@@ -49,7 +49,7 @@
     user := model.CommUser{Id: id}
     has, _ := clients.DB().Get(&user)
     //event使用
-	params := map[string]interface{}{}
+	params := make(map[string]interface{})
 	payload := &contracts.Payload{
 		Route:  "two", ->接收处理的handler
 		Params: params,

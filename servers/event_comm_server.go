@@ -2,6 +2,7 @@ package servers
 
 import (
 	"github.com/9299381/wego"
+	"github.com/9299381/wego/configs"
 	"github.com/9299381/wego/loggers"
 	"github.com/9299381/wego/servers/events"
 	"time"
@@ -12,12 +13,13 @@ type EventCommServer struct {
 }
 
 func NewEventCommServer() *EventCommServer {
-	freq := 3 //从config中读取
+	config := (&configs.EventConfig{}).Load()
 	ss := &EventCommServer{
 		Server: events.NewServer(),
 	}
 	ss.Logger = loggers.Log
-	ss.Ticker = time.NewTicker(time.Duration(freq) * time.Second)
+	ss.Concurrency = config.Concurrency
+	ss.After = time.After(time.Duration(config.After) * time.Second)
 	events.Handlers = wego.App.Handlers
 	return ss
 }

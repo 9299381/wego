@@ -24,6 +24,6 @@ func RedisPool() *redigo.Pool {
 func Micro(micro string) *microService {
 	return &microService{
 		micro:  micro,
-		params: map[string]interface{}{},
+		params: make(map[string]interface{}),
 	}
 }

@@ -49,7 +49,7 @@ func (it *CommEndpoint) makeLog(ctx contracts.Context, req contracts.Request) *l
 func (it *CommEndpoint) makeContext(ctx context.Context, req contracts.Request) contracts.Context {
 	cc := contracts.Context{
 		Context: ctx,
-		Keys:    map[string]interface{}{},
+		Keys:    make(map[string]interface{}),
 	}
 	cc.SetValue("request", req.Data)
 	cc.SetValue("request.id", req.Id)

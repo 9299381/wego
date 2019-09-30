@@ -8,8 +8,9 @@ import (
 )
 
 type Server struct {
-	Ticker *time.Ticker
-	Logger contracts.ILogger
+	Concurrency int
+	After       <-chan time.Time
+	Logger      contracts.ILogger
 }
 
 func NewServer() *Server {
@@ -19,36 +20,19 @@ func NewServer() *Server {
 
 func (it *Server) Serve() error {
 	errChan := make(chan error)
-	events := it.getEvent()
-	it.runEvent(events, errChan)
+	for i := 0; i < it.Concurrency; i++ {
+		go it.handleEventReceive(errChan)
+	}
 	err := <-errChan
 	if err != nil {
 		it.Logger.Info(err)
 	}
 	return nil
 }
-
-// 每3秒检查一次任务
-func (it *Server) getEvent() <-chan *contracts.Payload {
-	events := make(chan *contracts.Payload)
-	go func() {
-		for {
-			select {
-			case <-it.Ticker.C:
-				event := Event.Pop()
-				if event != nil {
-					select {
-					case events <- event:
-					}
-				}
-			}
-		}
-	}()
-	return events
-}
-func (it *Server) runEvent(events <-chan *contracts.Payload, errChan chan error) {
-	go func(errChan chan error) {
-		for event := range events {
+func (it *Server) handleEventReceive(errChan chan error) {
+	for {
+		select {
+		case event := <-eventChan:
 			filter, ok := Handlers[event.Route]
 			if ok {
 				ctx := context.Background()
@@ -59,11 +43,16 @@ func (it *Server) runEvent(events <-chan *contracts.Payload, errChan chan error)
 				}
 				resp, err := filter(ctx, request)
 				if err != nil {
-					errChan <- err
+					eventPool.Put(event)
+					it.Logger.Info("event error:", err)
+					//errChan <- err // 退出协程了
 				} else {
-					it.Logger.Info("事件结果:", resp)
+					it.Logger.Info("event response:", resp)
 				}
 			}
+			eventPool.Put(event)
+		case <-it.After:
+			it.Logger.Info("event wait ......")
 		}
-	}(errChan)
+	}
 }

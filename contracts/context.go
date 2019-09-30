@@ -18,7 +18,7 @@ func (c *Context) reset() {
 
 func (c *Context) Copy() *Context {
 	var cp = *c
-	cp.Keys = map[string]interface{}{}
+	cp.Keys = make(map[string]interface{})
 	for k, v := range c.Keys {
 		cp.Keys[k] = v
 	}

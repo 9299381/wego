@@ -2,6 +2,7 @@ package main
 
 import (
 	"github.com/9299381/wego"
+	"github.com/9299381/wego/args"
 	"github.com/9299381/wego/demo/src/provider"
 	"github.com/9299381/wego/demo/src/router"
 	"github.com/9299381/wego/providers"
@@ -11,9 +12,9 @@ import (
 func main() {
 
 	//args.Registy = "127.0.0.1:8500"
-	//args.Server = "http,grpc,event"
-	//args.Name = "consul_demo"
-	//args.Mode = "dev"
+	args.Server = "http,grpc,event"
+	args.Name = "consul_demo"
+	args.Mode = "dev"
 	//服务注册
 	wego.Provider(&providers.ConsulRegistyProvider{})
 

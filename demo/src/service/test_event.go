@@ -17,7 +17,7 @@ func (it *TestEvent) Next(srv contracts.IService) contracts.IService {
 
 func (it *TestEvent) Handle(ctx contracts.Context) error {
 
-	params := map[string]interface{}{}
+	params := make(map[string]interface{})
 	payload := &contracts.Payload{
 		Route:  "two",
 		Params: params,
