@@ -12,7 +12,8 @@ import (
 func main() {
 
 	//args.Registy = "127.0.0.1:8500"
-	args.Server = "http,grpc,event"
+	args.Server = "http,event,subscribe"
+	//args.Server = "subscribe"
 	args.Name = "consul_demo"
 	args.Mode = "dev"
 	//服务注册
@@ -27,6 +28,8 @@ func main() {
 	wego.Router("timer", &router.TimerRouter{})
 	wego.Router("cron", &router.CronRouter{})
 	wego.Router("websocket", &router.WebSocketRouter{})
+
+	wego.Router("subscribe", &router.SubscribeRouter{})
 
 	//内置加载事件服务,无需路由,直接调用 filter handler
 	wego.Router("event", servers.NewEventCommServer())

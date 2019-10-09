@@ -9,18 +9,22 @@ import (
 	"github.com/9299381/wego/tools/idwork"
 )
 
-func CommandDecodeRequest(_ context.Context, req interface{}) (interface{}, error) {
+func MqttSubscribeDecodeRequest(_ context.Context, req interface{}) (interface{}, error) {
 	var mapResult map[string]interface{}
-	err := json.Unmarshal([]byte(req.(string)), &mapResult)
+	err := json.Unmarshal(req.([]byte), &mapResult)
 	if err != nil {
 		return nil, errors.New(constants.ErrJson)
 	}
+	requestId, ok := mapResult["request_id"].(string)
+	if ok == false {
+		requestId = idwork.ID()
+	}
 	return contracts.Request{
-		Id:   idwork.ID(),
+		Id:   requestId,
 		Data: mapResult,
 	}, nil
 }
 
-func CommandEncodeResponse(_ context.Context, rsp interface{}) (interface{}, error) {
+func MqttSubscribeEncodeResponse(_ context.Context, rsp interface{}) (interface{}, error) {
 	return rsp, nil
 }
