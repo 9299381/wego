@@ -26,10 +26,6 @@ func (it *Server) Register(name string, handler *commons.CommHandler) {
 
 func (it *Server) Serve() error {
 	errChans := make(map[string]chan error)
-	//errChans["connectError"] = make(chan error)
-	//if token := mc.Connect(); token.Wait() && token.Error() != nil {
-	//	errChans["connectError"] <- token.Error()
-	//}
 	it.work(errChans)
 	for _, errChan := range errChans {
 		if errChan != nil {
