@@ -15,10 +15,18 @@ func (it *SqlService) Next(srv contracts.IService) contracts.IService {
 	return it
 }
 func (it *SqlService) Handle(ctx contracts.Context) error {
+
 	repo := repository.NewUserRepo(ctx)
-	user := repo.FetchId("1189164474851006208")
-	//初始化状态机
-	sm := fsm.NewUserFSM(ctx, &user)
+	req := make(map[string]interface{})
+	req["id"] = "1189164474851006208"
+	//req["user_name"] = "aaa"
+	user, err := repo.Get(req)
+	if err != nil {
+		return err
+	}
+
+	////初始化状态机
+	sm := fsm.NewUserFSM(ctx, user)
 	ctx.Log.Info(user.Status)
 	//发送状态转换的事件
 	if sm.Can("login") {
@@ -28,7 +36,7 @@ func (it *SqlService) Handle(ctx contracts.Context) error {
 		}
 		user.UserName = "aaaaaaaaa"
 		ctx.Log.Info(user.Status)
-		repo.Update(&user)
+		repo.Update(user)
 	}
 	ctx.Response("user", user)
 	ctx.Response("request", ctx.Request())

@@ -1,9 +1,11 @@
 package repository
 
 import (
+	"errors"
 	"github.com/9299381/wego/clients"
 	"github.com/9299381/wego/contracts"
 	"github.com/9299381/wego/demo/src/model"
+	"xorm.io/builder"
 )
 
 type UserRepo struct {
@@ -14,14 +16,30 @@ func NewUserRepo(ctx contracts.Context) *UserRepo {
 	return &UserRepo{Context: ctx}
 }
 
-func (it *UserRepo) FetchId(id string) model.CommUser {
-	user := model.CommUser{Id: id}
-	has, _ := clients.DB().Get(&user)
-	if has {
-		return user
+func (it *UserRepo) Get(req map[string]interface{}) (ret *model.CommUser, err error) {
+	cond := builder.Eq{}
+	for k, v := range req {
+		cond[k] = v
 	}
-	return model.CommUser{}
+	sql, args, _ := builder.MySQL().
+		Select("id,user_name,status,create_time,update_time").
+		From("comm_user_info").
+		Where(cond).
+		ToSQL()
+
+	ret = &model.CommUser{}
+	has, err := clients.DB().SQL(sql, args...).Get(ret)
+	if err != nil {
+		return
+	}
+	if has {
+		return
+	} else {
+		err = errors.New("用户不存在")
+		return
+	}
 }
+
 func (it *UserRepo) Update(user *model.CommUser) {
 	affected, err := clients.DB().ID(user.Id).Update(user)
 	if err != nil {
@@ -29,5 +47,4 @@ func (it *UserRepo) Update(user *model.CommUser) {
 		return
 	}
 	it.Log.Info(affected)
-
 }

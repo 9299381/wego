@@ -1,5 +1,7 @@
 package errors
 
+import "strings"
+
 func Code(code string, text string) error {
 	return &Error{Code: code, Message: text}
 }
@@ -11,5 +13,5 @@ type Error struct {
 }
 
 func (e *Error) Error() string {
-	return e.Code + "::" + e.Message
+	return strings.Join([]string{e.Code, e.Message}, "::")
 }

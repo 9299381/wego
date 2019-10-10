@@ -1,14 +1,18 @@
 package validations
 
-import "errors"
+import (
+	"errors"
+	"strings"
+)
 
 func Valid(obj interface{}) error {
 	valid := Validation{}
 	b, _ := valid.Valid(obj)
 	if !b {
-		msg := ""
+		var msg string
 		for _, err := range valid.Errors {
-			msg += err.Field + ":" + err.Message + ";"
+			m := strings.Join([]string{err.Field, err.Message}, ":")
+			msg = strings.Join([]string{m, msg}, ";")
 		}
 		return errors.New(msg)
 	}

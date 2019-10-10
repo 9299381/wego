@@ -7,6 +7,7 @@ require (
 	github.com/gomodule/redigo v2.0.0+incompatible
 	github.com/hashicorp/consul/api v1.2.0
 	github.com/looplab/fsm v0.1.0
+	xorm.io/builder v0.3.5
 )
 
 replace github.com/9299381/wego => ../
