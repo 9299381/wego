@@ -10,6 +10,10 @@ type UserRepo struct {
 	contracts.Context
 }
 
+func NewUserRepo(ctx contracts.Context) *UserRepo {
+	return &UserRepo{Context: ctx}
+}
+
 func (it *UserRepo) FetchId(id string) model.CommUser {
 	user := model.CommUser{Id: id}
 	has, _ := clients.DB().Get(&user)
