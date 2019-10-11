@@ -5,6 +5,15 @@ import (
 	"github.com/9299381/wego/contracts"
 )
 
+// 为统一php模式而封装
+// micro -> service,  service ->route
+func Micro(micro string) *microService {
+	return &microService{
+		micro:  micro,
+		params: make(map[string]interface{}),
+	}
+}
+
 type microService struct {
 	micro   string
 	service string

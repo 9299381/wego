@@ -24,7 +24,7 @@ func (l *LocalTime) UnmarshalJSON(b []byte) error {
 }
 
 func (l LocalTime) String() string {
-	return time.Time(l).Format(localDateTimeFormat)
+	return l.format()
 }
 
 func (l LocalTime) Now() LocalTime {
@@ -35,12 +35,16 @@ func (l LocalTime) ParseTime(t time.Time) LocalTime {
 	return LocalTime(t)
 }
 
-func (j LocalTime) format() string {
-	return time.Time(j).Format(localDateTimeFormat)
+func (l LocalTime) format() string {
+	t := time.Time(l)
+	if t.UnixNano() <= 0 {
+		return ""
+	}
+	return t.Format(localDateTimeFormat)
 }
 
-func (j LocalTime) MarshalText() ([]byte, error) {
-	return []byte(j.format()), nil
+func (l LocalTime) MarshalText() ([]byte, error) {
+	return []byte(l.format()), nil
 }
 
 func (l *LocalTime) FromDB(b []byte) error {

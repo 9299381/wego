@@ -6,22 +6,22 @@ import (
 	"github.com/go-xorm/xorm"
 )
 
-var db *xorm.Engine
+var DB *xorm.Engine
 
 func init() {
 	newMySql()
 }
 
-func Get() *xorm.Engine {
-	return db
+func GetDB() *xorm.Engine {
+	return DB
 }
 func newMySql() {
 	conf := (&configs.MySqlConfig{}).Load()
-	db, _ = xorm.NewEngine(
+	DB, _ = xorm.NewEngine(
 		conf.Driver,
 		conf.DataSource,
 	)
-	db.SetMaxIdleConns(conf.MaxIdleConns)
-	db.SetMaxOpenConns(conf.MaxOpenConns)
-	db.ShowSQL(false)
+	DB.SetMaxIdleConns(conf.MaxIdleConns)
+	DB.SetMaxOpenConns(conf.MaxOpenConns)
+	DB.ShowSQL(conf.ShowSQL)
 }

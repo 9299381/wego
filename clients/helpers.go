@@ -8,22 +8,13 @@ import (
 )
 
 func DB() *xorm.Engine {
-	return mysql.Get()
+	return mysql.GetDB()
 }
 
 func Redis() redigo.Conn {
-	return redis.Get()
+	return redis.GetRedis()
 }
 
 func RedisPool() *redigo.Pool {
-	return redis.Pool
-}
-
-// 为统一php模式而封装
-// micro -> service,  service ->route
-func Micro(micro string) *microService {
-	return &microService{
-		micro:  micro,
-		params: make(map[string]interface{}),
-	}
+	return redis.GetRedisPool()
 }

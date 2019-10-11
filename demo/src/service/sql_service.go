@@ -20,7 +20,7 @@ func (it *SqlService) Handle(ctx contracts.Context) error {
 	req := make(map[string]interface{})
 	req["id"] = "1189164474851006208"
 	//req["user_name"] = "aaa"
-	user, err := repo.Get(req)
+	user, err := repo.First(req)
 	if err != nil {
 		return err
 	}

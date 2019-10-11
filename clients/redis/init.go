@@ -20,8 +20,12 @@ var Pool *redis.Pool
 func init() {
 	newRedisPool()
 }
-func Get() redis.Conn {
+func GetRedis() redis.Conn {
 	return Pool.Get()
+}
+
+func GetRedisPool() *redis.Pool {
+	return Pool
 }
 
 func newRedisPool() {

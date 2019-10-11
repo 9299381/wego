@@ -3,12 +3,14 @@ package main
 import (
 	"fmt"
 	"github.com/9299381/wego/clients"
+	"github.com/9299381/wego/clients/mysql"
 	"github.com/9299381/wego/demo/src/model"
+	"github.com/9299381/wego/tools/idwork"
 	"xorm.io/builder"
 )
 
 func main() {
-	page()
+	insert()
 }
 
 func fetchListJoin() {
@@ -30,7 +32,7 @@ func fetchListJoin() {
 		Detail         `xorm:"extends"`
 	}
 	var users []UserDetail
-	results := clients.DB().SQL(sql, args...).Find(&users)
+	results := mysql.DB.SQL(sql, args...).Find(&users)
 	fmt.Println(sql)
 	fmt.Println(args)
 	fmt.Println(results)
@@ -65,7 +67,7 @@ func fetchOneJoin() {
 
 func fetchOne() {
 	req := make(map[string]interface{})
-	req["id"] = "1189164474851006208"
+	req["id"] = "118916447485100620"
 	cond := builder.Eq{}
 	for k, v := range req {
 		cond[k] = v
@@ -78,7 +80,7 @@ func fetchOne() {
 			ToSQL()
 
 	user := &model.CommUser{}
-	has, _ := clients.DB().SQL(sql, args...).Get(user)
+	has, _ := mysql.DB.SQL(sql, args...).Get(user)
 	fmt.Println(sql)
 	fmt.Println(args)
 	fmt.Println(has)
@@ -95,10 +97,10 @@ func fetch() {
 			ToSQL()
 
 	var users []model.CommUser
-	err := clients.DB().
-		SQL(sql, args...).
-		Find(&users)
-
+	err := mysql.Fetch(sql, args, &users)
+	for _, v := range users {
+		fmt.Println(v.Id)
+	}
 	fmt.Println(users)
 	fmt.Println(err)
 }
@@ -125,4 +127,30 @@ func page() {
 
 	fmt.Println(users)
 	fmt.Println(err)
+}
+
+func update() {
+	user := &model.CommUser{Id: "1189164474851006208"}
+	_, _ = mysql.DB.Get(user)
+	fmt.Println(user)
+	user.UserName = "ccc"
+	mysql.Update(user, &model.CommUser{Id: user.Id})
+	fmt.Println(user)
+}
+
+//insert
+func insert() {
+	user := &model.CommUser{
+		Id:        idwork.ID(),
+		UserName:  "go_test",
+		Status:    "30",
+		LoginName: "aaaaa",
+	}
+	mysql.Insert(user)
+
+}
+
+//可以创建表
+func sync2() {
+	_ = mysql.DB.Sync2(new(model.CommUser))
 }
