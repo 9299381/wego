@@ -21,6 +21,7 @@
     7 redis queue
     8 内部event server
     9 gateway server
+    10 mqtt订阅server
 ~~~~
 举例
 ~~~~    

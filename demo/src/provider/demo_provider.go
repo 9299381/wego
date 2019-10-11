@@ -45,5 +45,6 @@ func (it *DemoProvider) Register() {
 	wego.Handler("event", filters.New(services.Chain(&service.TestEvent{})))
 
 	wego.Handler("publish", filters.New(services.Chain(&service.Publish{})))
+	wego.Handler("sleep", filters.New(services.Chain(&service.SleepService{})))
 
 }

@@ -17,5 +17,6 @@ func (it *SubscribeRouter) Register() {
 	//topic -> handler
 	it.Route("sub_test", wego.Handler("two"))
 	it.Route("sub_test2", wego.Handler("two"))
+	it.Route("sub_test3", wego.Handler("sleep"))
 
 }
