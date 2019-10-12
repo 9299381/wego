@@ -10,6 +10,12 @@ import (
 type TwoController struct {
 }
 
+// swagger:route Get /demo/two 分组1 twoController
+// Test swagger
+// This will .......
+//     Responses:
+//       200: twoResponse
+
 func (it *TwoController) Handle(ctx contracts.Context) (interface{}, error) {
 
 	chain := services.Chain(
@@ -28,13 +34,11 @@ func (it *TwoController) Valid(ctx contracts.Context) error {
 	return nil
 }
 
-// swagger:parameters FirstController
+// swagger:parameters twoController
 type TwoRequest struct {
-	Param1 string `json:"param_1"`
-	Param2 int    `json:"param_2"`
 }
 
-// swagger:response FirstController
+// swagger:response twoResponse
 type TwoResponse struct {
 	Id       string `json:"id"`
 	UserName string `json:"user_name"`

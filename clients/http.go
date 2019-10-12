@@ -19,6 +19,7 @@ func NewHttpPostCall(host, service string, params map[string]interface{}) (ret c
 	resp, err := client.PostForm(path, convert.FormEncode(params))
 	if err != nil {
 		ret = contracts.ResponseFailed(err)
+		return
 	}
 	defer resp.Body.Close()
 	body, err := ioutil.ReadAll(resp.Body)

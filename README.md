@@ -1,7 +1,7 @@
 # 功能
 采用go-kit模式封装
 专注编写业务逻辑
-# 流程:
+# 流程  步骤
 ~~~~
     1 编写controller负责, 请求验证,响应,swagger格式,service中间件调用
     2.handler 由 filter(endpoint)和controller组合形成 
@@ -268,6 +268,22 @@ command
 ~~~~
     main -cmd="注册的路由" -args="json参数"
 ~~~~
+request过程
+~~~~
+    request
+    server
+        decode
+        route(handler)
+            endpoint.....
+                controller
+                    service ......
+        encode
+    response
+~~~~
 
+url
+~~~
+    https://goswagger.io
+~~~
 
 

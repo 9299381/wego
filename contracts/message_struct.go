@@ -14,6 +14,13 @@ type Response struct {
 	Message string      `json:"message"`
 }
 
+func MakeResponse(data interface{}, err error) Response {
+	if err != nil {
+		return ResponseFailed(err)
+	} else {
+		return ResponseSucess(data)
+	}
+}
 func ResponseSucess(data interface{}) Response {
 	return Response{
 		Code:    "0000",

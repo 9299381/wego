@@ -34,6 +34,7 @@ func (it *microService) Run() (resp contracts.Response) {
 	entity, err := GetConsulService(it.micro)
 	if err != nil {
 		resp = contracts.ResponseFailed(err)
+		return
 	}
 	tag := entity.Service.Tags[0]
 	host := fmt.Sprintf("%s:%d", entity.Service.Address, entity.Service.Port)

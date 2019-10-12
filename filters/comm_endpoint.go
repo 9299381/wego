@@ -30,16 +30,14 @@ func (it *CommEndpoint) Make() endpoint.Endpoint {
 		err := it.Controller.Valid(cc)
 		if err != nil {
 			cc.Log.Info(err.Error())
-			return contracts.ResponseFailed(err), nil
+			return nil, err
 		}
 		//逻辑处理
 		ret, err := it.Controller.Handle(cc)
 		if err != nil {
 			cc.Log.Info(err.Error())
-			return contracts.ResponseFailed(err), nil
-		} else {
-			return contracts.ResponseSucess(ret), nil
 		}
+		return ret, err
 	}
 }
 
