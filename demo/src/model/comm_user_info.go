@@ -14,5 +14,7 @@ type CommUser struct {
 }
 
 func (it *CommUser) TableName() string {
-	return "comm_user_info_copy1"
+	return "comm_user_info"
+
+	//return "comm_user_info_copy1"
 }

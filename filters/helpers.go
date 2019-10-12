@@ -13,25 +13,25 @@ func Chain(endpoints ...contracts.IFilter) endpoint.Endpoint {
 	return endpoints[0].Make()
 }
 
-func New(service contracts.IService) endpoint.Endpoint {
+func New(controller contracts.IController) endpoint.Endpoint {
 	return Chain(
 		&ResponseEndpoint{},
-		&CommEndpoint{Service: service},
+		&CommEndpoint{Controller: controller},
 	)
 }
 
-func Auth(service contracts.IService) endpoint.Endpoint {
+func Auth(controller contracts.IController) endpoint.Endpoint {
 	return Chain(
 		&ResponseEndpoint{},
 		&JwtEndpoint{},
-		&CommEndpoint{Service: service},
+		&CommEndpoint{Controller: controller},
 	)
 }
 
-func Limit(service contracts.IService) endpoint.Endpoint {
+func Limit(controller contracts.IController) endpoint.Endpoint {
 	return Chain(
 		&ResponseEndpoint{},
 		&LimitEndpoint{},
-		&CommEndpoint{Service: service},
+		&CommEndpoint{Controller: controller},
 	)
 }

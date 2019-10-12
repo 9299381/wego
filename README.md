@@ -3,12 +3,11 @@
 专注编写业务逻辑
 # 流程:
 ~~~~
-    1.编写service中间件
-    2.组合中间件形成service chain
-    3.handler 由 filter(endpoint)和service chain组合形成 
-    4.provider中注册handler
-    5.server的路由中注册各种handler
-    6.支持以下server
+    1 编写controller负责, 请求验证,响应,swagger格式,service中间件调用
+    2.handler 由 filter(endpoint)和controller组合形成 
+    3.provider中注册handler
+    4.server的路由中注册各种handler
+    5.支持以下server
 ~~~~
 内置支持Server
 ~~~~
@@ -134,24 +133,46 @@ main
 ~~~~
 ExamProvider
 ~~~~
-	wego.Handler("one",filters.Limit(
-			services.Chain(
-				&service.OneService{},
-				&service.TwoService{},
-			)),
-		)
-	wego.Handler("auth", filters.Chain(
-		&filters.ResponseEndpoint{},
-		&filters.JwtEndpoint{},
-		&filters.LimitEndpoint{},
-		&filters.CommEndpoint{
-			Service: services.Chain(
-				&service.AuthService{},
-			),},))
-
-	wego.Handler("two",filters.New(services.Chain(&service.TwoService{})))
+	wego.Handler("one", filters.Limit(&controller.OneController{}))
+	wego.Handler("two", filters.New(&controller.TwoController{}))
 
 ~~~~
+
+OneController 请求,响应,swagger,调用service中间件chain
+~~~~
+
+type OneController struct {
+}
+
+//swagger:route GET .....
+func (it *OneController) Handle(ctx contracts.Context) (interface{}, error) {
+    
+	chain := services.Chain(
+		&service.OneService{},
+		&service.TwoService{},
+	)
+	_ = chain.Handle(ctx)
+
+	ret := &FirstResp{
+		Id:       idwork.ID(),
+		UserName: ctx.GetValue("k.a").(string),
+	}
+	return ret, nil
+}
+
+// swagger:parameters .....
+type FirstRequest struct {
+	Param1 string `json:"param_1"`
+	Param2 int    `json:"param_2"`
+}
+
+// swagger:response .....
+type FirstResp struct {
+	Id       string `json:"id"`
+	UserName string `json:"user_name"`
+}
+~~~~
+
 HttpRouter
 ~~~~
 	it.Get("/exam/one", wego.Handler("one"))
@@ -167,6 +188,7 @@ GrpcRouter
 ~~~~
 	it.Route("Two", wego.Handler("two"))
 ~~~~
+
 
 
 RedisService
@@ -193,8 +215,7 @@ SqlService
 func (it *SqlService)Handle(ctx contracts.Context) error  {
 	repo := &repository2.UserRepo{Context: ctx}
 	user := repo.FetchId("1189164474851006208")
-	ctx.Response("user",user)
-	ctx.Response("request",ctx.GetValue("request"))
+	ctx.SetValue("user",user)
 	return it.next.Handle(ctx)
 }
 ~~~~

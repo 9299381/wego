@@ -18,7 +18,7 @@ func (it *TwoService) Next(srv contracts.IService) contracts.IService {
 
 func (it *TwoService) Handle(ctx contracts.Context) error {
 
-	ctx.Response("one", "tow")
+	ctx.SetValue("one", "tow")
 	ctx.Response("aa.bb", "aa")
 	ctx.Response("aa.cc", "cc")
 

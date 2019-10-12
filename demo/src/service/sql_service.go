@@ -21,6 +21,7 @@ func (it *SqlService) Handle(ctx contracts.Context) error {
 	req["id"] = "1189164474851006208"
 	//req["user_name"] = "aaa"
 	user, err := repo.First(req)
+	ctx.Log.Info(user)
 	if err != nil {
 		return err
 	}
@@ -38,8 +39,7 @@ func (it *SqlService) Handle(ctx contracts.Context) error {
 		ctx.Log.Info(user.Status)
 		repo.Update(user)
 	}
-	ctx.Response("user", user)
-	ctx.Response("request", ctx.Request())
+	ctx.SetValue("user", user)
 
 	return it.next.Handle(ctx)
 }

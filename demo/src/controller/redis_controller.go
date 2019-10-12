@@ -1,4 +1,4 @@
-package service
+package controller
 
 import (
 	"github.com/9299381/wego/clients"
@@ -6,15 +6,11 @@ import (
 	"github.com/gomodule/redigo/redis"
 )
 
-type RedisService struct {
-	next contracts.IService
+type RedisController struct {
 }
 
-func (it *RedisService) Next(srv contracts.IService) contracts.IService {
-	it.next = srv
-	return it
-}
-func (it *RedisService) Handle(ctx contracts.Context) error {
+func (it *RedisController) Handle(ctx contracts.Context) (interface{}, error) {
+
 	client := clients.Redis() //从pool中获取一个链接
 	defer client.Close()      //延时释放链接,本方法执行完毕时释放
 	_, _ = client.Do("SET", "go_key", "value")
@@ -28,5 +24,9 @@ func (it *RedisService) Handle(ctx contracts.Context) error {
 
 	}
 	ctx.Log.Info("redis-go_key 的值:", res)
-	return it.next.Handle(ctx)
+
+	return nil, nil
+}
+func (it *RedisController) Valid(ctx contracts.Context) error {
+	return nil
 }

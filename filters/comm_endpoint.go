@@ -9,8 +9,8 @@ import (
 )
 
 type CommEndpoint struct {
-	Service contracts.IService
-	next    endpoint.Endpoint
+	Controller contracts.IController
+	next       endpoint.Endpoint
 }
 
 func (it *CommEndpoint) Next(next endpoint.Endpoint) contracts.IFilter {
@@ -19,16 +19,26 @@ func (it *CommEndpoint) Next(next endpoint.Endpoint) contracts.IFilter {
 }
 
 func (it *CommEndpoint) Make() endpoint.Endpoint {
-	return func(ctx context.Context, request interface{}) (response interface{}, err error) {
+	return func(ctx context.Context, request interface{}) (interface{}, error) {
+		//生成请求参数
 		req := request.(contracts.Request)
+		//生成context上下文
 		cc := it.makeContext(ctx, req)
+		//成成线程log,统一处理ip,request_id等
 		cc.Log = it.makeLog(cc, req)
-		err = it.Service.Handle(cc)
+		//参数验证
+		err := it.Controller.Valid(cc)
+		if err != nil {
+			cc.Log.Info(err.Error())
+			return contracts.ResponseFailed(err), nil
+		}
+		//逻辑处理
+		ret, err := it.Controller.Handle(cc)
 		if err != nil {
 			cc.Log.Info(err.Error())
 			return contracts.ResponseFailed(err), nil
 		} else {
-			return contracts.ResponseSucess(cc.GetValue("response")), nil
+			return contracts.ResponseSucess(ret), nil
 		}
 	}
 }

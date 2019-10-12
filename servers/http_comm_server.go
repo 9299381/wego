@@ -55,5 +55,6 @@ func (it *HttpCommServer) Start() error {
 	address := config.HttpHost + ":" + config.HttpPort
 	it.Logger.Info("Http Server Start ", address)
 	handler := it.Router
+
 	return http.ListenAndServe(address, handler)
 }

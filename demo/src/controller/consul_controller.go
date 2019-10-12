@@ -1,4 +1,4 @@
-package service
+package controller
 
 import (
 	"github.com/9299381/wego/args"
@@ -6,16 +6,10 @@ import (
 	"github.com/9299381/wego/contracts"
 )
 
-type ConsulService struct {
-	next contracts.IService
+type ConsulController struct {
 }
 
-func (it *ConsulService) Next(srv contracts.IService) contracts.IService {
-	it.next = srv
-	return it
-}
-
-func (it *ConsulService) Handle(ctx contracts.Context) error {
+func (it *ConsulController) Handle(ctx contracts.Context) (interface{}, error) {
 
 	entity, _ := clients.GetConsulService(args.Name)
 	ctx.Log.Info(entity.Service.Service)
@@ -24,6 +18,9 @@ func (it *ConsulService) Handle(ctx contracts.Context) error {
 	tag := entity.Service.Tags[0]
 	ctx.Log.Info(tag)
 
-	return it.next.Handle(ctx)
+	return nil, nil
+}
 
+func (it *ConsulController) Valid(ctx contracts.Context) error {
+	return nil
 }
