@@ -2,6 +2,7 @@ package servers
 
 import (
 	"context"
+	"github.com/9299381/wego"
 	"github.com/9299381/wego/configs"
 	"github.com/9299381/wego/contracts"
 	"github.com/9299381/wego/loggers"
@@ -23,7 +24,7 @@ func NewGrpcCommServer() *GrpcCommServer {
 	ss := &GrpcCommServer{
 		Server: grpc.NewServer(),
 	}
-	ss.Logger = loggers.Log
+	ss.Logger = loggers.GetLog()
 	return ss
 }
 func (it *GrpcCommServer) Route(name string, endpoint endpoint.Endpoint) {
@@ -87,6 +88,13 @@ func (it *GrpcCommServer) serviceHandleHandler(srv interface{}, ctx context.Cont
 		return srv.(protobuf.ServiceServer).Handle(ctx, req.(*protobuf.Request))
 	}
 	return interceptor(ctx, in, info, handler)
+}
+
+func (it *GrpcCommServer) Close() {
+	v, ok := wego.App.Consul["grpc"]
+	if ok {
+		v.Deregister()
+	}
 }
 
 type grpcService struct {

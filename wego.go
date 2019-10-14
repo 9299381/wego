@@ -59,7 +59,6 @@ func Router(name string, server contracts.IRouter) {
 
 //启动server
 func Start() {
-
 	servers := strings.Split(args.Server, ",")
 	routers := make(map[string]contracts.IRouter)
 
@@ -81,11 +80,11 @@ func Start() {
 		}(errChans[key])
 	}
 	for _, errChan := range errChans {
-		loggers.Log.Info(<-errChan)
+		loggers.GetLog().Info(<-errChan)
 	}
-
-	for _, v := range App.Consul {
-		v.Deregister()
+	//关闭各种路由服务
+	for _, server := range routers {
+		server.Close()
 	}
 
 }

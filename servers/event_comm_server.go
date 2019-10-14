@@ -17,7 +17,7 @@ func NewEventCommServer() *EventCommServer {
 	ss := &EventCommServer{
 		Server: events.NewServer(),
 	}
-	ss.Logger = loggers.Log
+	ss.Logger = loggers.GetLog()
 	ss.Concurrency = config.Concurrency
 	ss.After = time.After(time.Duration(config.After) * time.Second)
 	events.Handlers = wego.App.Handlers
@@ -40,4 +40,7 @@ func (it *EventCommServer) Route() {
 
 func (it *EventCommServer) Start() error {
 	return it.Serve()
+}
+func (it *EventCommServer) Close() {
+	it.Server.Close()
 }

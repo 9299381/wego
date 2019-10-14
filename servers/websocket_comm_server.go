@@ -17,7 +17,7 @@ func NewWebSocketCommServer() *WebSocketCommServer {
 	ss := &WebSocketCommServer{
 		Server: websockets.NewServer(),
 	}
-	ss.Logger = loggers.Log
+	ss.Logger = loggers.GetLog()
 	return ss
 }
 
@@ -35,4 +35,7 @@ func (it *WebSocketCommServer) Load() {
 
 func (it *WebSocketCommServer) Start() error {
 	return it.Serve()
+}
+func (it *WebSocketCommServer) Close() {
+	it.Server.Close()
 }

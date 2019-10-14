@@ -1,8 +1,10 @@
 package redis
 
 import (
+	"fmt"
 	"github.com/9299381/wego/configs"
 	"github.com/gomodule/redigo/redis"
+	"sync"
 	"time"
 )
 
@@ -15,23 +17,20 @@ IdleTimeout 空闲连接超时时间，
 Wait 这是个很有用的配置。如果超过最大连接，是报错，还是等待
 */
 
-var Pool *redis.Pool
-
-func init() {
-	newRedisPool()
-}
-func GetRedis() redis.Conn {
-	return Pool.Get()
-}
+var pool *redis.Pool
+var once sync.Once
 
 func GetRedisPool() *redis.Pool {
-	return Pool
+	once.Do(func() {
+		pool = newRedisPool()
+	})
+	return pool
 }
 
-func newRedisPool() {
+func newRedisPool() *redis.Pool {
 	conf := (&configs.RedisConfig{}).Load()
 	timeout := conf.IdleTimeout
-	Pool = &redis.Pool{
+	pool = &redis.Pool{
 		MaxActive:   conf.MaxActive,
 		MaxIdle:     conf.MaxIdle,
 		IdleTimeout: timeout,
@@ -47,8 +46,7 @@ func newRedisPool() {
 				redis.DialWriteTimeout(timeout),
 			)
 			if err != nil {
-				panic(err)
-				return nil, nil
+				return nil, fmt.Errorf("redis connection error: %s", err)
 			}
 			return
 		},
@@ -57,5 +55,7 @@ func newRedisPool() {
 			return err
 		},
 	}
+
+	return pool
 
 }

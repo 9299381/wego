@@ -24,7 +24,7 @@ func (it *ResponseEndpoint) Make() endpoint.Endpoint {
 		//全局扑捉错误
 		defer func() {
 			if err := recover(); err != nil {
-				loggers.Log.Info(err)
+				loggers.GetLog().Info(err)
 				response = contracts.MakeResponse(nil, err.(error))
 			}
 		}()

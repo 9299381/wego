@@ -5,4 +5,5 @@ type IRouter interface {
 	Load()
 	Register()
 	Start() error
+	Close()
 }

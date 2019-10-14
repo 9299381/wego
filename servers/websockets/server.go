@@ -94,3 +94,7 @@ func (it *Server) faild(message string) []byte {
 	ret, _ := json.Marshal(response)
 	return ret
 }
+
+func (it *Server) Close() {
+
+}

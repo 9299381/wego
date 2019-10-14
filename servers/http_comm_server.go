@@ -2,6 +2,7 @@ package servers
 
 import (
 	"context"
+	"github.com/9299381/wego"
 	"github.com/9299381/wego/args"
 	"github.com/9299381/wego/configs"
 	"github.com/9299381/wego/contracts"
@@ -24,7 +25,7 @@ func NewHttpCommServer() *HttpCommServer {
 	ss := &HttpCommServer{
 		Router: mux.NewRouter(),
 	}
-	ss.Logger = loggers.Log
+	ss.Logger = loggers.GetLog()
 	return ss
 }
 
@@ -84,5 +85,12 @@ func (it *HttpCommServer) buildSwagger() http.HandlerFunc {
 		err := cmd.Run()
 		response := contracts.MakeResponse("ok", err)
 		_ = codecs.HttpEncodeResponse(context.Background(), w, response)
+	}
+}
+
+func (it *HttpCommServer) Close() {
+	v, ok := wego.App.Consul["http"]
+	if ok {
+		v.Deregister()
 	}
 }

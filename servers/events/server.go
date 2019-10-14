@@ -4,8 +4,18 @@ import (
 	"context"
 	"github.com/9299381/wego/contracts"
 	"github.com/9299381/wego/tools/idwork"
+	"github.com/go-kit/kit/endpoint"
+	"runtime"
+	"sync"
 	"time"
 )
+
+/**
+通过channel方式传递event,而不是通过共享内存传递
+*/
+var Handlers map[string]endpoint.Endpoint
+var eventPool sync.Pool
+var eventChan chan *contracts.Payload
 
 type Server struct {
 	Concurrency int
@@ -14,6 +24,8 @@ type Server struct {
 }
 
 func NewServer() *Server {
+	Handlers = make(map[string]endpoint.Endpoint)
+	eventChan = make(chan *contracts.Payload, runtime.NumCPU())
 	ss := &Server{}
 	return ss
 }
@@ -55,4 +67,7 @@ func (it *Server) handleEventReceive(errChan chan error) {
 			it.Logger.Info("event wait ......")
 		}
 	}
+}
+func (it *Server) Close() {
+
 }

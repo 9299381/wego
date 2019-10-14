@@ -29,7 +29,7 @@ func NewQueueCommServer() *QueueCommServer {
 		}),
 	}
 	ss.RedisPool = clients.RedisPool()
-	ss.Logger = loggers.Log
+	ss.Logger = loggers.GetLog()
 	return ss
 }
 
@@ -49,4 +49,7 @@ func (it *QueueCommServer) Load() {
 func (it *QueueCommServer) Start() error {
 	return it.Serve()
 
+}
+func (it *QueueCommServer) Close() {
+	it.Server.Close()
 }

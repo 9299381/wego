@@ -15,7 +15,7 @@ func NewGateWayCommServer() *GateWayCommServer {
 	ss := &GateWayCommServer{
 		Server: gateways.NewServer(),
 	}
-	ss.Logger = loggers.Log
+	ss.Logger = loggers.GetLog()
 	return ss
 }
 
@@ -34,4 +34,7 @@ func (it *GateWayCommServer) Load() {
 
 func (it *GateWayCommServer) Start() error {
 	return it.Serve()
+}
+func (it *GateWayCommServer) Close() {
+	it.Server.Close()
 }

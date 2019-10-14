@@ -16,7 +16,7 @@ func NewCommandCommServer() *CommandCommServer {
 	ss := &CommandCommServer{
 		Server: commands.NewServer(),
 	}
-	ss.Logger = loggers.Log
+	ss.Logger = loggers.GetLog()
 	return ss
 }
 
@@ -36,4 +36,7 @@ func (it *CommandCommServer) Load() {
 func (it *CommandCommServer) Start() error {
 	return it.Serve()
 
+}
+func (it *CommandCommServer) Close() {
+	it.Server.Close()
 }

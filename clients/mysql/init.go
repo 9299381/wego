@@ -4,24 +4,26 @@ import (
 	"github.com/9299381/wego/configs"
 	_ "github.com/go-sql-driver/mysql"
 	"github.com/go-xorm/xorm"
+	"sync"
 )
 
-var DB *xorm.Engine
-
-func init() {
-	newMySql()
-}
+var db *xorm.Engine
+var once sync.Once
 
 func GetDB() *xorm.Engine {
-	return DB
+	once.Do(func() {
+		db = newMySql()
+	})
+	return db
 }
-func newMySql() {
+func newMySql() *xorm.Engine {
 	conf := (&configs.MySqlConfig{}).Load()
-	DB, _ = xorm.NewEngine(
+	db, _ = xorm.NewEngine(
 		conf.Driver,
 		conf.DataSource,
 	)
-	DB.SetMaxIdleConns(conf.MaxIdleConns)
-	DB.SetMaxOpenConns(conf.MaxOpenConns)
-	DB.ShowSQL(conf.ShowSQL)
+	db.SetMaxIdleConns(conf.MaxIdleConns)
+	db.SetMaxOpenConns(conf.MaxOpenConns)
+	db.ShowSQL(conf.ShowSQL)
+	return db
 }

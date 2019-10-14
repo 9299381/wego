@@ -16,7 +16,7 @@ func NewMqttSubscribeCommCommServer() *MqttSubscribeCommCommServer {
 	ss := &MqttSubscribeCommCommServer{
 		Server: mqtts.NewServer(),
 	}
-	ss.Logger = loggers.Log
+	ss.Logger = loggers.GetLog()
 	return ss
 }
 
@@ -36,4 +36,8 @@ func (it *MqttSubscribeCommCommServer) Load() {
 func (it *MqttSubscribeCommCommServer) Start() error {
 	return it.Serve()
 
+}
+
+func (it *MqttSubscribeCommCommServer) Close() {
+	it.Server.Close()
 }

@@ -12,7 +12,7 @@ func DB() *xorm.Engine {
 }
 
 func Redis() redigo.Conn {
-	return redis.GetRedis()
+	return redis.GetRedisPool().Get()
 }
 
 func RedisPool() *redigo.Pool {

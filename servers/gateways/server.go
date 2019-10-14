@@ -127,3 +127,6 @@ func (it *Server) fireEvent(begin time.Time, key, tag, host *string) {
 	}
 	events.Fire(payload)
 }
+func (it *Server) Close() {
+
+}

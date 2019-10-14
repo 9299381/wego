@@ -47,7 +47,7 @@ func (it *CommEndpoint) makeLog(ctx contracts.Context, req contracts.Request) *l
 	if ip == nil {
 		ip = "LAN"
 	}
-	entity := loggers.Log.WithFields(logrus.Fields{
+	entity := loggers.GetLog().WithFields(logrus.Fields{
 		"request_id": req.Id,
 		"client_ip":  ip,
 	})

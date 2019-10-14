@@ -19,7 +19,7 @@ func NewTimerCommServer() *TimerCommServer {
 	ss := &TimerCommServer{
 		Server: timers.NewServer(),
 	}
-	ss.Logger = loggers.Log
+	ss.Logger = loggers.GetLog()
 	return ss
 }
 
@@ -38,4 +38,7 @@ func (it *TimerCommServer) Route(name string, freq int, endpoint endpoint.Endpoi
 
 func (it *TimerCommServer) Start() error {
 	return it.Serve()
+}
+func (it *TimerCommServer) Close() {
+	it.Server.Close()
 }

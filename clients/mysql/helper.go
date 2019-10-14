@@ -6,7 +6,7 @@ import (
 )
 
 func First(query interface{}, args []interface{}, bean interface{}) error {
-	has, err := DB.SQL(query, args...).Get(bean)
+	has, err := GetDB().SQL(query, args...).Get(bean)
 	if err != nil {
 		return err
 	}
@@ -17,11 +17,11 @@ func First(query interface{}, args []interface{}, bean interface{}) error {
 }
 
 func Fetch(query interface{}, args []interface{}, bean interface{}) error {
-	return DB.SQL(query, args...).Find(bean)
+	return GetDB().SQL(query, args...).Find(bean)
 }
 
 func Insert(bean interface{}) bool {
-	affected, _ := DB.Insert(bean)
+	affected, _ := GetDB().Insert(bean)
 	if affected == 1 {
 		return true
 	}
@@ -29,7 +29,7 @@ func Insert(bean interface{}) bool {
 }
 
 func Update(bean interface{}, cond interface{}) bool {
-	affected, _ := DB.Update(bean, cond)
+	affected, _ := GetDB().Update(bean, cond)
 	if affected == 1 {
 		return true
 	}

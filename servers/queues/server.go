@@ -160,3 +160,7 @@ func (it *Server) getJob(conn redis.Conn) (*Job, error) {
 	}
 	return nil, nil
 }
+
+func (it *Server) Close() {
+
+}

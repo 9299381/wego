@@ -65,3 +65,7 @@ func (it *Server) Serve() error {
 	}
 	return nil
 }
+
+func (it *Server) Close() {
+
+}

@@ -1,6 +1,7 @@
 package configs
 
 import (
+	"errors"
 	"github.com/9299381/wego/args"
 	"github.com/9299381/wego/tools/readers"
 	"strings"
@@ -14,6 +15,8 @@ func init() {
 		environment = readFromEnv(m[0])
 	} else if m[0] == "registy" {
 		environment = readFromConsul(args.Registy)
+	} else {
+		panic(errors.New("请配置环境变量"))
 	}
 }
 func readFromEnv(filepath string) map[string]string {

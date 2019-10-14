@@ -26,3 +26,6 @@ func (it *Server) Serve() error {
 	it.Server.Start()
 	select {}
 }
+func (it *Server) Close() {
+
+}

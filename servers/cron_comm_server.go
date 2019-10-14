@@ -54,3 +54,6 @@ func (it *CronCommServer) Start() error {
 
 	return it.Serve()
 }
+func (it *CronCommServer) Close() {
+	it.Server.Close()
+}
