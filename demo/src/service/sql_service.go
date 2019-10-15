@@ -7,13 +7,8 @@ import (
 )
 
 type SqlService struct {
-	next contracts.IService
 }
 
-func (it *SqlService) Next(srv contracts.IService) contracts.IService {
-	it.next = srv
-	return it
-}
 func (it *SqlService) Handle(ctx contracts.Context) error {
 
 	repo := repository.NewUserRepo(ctx)
@@ -41,5 +36,5 @@ func (it *SqlService) Handle(ctx contracts.Context) error {
 	}
 	ctx.SetValue("user", user)
 
-	return it.next.Handle(ctx)
+	return nil
 }

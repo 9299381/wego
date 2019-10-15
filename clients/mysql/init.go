@@ -18,12 +18,12 @@ func GetDB() *xorm.Engine {
 }
 func newMySql() *xorm.Engine {
 	conf := (&configs.MySqlConfig{}).Load()
-	db, _ = xorm.NewEngine(
+	engine, _ := xorm.NewEngine(
 		conf.Driver,
 		conf.DataSource,
 	)
-	db.SetMaxIdleConns(conf.MaxIdleConns)
-	db.SetMaxOpenConns(conf.MaxOpenConns)
-	db.ShowSQL(conf.ShowSQL)
-	return db
+	engine.SetMaxIdleConns(conf.MaxIdleConns)
+	engine.SetMaxOpenConns(conf.MaxOpenConns)
+	engine.ShowSQL(conf.ShowSQL)
+	return engine
 }

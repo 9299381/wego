@@ -1,11 +1,12 @@
-package main
+package token
 
 import (
 	"fmt"
 	"github.com/9299381/wego/tools/jwt"
+	"testing"
 )
 
-func main() {
+func TestToken(t *testing.T) {
 	token := jwt.New().
 		SetId("123").
 		SetName("abc").

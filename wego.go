@@ -16,6 +16,7 @@ import (
 type Application struct {
 	Status bool
 	//必须初始化
+	Service  map[string]contracts.IService
 	Consul   map[string]*consul.Registrar
 	Handlers map[string]endpoint.Endpoint
 	Routers  map[string]contracts.IRouter
@@ -27,6 +28,7 @@ var App *Application
 func init() {
 	App = &Application{
 		Status:   true,
+		Service:  make(map[string]contracts.IService),
 		Consul:   make(map[string]*consul.Registrar),
 		Handlers: make(map[string]endpoint.Endpoint),
 		Routers:  make(map[string]contracts.IRouter),
@@ -46,6 +48,18 @@ func Handler(name string, endpoint ...endpoint.Endpoint) endpoint.Endpoint {
 		}
 	} else {
 		App.Handlers[name] = endpoint[0]
+	}
+	return nil
+}
+
+func Service(name string, service ...contracts.IService) contracts.IService {
+	if service == nil {
+		ret, exist := App.Service[name]
+		if exist {
+			return ret
+		}
+	} else {
+		App.Service[name] = service[0]
 	}
 	return nil
 }

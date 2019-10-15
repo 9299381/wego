@@ -17,12 +17,9 @@ type TwoController struct {
 //       200: twoResponse
 
 func (it *TwoController) Handle(ctx contracts.Context) (interface{}, error) {
-
-	chain := services.Chain(
-		&service.TwoService{},
-	)
-	_ = chain.Handle(ctx)
-
+	_ = services.New().
+		Middle(&service.TwoService{}).
+		Line(ctx)
 	ret := &TwoResponse{
 		Id:       idwork.ID(),
 		UserName: ctx.GetValue("one").(string),

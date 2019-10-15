@@ -38,9 +38,6 @@
 	ctx.Log.Infof(format,arg...)
 	//请求参数
 	ctx.Request("claim.Id")
-	//返回值
-	ctx.Response("aa.bb", "cc")
-	ctx.Response("aa.cc", "dd")
 	//redis使用
     client := clients.Redis() //从pool中获取一个链接
     defer client.Close()      //延时释放链接,本方法执行完毕时释放
@@ -207,7 +204,7 @@ func (it *RedisService)Handle(ctx contracts.Context) error  {
 
 	}
 	ctx.Log.Info("redis-go_key 的值:", res)
-	return it.next.Handle(ctx)
+	return nil
 }
 ~~~~
 SqlService
@@ -216,7 +213,7 @@ func (it *SqlService)Handle(ctx contracts.Context) error  {
 	repo := &repository2.UserRepo{Context: ctx}
 	user := repo.FetchId("1189164474851006208")
 	ctx.SetValue("user",user)
-	return it.next.Handle(ctx)
+	return nil
 }
 ~~~~
 struct validations 由 beego的validations 修改而来
@@ -276,7 +273,7 @@ request过程
         route(handler)
             endpoint.....
                 controller
-                    service ......
+                    service ......(并行,串行运行)
         encode
     response
 ~~~~

@@ -1,10 +1,8 @@
 package tools
 
 import (
-	"log"
+	"github.com/9299381/wego/tools/tests"
 	"net"
-	"os"
-	"strings"
 )
 
 func LocalIp() (string, error) {
@@ -29,10 +27,6 @@ func LocalIp() (string, error) {
 
 }
 
-func GetCurrentPath() string {
-	dir, err := os.Getwd()
-	if err != nil {
-		log.Fatal(err)
-	}
-	return strings.Replace(dir, "\\", "/", -1)
+func Test() *tests.TestStruct {
+	return tests.NewTest()
 }

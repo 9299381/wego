@@ -4,6 +4,7 @@ const Err string = "9999::错误"
 const ErrStop string = "9990::暂停服务"
 const ErrMQTTConnect string = "9991::MQTT链接失败"
 const ErrCacheInit string = "9992::Cache初始化错误"
+const ErrLoadEnv string = "9993::ENV环境加载失败"
 
 const ErrExsit string = "9000::数据不存在"
 

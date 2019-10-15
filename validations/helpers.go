@@ -6,6 +6,7 @@ import (
 )
 
 func Valid(obj interface{}) error {
+	//如何验证嵌套的问题
 	valid := Validation{}
 	b, _ := valid.Valid(obj)
 	if !b {

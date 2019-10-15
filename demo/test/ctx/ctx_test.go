@@ -1,11 +1,12 @@
-package main
+package ctx
 
 import (
 	"fmt"
 	"github.com/9299381/wego/contracts"
+	"testing"
 )
 
-func main() {
+func TestContext(t *testing.T) {
 	ctx := &contracts.Context{
 		Keys: make(map[string]interface{}),
 	}

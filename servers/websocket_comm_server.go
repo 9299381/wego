@@ -8,6 +8,7 @@ import (
 	"github.com/go-kit/kit/endpoint"
 )
 
+//websocket 服务器尽量采用 emqx mqtt broker
 type WebSocketCommServer struct {
 	*websockets.Server
 }

@@ -38,6 +38,21 @@ func newLogrus() *logrus.Logger {
 }
 
 func getLogHook() *lfshook.LfsHook {
+	logWriter, _ := getLogWriter()
+	writeMap := lfshook.WriterMap{
+		logrus.InfoLevel:  logWriter,
+		logrus.FatalLevel: logWriter,
+		logrus.DebugLevel: logWriter,
+		logrus.WarnLevel:  logWriter,
+		logrus.ErrorLevel: logWriter,
+		logrus.PanicLevel: logWriter,
+	}
+	return lfshook.NewHook(writeMap, &logrus.JSONFormatter{
+		TimestampFormat: constants.YmdHis,
+	})
+}
+
+func getLogWriter() (*rotatelogs.RotateLogs, error) {
 	config := (&configs.LogConfig{}).Load()
 	logFilePath := config.LogFilePath
 	logFileName := config.LogFileName
@@ -56,23 +71,13 @@ func getLogHook() *lfshook.LfsHook {
 
 	//日志文件
 	fileName := path.Join(logFilePath, logFileName)
-	logWriter, _ := rotatelogs.New(
+	logWriter, err := rotatelogs.New(
 		fileName+".%Y%m%d.log",
 		rotatelogs.WithLinkName(fileName),         // 生成软链，指向最新日志文件
 		rotatelogs.WithMaxAge(7*24*time.Hour),     // 文件最大保存时间
 		rotatelogs.WithRotationTime(24*time.Hour), // 日志切割时间间隔
 	)
-	writeMap := lfshook.WriterMap{
-		logrus.InfoLevel:  logWriter,
-		logrus.FatalLevel: logWriter,
-		logrus.DebugLevel: logWriter,
-		logrus.WarnLevel:  logWriter,
-		logrus.ErrorLevel: logWriter,
-		logrus.PanicLevel: logWriter,
-	}
-	return lfshook.NewHook(writeMap, &logrus.JSONFormatter{
-		TimestampFormat: constants.YmdHis,
-	})
+	return logWriter, err
 }
 
 func pathExists(path string) (bool, error) {

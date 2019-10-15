@@ -1,11 +1,13 @@
-package main
+package mqtt
 
 import (
 	"fmt"
 	"github.com/9299381/wego/servers/mqtts"
+	"testing"
 )
 
-func main() {
+func TestMqtt(t *testing.T) {
+
 	m := make(map[string]interface{})
 	m["pub"] = "pub"
 	m["sub"] = "sub"

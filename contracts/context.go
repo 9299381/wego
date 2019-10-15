@@ -167,10 +167,6 @@ func (c *Context) Request(key ...string) (ret interface{}) {
 	}
 	return c.GetValue(k)
 }
-func (c *Context) Response(key string, value interface{}) {
-	k := "response." + key
-	c.SetValue(k, value)
-}
 
 //------私有
 

@@ -14,8 +14,8 @@ func main() {
 	//args.Registy = "127.0.0.1:8500"
 	//args.Server = "http"
 
-	args.Server = "http,event,subscribe"
-	//args.Server = "subscribe"
+	//args.Server = "http,event,subscribe"
+	args.Server = "subscribe"
 	args.Name = "consul_demo"
 	args.Mode = "dev"
 	//服务注册

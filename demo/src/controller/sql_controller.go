@@ -10,12 +10,7 @@ type SqlController struct {
 }
 
 func (it *SqlController) Handle(ctx contracts.Context) (interface{}, error) {
-
-	chain := services.Chain(
-		&service.SqlService{},
-	)
-	_ = chain.Handle(ctx)
-
+	_ = services.New().Middle(&service.SqlService{}).Line(ctx)
 	ret := ctx.GetValue("user")
 	return ret, nil
 

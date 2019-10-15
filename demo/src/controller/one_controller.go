@@ -17,10 +17,10 @@ func (it *OneController) Handle(ctx contracts.Context) (interface{}, error) {
 	// This will .......
 	//     Responses:
 	//       200: oneResponse
-	err := services.Chain(
-		&service.OneService{},
-		&service.TwoService{},
-	).Handle(ctx)
+	err := services.New().
+		Middle(&service.OneService{}).
+		Middle(&service.TwoService{}).
+		Line(ctx)
 	if err != nil {
 		return nil, err
 	}
