@@ -20,7 +20,6 @@ func (it *ConsulController) Handle(ctx contracts.Context) (interface{}, error) {
 
 	return nil, nil
 }
-
-func (it *ConsulController) Valid(ctx contracts.Context) error {
+func (it *ConsulController) GetRules() interface{} {
 	return nil
 }

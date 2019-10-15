@@ -10,11 +10,11 @@ type SqlController struct {
 }
 
 func (it *SqlController) Handle(ctx contracts.Context) (interface{}, error) {
-	_ = services.New().Middle(&service.SqlService{}).Line(ctx)
+	_ = services.Pipe().Middle(&service.SqlService{}).Line(ctx)
 	ret := ctx.GetValue("user")
 	return ret, nil
 
 }
-func (it *SqlController) Valid(ctx contracts.Context) error {
+func (it *SqlController) GetRules() interface{} {
 	return nil
 }

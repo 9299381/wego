@@ -32,7 +32,7 @@ func (it *PostController) Handle(ctx contracts.Context) (interface{}, error) {
 	return ret, nil
 }
 
-func (it *PostController) Valid(ctx contracts.Context) error {
+func (it *PostController) GetRules() interface{} {
 	return nil
 }
 

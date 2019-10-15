@@ -18,6 +18,6 @@ func (it *EventController) Handle(ctx contracts.Context) (interface{}, error) {
 	return nil, nil
 }
 
-func (it *EventController) Valid(ctx contracts.Context) error {
+func (it *EventController) GetRules() interface{} {
 	return nil
 }

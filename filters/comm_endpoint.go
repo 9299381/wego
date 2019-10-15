@@ -4,6 +4,8 @@ import (
 	"context"
 	"github.com/9299381/wego/contracts"
 	"github.com/9299381/wego/loggers"
+	"github.com/9299381/wego/tools/convert"
+	"github.com/9299381/wego/validations"
 	"github.com/go-kit/kit/endpoint"
 	"github.com/sirupsen/logrus"
 )
@@ -27,7 +29,7 @@ func (it *CommEndpoint) Make() endpoint.Endpoint {
 		//成成线程log,统一处理ip,request_id等
 		cc.Log = it.makeLog(cc, req)
 		//参数验证
-		err := it.Controller.Valid(cc)
+		err := it.valid(cc, req)
 		if err != nil {
 			cc.Log.Info(err.Error())
 			return nil, err
@@ -39,6 +41,22 @@ func (it *CommEndpoint) Make() endpoint.Endpoint {
 		}
 		return ret, err
 	}
+}
+func (it *CommEndpoint) valid(ctx contracts.Context, request contracts.Request) error {
+	obj := it.Controller.GetRules()
+	if obj != nil {
+		err := convert.Map2Struct(request.Data, obj)
+		if err != nil {
+			return err
+		}
+		//验证obj
+		err = validations.Valid(obj)
+		if err != nil {
+			return err
+		}
+		ctx.SetValue("RequestDTO", obj)
+	}
+	return nil
 }
 
 func (it *CommEndpoint) makeLog(ctx contracts.Context, req contracts.Request) *logrus.Entry {

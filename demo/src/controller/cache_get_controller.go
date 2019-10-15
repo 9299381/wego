@@ -22,7 +22,6 @@ func (it *CacheGetController) Handle(ctx contracts.Context) (interface{}, error)
 
 	return nil, nil
 }
-
-func (it *CacheGetController) Valid(ctx contracts.Context) error {
+func (it *CacheGetController) GetRules() interface{} {
 	return nil
 }

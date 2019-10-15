@@ -5,7 +5,7 @@ import (
 	"github.com/9299381/wego/contracts"
 )
 
-func New() *commonService {
+func Pipe() *commonService {
 	var s []contracts.IService
 	return &commonService{
 		serviecs: s,

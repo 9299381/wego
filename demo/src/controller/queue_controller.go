@@ -19,6 +19,6 @@ func (it *QueueController) Handle(ctx contracts.Context) (interface{}, error) {
 	}
 	return nil, nil
 }
-func (it *QueueController) Valid(ctx contracts.Context) error {
+func (it *QueueController) GetRules() interface{} {
 	return nil
 }

@@ -17,7 +17,7 @@ func (it *OneController) Handle(ctx contracts.Context) (interface{}, error) {
 	// This will .......
 	//     Responses:
 	//       200: oneResponse
-	err := services.New().
+	err := services.Pipe().
 		Middle(&service.OneService{}).
 		Middle(&service.TwoService{}).
 		Line(ctx)
@@ -31,7 +31,7 @@ func (it *OneController) Handle(ctx contracts.Context) (interface{}, error) {
 	return ret, nil
 }
 
-func (it *OneController) Valid(ctx contracts.Context) error {
+func (it *OneController) GetRules() interface{} {
 	return nil
 }
 

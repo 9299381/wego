@@ -16,6 +16,6 @@ func (it *AuthController) Handle(ctx contracts.Context) (interface{}, error) {
 	return nil, nil
 }
 
-func (it *AuthController) Valid(ctx contracts.Context) error {
+func (it *AuthController) GetRules() interface{} {
 	return nil
 }

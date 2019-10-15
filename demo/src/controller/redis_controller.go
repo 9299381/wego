@@ -27,6 +27,6 @@ func (it *RedisController) Handle(ctx contracts.Context) (interface{}, error) {
 
 	return nil, nil
 }
-func (it *RedisController) Valid(ctx contracts.Context) error {
+func (it *RedisController) GetRules() interface{} {
 	return nil
 }

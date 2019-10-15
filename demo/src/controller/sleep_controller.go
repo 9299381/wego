@@ -16,6 +16,6 @@ func (it *SleepController) Handle(ctx contracts.Context) (interface{}, error) {
 
 	return nil, nil
 }
-func (it *SleepController) Valid(ctx contracts.Context) error {
+func (it *SleepController) GetRules() interface{} {
 	return nil
 }

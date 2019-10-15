@@ -19,6 +19,6 @@ func (it *PublishController) Handle(ctx contracts.Context) (interface{}, error) 
 	}
 	return nil, nil
 }
-func (it *PublishController) Valid(ctx contracts.Context) error {
+func (it *PublishController) GetRules() interface{} {
 	return nil
 }

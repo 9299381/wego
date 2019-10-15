@@ -17,7 +17,7 @@ type TwoController struct {
 //       200: twoResponse
 
 func (it *TwoController) Handle(ctx contracts.Context) (interface{}, error) {
-	_ = services.New().
+	_ = services.Pipe().
 		Middle(&service.TwoService{}).
 		Line(ctx)
 	ret := &TwoResponse{
@@ -26,8 +26,7 @@ func (it *TwoController) Handle(ctx contracts.Context) (interface{}, error) {
 	}
 	return ret, nil
 }
-
-func (it *TwoController) Valid(ctx contracts.Context) error {
+func (it *TwoController) GetRules() interface{} {
 	return nil
 }
 

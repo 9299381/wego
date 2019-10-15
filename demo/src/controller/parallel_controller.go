@@ -13,7 +13,7 @@ func (it *ParallelController) Handle(ctx contracts.Context) (interface{}, error)
 	ctx.SetValue("controller", "parallel")
 
 	//并行service中间件
-	err := services.New().
+	err := services.Pipe().
 		Middle(&service.ParallelOne{}).
 		Middle(&service.ParallelTwo{}).
 		Parallel(ctx)
@@ -28,6 +28,6 @@ func (it *ParallelController) Handle(ctx contracts.Context) (interface{}, error)
 
 	return m, nil
 }
-func (it *ParallelController) Valid(ctx contracts.Context) error {
+func (it *ParallelController) GetRules() interface{} {
 	return nil
 }
