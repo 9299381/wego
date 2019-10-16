@@ -6,9 +6,10 @@ import (
 )
 
 type QueueController struct {
+	*contracts.Controller
 }
 
-func (it *QueueController) Handle(ctx contracts.Context) (interface{}, error) {
+func (s *QueueController) Handle(ctx contracts.Context) (interface{}, error) {
 
 	msg := make(map[string]interface{})
 	msg["aaa"] = "bbb"
@@ -18,7 +19,4 @@ func (it *QueueController) Handle(ctx contracts.Context) (interface{}, error) {
 		return nil, err
 	}
 	return nil, nil
-}
-func (it *QueueController) GetRules() interface{} {
-	return nil
 }

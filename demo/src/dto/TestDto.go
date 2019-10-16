@@ -23,15 +23,15 @@ type TestDto struct {
 	Desc string `json:"desc" valid:"Required;Custom(CheckDesc)"`
 }
 
-func (it *TestDto) CheckDesc(v *validations.Validation) {
-	if strings.Index(it.Desc, "desc") != -1 {
+func (s *TestDto) CheckDesc(v *validations.Validation) {
+	if strings.Index(s.Desc, "desc") != -1 {
 		_ = v.SetError("Desc", "名称里不能含有 desc")
 	}
 }
 
 //最后执行
-func (it *TestDto) Finish(v *validations.Validation) {
-	if strings.Index(it.Name, "admin") != -1 {
+func (s *TestDto) Finish(v *validations.Validation) {
+	if strings.Index(s.Name, "admin") != -1 {
 		// 通过 SetError 设置 Name 的错误信息，HasErrors 将会返回 true
 		_ = v.SetError("Name", "名称里不能含有 admin")
 	}

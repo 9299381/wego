@@ -8,10 +8,11 @@ import (
 )
 
 type OneController struct {
+	*contracts.Controller
 }
 
 // ServeAPI serves the API for this record store
-func (it *OneController) Handle(ctx contracts.Context) (interface{}, error) {
+func (s *OneController) Handle(ctx contracts.Context) (interface{}, error) {
 	// swagger:route Get /demo/one 分组1 oneController
 	// Test swagger
 	// This will .......
@@ -31,7 +32,7 @@ func (it *OneController) Handle(ctx contracts.Context) (interface{}, error) {
 	return ret, nil
 }
 
-func (it *OneController) GetRules() interface{} {
+func (s *OneController) GetRules() interface{} {
 	return nil
 }
 

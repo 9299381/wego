@@ -8,8 +8,8 @@ type CommHandler struct {
 	Handler Handler
 }
 
-func (it *CommHandler) Handle(ctx context.Context, req interface{}) (interface{}, error) {
-	rsp, err := it.Handler.ServeHandle(ctx, req)
+func (s *CommHandler) Handle(ctx context.Context, req interface{}) (interface{}, error) {
+	rsp, err := s.Handler.ServeHandle(ctx, req)
 	if err != nil {
 		return nil, err
 	}
@@ -17,8 +17,8 @@ func (it *CommHandler) Handle(ctx context.Context, req interface{}) (interface{}
 }
 
 //该接口的实现是为了 cronjob
-func (it *CommHandler) Run() {
+func (s *CommHandler) Run() {
 	ctx := context.Background()
 	req := make(map[string]interface{})
-	_, _ = it.Handler.ServeHandle(ctx, req)
+	_, _ = s.Handler.ServeHandle(ctx, req)
 }

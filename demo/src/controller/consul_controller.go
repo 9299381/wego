@@ -7,9 +7,10 @@ import (
 )
 
 type ConsulController struct {
+	*contracts.Controller
 }
 
-func (it *ConsulController) Handle(ctx contracts.Context) (interface{}, error) {
+func (s *ConsulController) Handle(ctx contracts.Context) (interface{}, error) {
 
 	entity, _ := clients.GetConsulService(args.Name)
 	ctx.Log.Info(entity.Service.Service)
@@ -19,7 +20,4 @@ func (it *ConsulController) Handle(ctx contracts.Context) (interface{}, error) {
 	ctx.Log.Info(tag)
 
 	return nil, nil
-}
-func (it *ConsulController) GetRules() interface{} {
-	return nil
 }

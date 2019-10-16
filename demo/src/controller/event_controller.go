@@ -6,9 +6,10 @@ import (
 )
 
 type EventController struct {
+	*contracts.Controller
 }
 
-func (it *EventController) Handle(ctx contracts.Context) (interface{}, error) {
+func (s *EventController) Handle(ctx contracts.Context) (interface{}, error) {
 	params := make(map[string]interface{})
 	payload := &contracts.Payload{
 		Route:  "two",
@@ -16,8 +17,4 @@ func (it *EventController) Handle(ctx contracts.Context) (interface{}, error) {
 	}
 	events.Fire(payload)
 	return nil, nil
-}
-
-func (it *EventController) GetRules() interface{} {
-	return nil
 }

@@ -7,7 +7,7 @@ type EventConfig struct {
 	After       int `json:"after"`
 }
 
-func (it *EventConfig) Load() *EventConfig {
+func (s *EventConfig) Load() *EventConfig {
 	concurrency, _ := strconv.Atoi(Env("EVENT_CONCURRENCY", "1"))
 	after, _ := strconv.Atoi(Env("EVENT_AFTER", "1"))
 

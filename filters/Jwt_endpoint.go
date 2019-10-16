@@ -14,12 +14,12 @@ type JwtEndpoint struct {
 	next endpoint.Endpoint
 }
 
-func (it *JwtEndpoint) Next(next endpoint.Endpoint) contracts.IFilter {
-	it.next = next
-	return it
+func (s *JwtEndpoint) Next(next endpoint.Endpoint) contracts.IFilter {
+	s.next = next
+	return s
 }
 
-func (it *JwtEndpoint) Make() endpoint.Endpoint {
+func (s *JwtEndpoint) Make() endpoint.Endpoint {
 	return func(ctx context.Context, request interface{}) (response interface{}, err error) {
 		req := request.(contracts.Request)
 		token := req.Data["authToken"]
@@ -32,6 +32,6 @@ func (it *JwtEndpoint) Make() endpoint.Endpoint {
 		}
 		req.Data["claim"] = convert.Struct2Map(claim)
 		//这里进行token的jwt认证
-		return it.next(ctx, req)
+		return s.next(ctx, req)
 	}
 }

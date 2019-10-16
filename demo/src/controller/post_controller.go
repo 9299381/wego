@@ -7,6 +7,7 @@ import (
 )
 
 type PostController struct {
+	*contracts.Controller
 }
 
 // swagger:route Post /demo/post 分组2 postController
@@ -15,7 +16,7 @@ type PostController struct {
 //     Responses:
 //       200: postResponse
 
-func (it *PostController) Handle(ctx contracts.Context) (interface{}, error) {
+func (s *PostController) Handle(ctx contracts.Context) (interface{}, error) {
 
 	request := &postRequest{}
 	err := convert.Map2Struct(ctx.Request(), request)
@@ -30,10 +31,6 @@ func (it *PostController) Handle(ctx contracts.Context) (interface{}, error) {
 		Resp: *request,
 	}
 	return ret, nil
-}
-
-func (it *PostController) GetRules() interface{} {
-	return nil
 }
 
 // swagger:parameters postController

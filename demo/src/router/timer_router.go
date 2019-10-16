@@ -9,15 +9,15 @@ type TimerRouter struct {
 	*servers.TimerCommServer
 }
 
-func (it *TimerRouter) Boot() {
-	it.TimerCommServer = servers.NewTimerCommServer()
+func (s *TimerRouter) Boot() {
+	s.TimerCommServer = servers.NewTimerCommServer()
 }
 
-func (it *TimerRouter) Register() {
+func (s *TimerRouter) Register() {
 
 	params := make(map[string]interface{})
 	params["timer"] = "test"
-	it.Route("one", 2, wego.Handler("one"), params)
-	it.Route("two", 5, wego.Handler("two"), params)
+	s.Route("one", 2, wego.Handler("one"), params)
+	s.Route("two", 5, wego.Handler("two"), params)
 
 }

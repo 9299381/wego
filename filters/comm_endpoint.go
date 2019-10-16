@@ -15,35 +15,35 @@ type CommEndpoint struct {
 	next       endpoint.Endpoint
 }
 
-func (it *CommEndpoint) Next(next endpoint.Endpoint) contracts.IFilter {
-	it.next = next
-	return it
+func (s *CommEndpoint) Next(next endpoint.Endpoint) contracts.IFilter {
+	s.next = next
+	return s
 }
 
-func (it *CommEndpoint) Make() endpoint.Endpoint {
+func (s *CommEndpoint) Make() endpoint.Endpoint {
 	return func(ctx context.Context, request interface{}) (interface{}, error) {
 		//生成请求参数
 		req := request.(contracts.Request)
 		//生成context上下文
-		cc := it.makeContext(ctx, req)
+		cc := s.makeContext(ctx, req)
 		//成成线程log,统一处理ip,request_id等
-		cc.Log = it.makeLog(cc, req)
+		cc.Log = s.makeLog(cc, req)
 		//参数验证
-		err := it.valid(cc, req)
+		err := s.valid(cc, req)
 		if err != nil {
 			cc.Log.Info(err.Error())
 			return nil, err
 		}
 		//逻辑处理
-		ret, err := it.Controller.Handle(cc)
+		ret, err := s.Controller.Handle(cc)
 		if err != nil {
 			cc.Log.Info(err.Error())
 		}
 		return ret, err
 	}
 }
-func (it *CommEndpoint) valid(ctx contracts.Context, request contracts.Request) error {
-	obj := it.Controller.GetRules()
+func (s *CommEndpoint) valid(ctx contracts.Context, request contracts.Request) error {
+	obj := s.Controller.GetRules()
 	if obj != nil {
 		err := convert.Map2Struct(request.Data, obj)
 		if err != nil {
@@ -59,7 +59,7 @@ func (it *CommEndpoint) valid(ctx contracts.Context, request contracts.Request) 
 	return nil
 }
 
-func (it *CommEndpoint) makeLog(ctx contracts.Context, req contracts.Request) *logrus.Entry {
+func (s *CommEndpoint) makeLog(ctx contracts.Context, req contracts.Request) *logrus.Entry {
 	//初始化日志字段,放到context中
 	ip := (req.Data)["client_ip"]
 	if ip == nil {
@@ -72,7 +72,7 @@ func (it *CommEndpoint) makeLog(ctx contracts.Context, req contracts.Request) *l
 	return entity
 }
 
-func (it *CommEndpoint) makeContext(ctx context.Context, req contracts.Request) contracts.Context {
+func (s *CommEndpoint) makeContext(ctx context.Context, req contracts.Request) contracts.Context {
 	cc := contracts.Context{
 		Context: ctx,
 		Keys:    make(map[string]interface{}),

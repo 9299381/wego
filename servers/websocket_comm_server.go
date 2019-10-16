@@ -22,21 +22,21 @@ func NewWebSocketCommServer() *WebSocketCommServer {
 	return ss
 }
 
-func (it *WebSocketCommServer) Route(name string, endpoint endpoint.Endpoint) {
+func (s *WebSocketCommServer) Route(name string, endpoint endpoint.Endpoint) {
 
 	handler := &commons.CommHandler{
 		Handler: transports.NewWebSocket(endpoint),
 	}
-	it.Register(name, handler)
+	s.Register(name, handler)
 }
 
-func (it *WebSocketCommServer) Load() {
+func (s *WebSocketCommServer) Load() {
 	//注册通用路由
 }
 
-func (it *WebSocketCommServer) Start() error {
-	return it.Serve()
+func (s *WebSocketCommServer) Start() error {
+	return s.Serve()
 }
-func (it *WebSocketCommServer) Close() {
-	it.Server.Close()
+func (s *WebSocketCommServer) Close() {
+	s.Server.Close()
 }

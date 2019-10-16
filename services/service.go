@@ -8,20 +8,22 @@ import (
 func Pipe() *commonService {
 	var s []contracts.IService
 	return &commonService{
-		serviecs: s,
+		services: s,
 	}
 }
 
 type commonService struct {
-	serviecs []contracts.IService
+	services []contracts.IService
 }
 
-func (it *commonService) Middle(s contracts.IService) *commonService {
-	it.serviecs = append(it.serviecs, s)
-	return it
+func (s *commonService) Middle(services ...contracts.IService) *commonService {
+	for _, service := range services {
+		s.services = append(s.services, service)
+	}
+	return s
 }
-func (it *commonService) Line(ctx contracts.Context) error {
-	for _, service := range it.serviecs {
+func (s *commonService) Line(ctx contracts.Context) error {
+	for _, service := range s.services {
 		err := service.Handle(ctx)
 		if err != nil {
 			return err
@@ -29,14 +31,14 @@ func (it *commonService) Line(ctx contracts.Context) error {
 	}
 	return nil
 }
-func (it *commonService) Parallel(ctx contracts.Context) error {
+func (s *commonService) Parallel(ctx contracts.Context) error {
 
 	type st struct {
 		contracts.Context
 		err error
 	}
-	ch := make([]chan st, len(it.serviecs))
-	for k, service := range it.serviecs {
+	ch := make([]chan st, len(s.services))
+	for k, service := range s.services {
 		ch[k] = make(chan st)
 		cc := contracts.Context{
 			Context: context.Background(),

@@ -7,7 +7,7 @@ import (
 type TwoService struct {
 }
 
-func (it *TwoService) Handle(ctx contracts.Context) error {
+func (s *TwoService) Handle(ctx contracts.Context) error {
 
 	ctx.SetValue("one", "tow")
 	//if ctx.Request("a").(string) == "a" {

@@ -18,21 +18,21 @@ func NewTest() *TestStruct {
 		request: make(map[string]interface{}),
 	}
 }
-func (it *TestStruct) Controller(controller contracts.IController) *TestStruct {
-	it.controller = controller
-	return it
+func (s *TestStruct) Controller(controller contracts.IController) *TestStruct {
+	s.controller = controller
+	return s
 }
-func (it *TestStruct) Request(m map[string]interface{}) *TestStruct {
+func (s *TestStruct) Request(m map[string]interface{}) *TestStruct {
 	if m != nil {
-		it.request = m
+		s.request = m
 	}
-	return it
+	return s
 }
-func (it *TestStruct) Run() (contracts.Response, error) {
-	e := filters.New(it.controller)
+func (s *TestStruct) Run() (contracts.Response, error) {
+	e := filters.New(s.controller)
 	request := contracts.Request{
 		Id:   idwork.ID(),
-		Data: it.request,
+		Data: s.request,
 	}
 	response, err := e(context.Background(), request)
 	resp := response.(contracts.Response)

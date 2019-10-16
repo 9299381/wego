@@ -20,24 +20,24 @@ func NewMqttSubscribeCommCommServer() *MqttSubscribeCommCommServer {
 	return ss
 }
 
-func (it *MqttSubscribeCommCommServer) Route(name string, endpoint endpoint.Endpoint) {
+func (s *MqttSubscribeCommCommServer) Route(name string, endpoint endpoint.Endpoint) {
 
 	handler := &commons.CommHandler{
 		Handler: transports.NewMqttSubscribe(endpoint),
 	}
-	it.Register(name, handler)
+	s.Register(name, handler)
 }
 
-func (it *MqttSubscribeCommCommServer) Load() {
+func (s *MqttSubscribeCommCommServer) Load() {
 
 	//注册通用路由
 }
 
-func (it *MqttSubscribeCommCommServer) Start() error {
-	return it.Serve()
+func (s *MqttSubscribeCommCommServer) Start() error {
+	return s.Serve()
 
 }
 
-func (it *MqttSubscribeCommCommServer) Close() {
-	it.Server.Close()
+func (s *MqttSubscribeCommCommServer) Close() {
+	s.Server.Close()
 }

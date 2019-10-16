@@ -11,12 +11,12 @@ import (
 type IniReader struct {
 }
 
-func (it *IniReader) New() *IniReader {
+func (s *IniReader) New() *IniReader {
 	//这里可以做一些初始化
-	return it
+	return s
 }
 
-func (it *IniReader) Read(filePath string) interface{} {
+func (s *IniReader) Read(filePath string) interface{} {
 	file, err := os.Open(filePath)
 	if err != nil {
 		fmt.Println(err)
@@ -30,7 +30,7 @@ func (it *IniReader) Read(filePath string) interface{} {
 		line := strings.TrimSpace(l)
 		if err != nil {
 			if err != io.EOF {
-				it.CheckErr(err)
+				s.CheckErr(err)
 			}
 			if len(line) == 0 {
 				break
@@ -55,7 +55,7 @@ func (it *IniReader) Read(filePath string) interface{} {
 	return data
 }
 
-func (it *IniReader) CheckErr(err error) string {
+func (s *IniReader) CheckErr(err error) string {
 	if err != nil {
 		return fmt.Sprintf("Error is :'%s'", err.Error())
 	}

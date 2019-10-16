@@ -29,55 +29,55 @@ func NewHttpCommServer() *HttpCommServer {
 	return ss
 }
 
-func (it *HttpCommServer) Route(method string, path string, endpoint endpoint.Endpoint) {
-	it.Methods(method).
+func (s *HttpCommServer) Route(method string, path string, endpoint endpoint.Endpoint) {
+	s.Methods(method).
 		Path(path).
 		Handler(transports.NewHTTP(endpoint))
 }
 
-func (it *HttpCommServer) Post(path string, endpoint endpoint.Endpoint) {
-	it.Methods("POST").
+func (s *HttpCommServer) Post(path string, endpoint endpoint.Endpoint) {
+	s.Methods("POST").
 		Path(path).
 		Handler(transports.NewHTTP(endpoint))
 }
 
 //
-func (it *HttpCommServer) Get(path string, endpoint endpoint.Endpoint) {
-	it.Methods("GET").
+func (s *HttpCommServer) Get(path string, endpoint endpoint.Endpoint) {
+	s.Methods("GET").
 		Path(path).
 		Handler(transports.NewHTTP(endpoint))
 }
 
-func (it *HttpCommServer) Load() {
+func (s *HttpCommServer) Load() {
 
 	//注册通用路由
-	it.Route("GET", "/health", (&filters.HealthEndpoint{}).Make())
+	s.Route("GET", "/health", (&filters.HealthEndpoint{}).Make())
 	if args.Mode != "prod" {
-		it.handleSwagger()
+		s.handleSwagger()
 	}
 }
 
-func (it *HttpCommServer) Start() error {
+func (s *HttpCommServer) Start() error {
 	config := (&configs.HttpConfig{}).Load()
 	address := config.HttpHost + ":" + config.HttpPort
-	it.Logger.Info("Http Server Start ", address)
-	handler := it.Router
+	s.Logger.Info("Http Server Start ", address)
+	handler := s.Router
 	return http.ListenAndServe(address, handler)
 }
 
-func (it *HttpCommServer) handleSwagger() {
+func (s *HttpCommServer) handleSwagger() {
 	//文件服务器 /swagger/ 前缀目录下index.html
 	fs := http.FileServer(http.Dir("./swaggerui/"))
-	it.Methods("GET").
+	s.Methods("GET").
 		PathPrefix("/swagger/").
 		Handler(http.StripPrefix("/swagger/", fs))
 	//重新生成
-	it.Methods("GET").
+	s.Methods("GET").
 		Path("/swagger_generate").
-		HandlerFunc(it.buildSwagger())
+		HandlerFunc(s.buildSwagger())
 }
 
-func (it *HttpCommServer) buildSwagger() http.HandlerFunc {
+func (s *HttpCommServer) buildSwagger() http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		cmd := exec.Command(
 			"swagger",
@@ -88,7 +88,7 @@ func (it *HttpCommServer) buildSwagger() http.HandlerFunc {
 	}
 }
 
-func (it *HttpCommServer) Close() {
+func (s *HttpCommServer) Close() {
 	v, ok := wego.App.Consul["http"]
 	if ok {
 		v.Deregister()

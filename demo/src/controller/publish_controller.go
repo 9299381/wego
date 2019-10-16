@@ -6,9 +6,10 @@ import (
 )
 
 type PublishController struct {
+	*contracts.Controller
 }
 
-func (it *PublishController) Handle(ctx contracts.Context) (interface{}, error) {
+func (s *PublishController) Handle(ctx contracts.Context) (interface{}, error) {
 
 	m := make(map[string]interface{})
 	m["pub"] = "pub"
@@ -18,7 +19,4 @@ func (it *PublishController) Handle(ctx contracts.Context) (interface{}, error) 
 		return nil, err
 	}
 	return nil, nil
-}
-func (it *PublishController) GetRules() interface{} {
-	return nil
 }

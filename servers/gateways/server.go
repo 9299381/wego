@@ -27,20 +27,20 @@ func NewServer() *Server {
 	return ss
 }
 
-func (it *Server) Register(method, path string, endpoint endpoint.Endpoint) {
+func (s *Server) Register(method, path string, endpoint endpoint.Endpoint) {
 	key := method + "_" + path
-	it.handlers[key] = endpoint
+	s.handlers[key] = endpoint
 }
 
-func (it *Server) Serve() error {
+func (s *Server) Serve() error {
 	config := (&configs.HttpConfig{}).Load()
 	address := config.HttpHost + ":" + config.HttpPort
-	it.Logger.Info("Http Server Start ", address)
-	handler := it
+	s.Logger.Info("Http Server Start ", address)
+	handler := s
 	return http.ListenAndServe(address, handler)
 }
 
-func (it *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
+func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	if r.URL.Path == "/favicon.ico" {
 		return
 	}
@@ -54,12 +54,12 @@ func (it *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	key := req.Method + "_" + r.URL.Path
-	filter, ok := it.handlers[key]
+	filter, ok := s.handlers[key]
 	if ok && filter != nil {
 		// 如果有注册管理,则注册管理处理
 		//注意filter的endpoint可以只过滤,不进行service处理,
 		// gateway_endpoint负责返回GATEWAY,h或者error
-		resp = it.runFilter(filter, ctx, req)
+		resp = s.runFilter(filter, ctx, req)
 		data, exist := resp.Data.(map[string]interface{})
 		if exist && data != nil {
 			req.Data = data
@@ -72,7 +72,7 @@ func (it *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 		var tag, host string
-		defer it.fireEvent(time.Now(), &key, &tag, &host)
+		defer s.fireEvent(time.Now(), &key, &tag, &host)
 
 		//服务发现
 		entity, err := clients.GetConsulService(req.Service)
@@ -103,7 +103,7 @@ func (it *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	_ = encodeResponse(ctx, w, resp)
 }
 
-func (it *Server) runFilter(filter endpoint.Endpoint, ctx context.Context, req *contracts.GateWayRequest) contracts.Response {
+func (s *Server) runFilter(filter endpoint.Endpoint, ctx context.Context, req *contracts.GateWayRequest) contracts.Response {
 	filterResp, err := filter(ctx, contracts.Request{
 		Id:   req.Id,
 		Data: req.Data,
@@ -114,7 +114,7 @@ func (it *Server) runFilter(filter endpoint.Endpoint, ctx context.Context, req *
 		return filterResp.(contracts.Response)
 	}
 }
-func (it *Server) fireEvent(begin time.Time, key, tag, host *string) {
+func (s *Server) fireEvent(begin time.Time, key, tag, host *string) {
 	params := make(map[string]interface{})
 	params["url"] = key
 	params["begin"] = begin.Format(constants.YmdHis)
@@ -127,6 +127,6 @@ func (it *Server) fireEvent(begin time.Time, key, tag, host *string) {
 	}
 	events.Fire(payload)
 }
-func (it *Server) Close() {
+func (s *Server) Close() {
 
 }

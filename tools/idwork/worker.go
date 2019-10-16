@@ -59,7 +59,7 @@ func newNode(server int64) (*snowflake, error) {
 
 	return &it, nil
 }
-func (it *snowflake) epochGen() int64 {
+func (s *snowflake) epochGen() int64 {
 	start := "2010-01-01 00:00:00"
 	layout := constants.YmdHis
 	loc, _ := time.LoadLocation("Local")
@@ -67,27 +67,27 @@ func (it *snowflake) epochGen() int64 {
 	return theTime.UnixNano() / 1000000
 }
 
-func (it *snowflake) nextId() string {
-	it.mu.Lock()
-	epoch := it.epochGen()
+func (s *snowflake) nextId() string {
+	s.mu.Lock()
+	epoch := s.epochGen()
 	timestamp := time.Now().UnixNano() / 1000000
-	lastTime := it.lastTime
+	lastTime := s.lastTime
 	//生成唯一序列
 	if timestamp == lastTime {
-		it.sequence = (it.sequence + 1) & it.sequenceMask
-		if it.sequence == 0 {
+		s.sequence = (s.sequence + 1) & s.sequenceMask
+		if s.sequence == 0 {
 			for timestamp <= lastTime {
 				timestamp = time.Now().UnixNano() / 1000000
 			}
 		}
 	} else {
-		it.sequence = 0
+		s.sequence = 0
 	}
-	it.lastTime = timestamp
-	r := int64((timestamp-epoch)<<it.timeShift |
-		(it.server << it.serverShift) |
-		(it.sequence),
+	s.lastTime = timestamp
+	r := int64((timestamp-epoch)<<s.timeShift |
+		(s.server << s.serverShift) |
+		(s.sequence),
 	)
-	it.mu.Unlock()
+	s.mu.Unlock()
 	return strconv.FormatInt(int64(r), 10)
 }

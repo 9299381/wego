@@ -26,20 +26,20 @@ func NewServer() *Server {
 	return s
 }
 
-func (it *Server) Register(name string, handler *commons.CommHandler) {
-	it.handlers[name] = handler
+func (s *Server) Register(name string, handler *commons.CommHandler) {
+	s.handlers[name] = handler
 
 }
 
-func (it *Server) Serve() error {
+func (s *Server) Serve() error {
 	config := (&configs.WebSocketConfig{}).Load()
 	address := config.WebSocketHost + ":" + config.WebSocketPort
-	it.Logger.Info("WebSocket Server Start ", address)
-	http.HandleFunc(config.Path, it.wsHandler)
+	s.Logger.Info("WebSocket Server Start ", address)
+	http.HandleFunc(config.Path, s.wsHandler)
 	return http.ListenAndServe(address, nil)
 }
 
-func (it *Server) wsHandler(w http.ResponseWriter, r *http.Request) {
+func (s *Server) wsHandler(w http.ResponseWriter, r *http.Request) {
 
 	var socket = websocket.Upgrader{
 		CheckOrigin: func(r *http.Request) bool {
@@ -48,26 +48,26 @@ func (it *Server) wsHandler(w http.ResponseWriter, r *http.Request) {
 	}
 	c, err := socket.Upgrade(w, r, nil)
 	if err != nil {
-		it.Logger.Debug("upgrade err:", err)
+		s.Logger.Debug("upgrade err:", err)
 		return
 	}
 	defer c.Close()
 	for {
 		mt, message, err := c.ReadMessage()
 		if err != nil {
-			it.Logger.Debug("read message err:", err)
+			s.Logger.Debug("read message err:", err)
 			break
 		}
 		payload := &contracts.Payload{}
 		err = json.Unmarshal(message, payload)
 		if err != nil {
-			e := it.faild(constants.ErrJson)
+			e := s.faild(constants.ErrJson)
 			err = c.WriteMessage(mt, e)
 			break
 		}
-		handler, isExist := it.handlers[payload.Route]
+		handler, isExist := s.handlers[payload.Route]
 		if isExist == false {
-			e := it.faild(constants.ErrRoute)
+			e := s.faild(constants.ErrRoute)
 			err = c.WriteMessage(mt, e)
 			break
 		}
@@ -76,25 +76,25 @@ func (it *Server) wsHandler(w http.ResponseWriter, r *http.Request) {
 		response, errResp := handler.Handle(ctx, payload.Params)
 
 		if errResp != nil {
-			e := it.faild(errResp.Error())
+			e := s.faild(errResp.Error())
 			err = c.WriteMessage(mt, e)
 			break
 		}
 		resp, _ := json.Marshal(response)
 		err = c.WriteMessage(mt, resp)
 		if err != nil {
-			it.Logger.Debug("write err:", err)
+			s.Logger.Debug("write err:", err)
 			break
 		}
 	}
 }
 
-func (it *Server) faild(message string) []byte {
+func (s *Server) faild(message string) []byte {
 	response := contracts.ResponseFailed(errors.New(message))
 	ret, _ := json.Marshal(response)
 	return ret
 }
 
-func (it *Server) Close() {
+func (s *Server) Close() {
 
 }

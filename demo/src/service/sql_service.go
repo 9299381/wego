@@ -9,7 +9,7 @@ import (
 type SqlService struct {
 }
 
-func (it *SqlService) Handle(ctx contracts.Context) error {
+func (s *SqlService) Handle(ctx contracts.Context) error {
 
 	repo := repository.NewUserRepo(ctx)
 	req := make(map[string]interface{})

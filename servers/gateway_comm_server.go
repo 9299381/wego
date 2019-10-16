@@ -19,22 +19,22 @@ func NewGateWayCommServer() *GateWayCommServer {
 	return ss
 }
 
-func (it *GateWayCommServer) Route(method, path string, endpoint endpoint.Endpoint) {
+func (s *GateWayCommServer) Route(method, path string, endpoint endpoint.Endpoint) {
 	//如果有本地注册的路由,则跑本地,2种情况组合endpoint filter
 	//1 跑本地服务
 	//2 只跑本地endpoint filter
-	it.Register(method, path, endpoint)
+	s.Register(method, path, endpoint)
 }
 
-func (it *GateWayCommServer) Load() {
+func (s *GateWayCommServer) Load() {
 	//注册通用路由,consul 心跳检测
-	it.Route("GET", "/health", (&filters.HealthEndpoint{}).Make())
+	s.Route("GET", "/health", (&filters.HealthEndpoint{}).Make())
 
 }
 
-func (it *GateWayCommServer) Start() error {
-	return it.Serve()
+func (s *GateWayCommServer) Start() error {
+	return s.Serve()
 }
-func (it *GateWayCommServer) Close() {
-	it.Server.Close()
+func (s *GateWayCommServer) Close() {
+	s.Server.Close()
 }

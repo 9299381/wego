@@ -26,35 +26,35 @@ func New() *Token {
 	return token
 }
 
-func (it *Token) SetId(id string) *Token {
-	it.Claims.Id = id
-	return it
+func (s *Token) SetId(id string) *Token {
+	s.Claims.Id = id
+	return s
 }
 
-func (it *Token) SetName(name string) *Token {
-	it.Claims.Name = name
-	return it
+func (s *Token) SetName(name string) *Token {
+	s.Claims.Name = name
+	return s
 }
 
-func (it *Token) SetRole(role string) *Token {
-	it.Claims.Role = role
-	return it
+func (s *Token) SetRole(role string) *Token {
+	s.Claims.Role = role
+	return s
 }
 
-func (it *Token) GetToken() string {
-	it.Claims.Iat = time.Now().Unix()
-	it.Claims.Exp = it.getExpTime()
-	jsonClaim, err := json.Marshal(it.Claims)
+func (s *Token) GetToken() string {
+	s.Claims.Iat = time.Now().Unix()
+	s.Claims.Exp = s.getExpTime()
+	jsonClaim, err := json.Marshal(s.Claims)
 	if err != nil {
 		panic(err)
 	}
 	payload := base64.StdEncoding.EncodeToString(jsonClaim)
-	sign := it.getSign(it.Claims)
+	sign := s.getSign(s.Claims)
 	ret := string(payload) + "." + sign
 	return ret
 }
 
-func (it *Token) VerifyToken(sign string) (*Claims, error) {
+func (s *Token) VerifyToken(sign string) (*Claims, error) {
 	m := strings.Split(sign, ".")
 	if len(m) < 1 {
 		return nil, errors.New(constants.ErrTokenFmt)
@@ -73,17 +73,17 @@ func (it *Token) VerifyToken(sign string) (*Claims, error) {
 		return nil, errors.New(constants.ErrTokenExp)
 	}
 
-	if m[1] != it.getSign(claims) {
+	if m[1] != s.getSign(claims) {
 		return nil, errors.New(constants.ErrTokenSign)
 	}
 	return claims, nil
 }
-func (it *Token) getExpTime() int64 {
-	period := it.config.Exp
-	return it.Claims.Iat + period
+func (s *Token) getExpTime() int64 {
+	period := s.config.Exp
+	return s.Claims.Iat + period
 }
-func (it *Token) getSign(claims *Claims) string {
-	key := it.config.Key
+func (s *Token) getSign(claims *Claims) string {
+	key := s.config.Key
 	keyPlain := claims.Id + strconv.Itoa(int(claims.Iat)) + key
 	h := md5.New()
 	h.Write([]byte(keyPlain))

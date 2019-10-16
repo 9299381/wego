@@ -30,18 +30,18 @@ func NewServer() *Server {
 	return ss
 }
 
-func (it *Server) Serve() error {
+func (s *Server) Serve() error {
 	errChan := make(chan error)
-	for i := 0; i < it.Concurrency; i++ {
-		go it.handleEventReceive(errChan)
+	for i := 0; i < s.Concurrency; i++ {
+		go s.handleEventReceive(errChan)
 	}
 	err := <-errChan
 	if err != nil {
-		it.Logger.Info(err)
+		s.Logger.Info(err)
 	}
 	return nil
 }
-func (it *Server) handleEventReceive(errChan chan error) {
+func (s *Server) handleEventReceive(errChan chan error) {
 	for {
 		select {
 		case event := <-eventChan:
@@ -56,18 +56,18 @@ func (it *Server) handleEventReceive(errChan chan error) {
 				resp, err := filter(ctx, request)
 				if err != nil {
 					eventPool.Put(event)
-					it.Logger.Info("event error:", err)
+					s.Logger.Info("event error:", err)
 					//errChan <- err // 退出协程了
 				} else {
-					it.Logger.Info("event response:", resp)
+					s.Logger.Info("event response:", resp)
 				}
 			}
 			eventPool.Put(event)
-		case <-it.After:
-			it.Logger.Info("event wait ......")
+		case <-s.After:
+			s.Logger.Info("event wait ......")
 		}
 	}
 }
-func (it *Server) Close() {
+func (s *Server) Close() {
 
 }

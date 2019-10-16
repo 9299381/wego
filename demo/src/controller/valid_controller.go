@@ -6,13 +6,14 @@ import (
 )
 
 type ValidController struct {
+	*contracts.Controller
 }
 
-func (it *ValidController) Handle(ctx contracts.Context) (interface{}, error) {
+func (s *ValidController) Handle(ctx contracts.Context) (interface{}, error) {
 
 	return nil, nil
 }
 
-func (it *ValidController) GetRules() interface{} {
+func (s *ValidController) GetRules() interface{} {
 	return &dto.TestDto{}
 }

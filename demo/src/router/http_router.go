@@ -9,27 +9,27 @@ type HttpRouter struct {
 	*servers.HttpCommServer
 }
 
-func (it *HttpRouter) Boot() {
-	it.HttpCommServer = servers.NewHttpCommServer()
+func (s *HttpRouter) Boot() {
+	s.HttpCommServer = servers.NewHttpCommServer()
 }
 
-func (it *HttpRouter) Register() {
+func (s *HttpRouter) Register() {
 
-	it.Get("/demo/one", wego.Handler("one"))
-	it.Get("/demo/two", wego.Handler("two"))
-	it.Post("/demo/auth", wego.Handler("auth"))
-	it.Get("/demo/sql", wego.Handler("sql"))
-	it.Get("/demo/redis", wego.Handler("redis"))
-	it.Post("/demo/post", wego.Handler("post"))
-	it.Get("/demo/queue", wego.Handler("queue"))
+	s.Get("/demo/one", wego.Handler("one"))
+	s.Get("/demo/two", wego.Handler("two"))
+	s.Post("/demo/auth", wego.Handler("auth"))
+	s.Get("/demo/sql", wego.Handler("sql"))
+	s.Get("/demo/redis", wego.Handler("redis"))
+	s.Post("/demo/post", wego.Handler("post"))
+	s.Get("/demo/queue", wego.Handler("queue"))
 
-	it.Get("/demo/cache_set", wego.Handler("cache_set"))
-	it.Get("/demo/cache_get", wego.Handler("cache_get"))
+	s.Get("/demo/cache_set", wego.Handler("cache_set"))
+	s.Get("/demo/cache_get", wego.Handler("cache_get"))
 	//验证validate
-	it.Get("/demo/valid", wego.Handler("valid"))
+	s.Get("/demo/valid", wego.Handler("valid"))
 
-	it.Get("/demo/consul", wego.Handler("consul"))
-	it.Get("/demo/event", wego.Handler("event"))
-	it.Get("/demo/publish", wego.Handler("publish"))
+	s.Get("/demo/consul", wego.Handler("consul"))
+	s.Get("/demo/event", wego.Handler("event"))
+	s.Get("/demo/publish", wego.Handler("publish"))
 
 }

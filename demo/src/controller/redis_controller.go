@@ -7,9 +7,10 @@ import (
 )
 
 type RedisController struct {
+	*contracts.Controller
 }
 
-func (it *RedisController) Handle(ctx contracts.Context) (interface{}, error) {
+func (s *RedisController) Handle(ctx contracts.Context) (interface{}, error) {
 
 	client := clients.Redis() //从pool中获取一个链接
 	defer client.Close()      //延时释放链接,本方法执行完毕时释放
@@ -26,7 +27,4 @@ func (it *RedisController) Handle(ctx contracts.Context) (interface{}, error) {
 	ctx.Log.Info("redis-go_key 的值:", res)
 
 	return nil, nil
-}
-func (it *RedisController) GetRules() interface{} {
-	return nil
 }

@@ -20,23 +20,23 @@ func NewCommandCommServer() *CommandCommServer {
 	return ss
 }
 
-func (it *CommandCommServer) Route(name string, endpoint endpoint.Endpoint) {
+func (s *CommandCommServer) Route(name string, endpoint endpoint.Endpoint) {
 
 	handler := &commons.CommHandler{
 		Handler: transports.NewCommand(endpoint),
 	}
-	it.Register(name, handler)
+	s.Register(name, handler)
 }
 
-func (it *CommandCommServer) Load() {
+func (s *CommandCommServer) Load() {
 
 	//注册通用路由
 }
 
-func (it *CommandCommServer) Start() error {
-	return it.Serve()
+func (s *CommandCommServer) Start() error {
+	return s.Serve()
 
 }
-func (it *CommandCommServer) Close() {
-	it.Server.Close()
+func (s *CommandCommServer) Close() {
+	s.Server.Close()
 }

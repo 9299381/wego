@@ -27,42 +27,42 @@ func NewGrpcCommServer() *GrpcCommServer {
 	ss.Logger = loggers.GetLog()
 	return ss
 }
-func (it *GrpcCommServer) Route(name string, endpoint endpoint.Endpoint) {
+func (s *GrpcCommServer) Route(name string, endpoint endpoint.Endpoint) {
 
-	sd := it.getServiceDesc(name)
+	sd := s.getServiceDesc(name)
 	service := &grpcService{
 		handler: transports.NewGRPC(endpoint),
 	}
-	it.RegisterService(&sd, service)
+	s.RegisterService(&sd, service)
 }
 
-func (it *GrpcCommServer) Load() {
+func (s *GrpcCommServer) Load() {
 
 	//注册通用路由
-	grpc_health_v1.RegisterHealthServer(it.Server, &HealthImpl{})
+	grpc_health_v1.RegisterHealthServer(s.Server, &HealthImpl{})
 }
 
-func (it *GrpcCommServer) Start() error {
+func (s *GrpcCommServer) Start() error {
 	config := (&configs.GrpcConfig{}).Load()
 	address := config.GrpcHost + ":" + config.GrpcPort
-	it.Logger.Info("Grpc Server Start ", address)
+	s.Logger.Info("Grpc Server Start ", address)
 	lis, err := net.Listen("tcp", address)
 	if err != nil {
 		return err
 	}
-	return it.Serve(lis)
+	return s.Serve(lis)
 }
 
 //--------------
 
-func (it *GrpcCommServer) getServiceDesc(name string) grpc.ServiceDesc {
+func (s *GrpcCommServer) getServiceDesc(name string) grpc.ServiceDesc {
 	var serviceDesc = grpc.ServiceDesc{
 		ServiceName: "protobuf." + name,
 		HandlerType: (*protobuf.ServiceServer)(nil),
 		Methods: []grpc.MethodDesc{
 			{
 				MethodName: "Handle",
-				Handler:    it.serviceHandleHandler,
+				Handler:    s.serviceHandleHandler,
 			},
 		},
 		Streams:  []grpc.StreamDesc{},
@@ -71,7 +71,7 @@ func (it *GrpcCommServer) getServiceDesc(name string) grpc.ServiceDesc {
 	return serviceDesc
 }
 
-func (it *GrpcCommServer) serviceHandleHandler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func (s *GrpcCommServer) serviceHandleHandler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(protobuf.Request)
 	if err := dec(in); err != nil {
 		return nil, err
@@ -90,7 +90,7 @@ func (it *GrpcCommServer) serviceHandleHandler(srv interface{}, ctx context.Cont
 	return interceptor(ctx, in, info, handler)
 }
 
-func (it *GrpcCommServer) Close() {
+func (s *GrpcCommServer) Close() {
 	v, ok := wego.App.Consul["grpc"]
 	if ok {
 		v.Deregister()
@@ -101,8 +101,8 @@ type grpcService struct {
 	handler GrpcTransport.Handler
 }
 
-func (it *grpcService) Handle(ctx context.Context, req *protobuf.Request) (*protobuf.Response, error) {
-	_, rsp, err := it.handler.ServeGRPC(ctx, req)
+func (s *grpcService) Handle(ctx context.Context, req *protobuf.Request) (*protobuf.Response, error) {
+	_, rsp, err := s.handler.ServeGRPC(ctx, req)
 	if err != nil {
 		return nil, err
 	}
@@ -113,12 +113,12 @@ type HealthImpl struct{}
 
 // Check 实现健康检查接口，这里直接返回健康状态，
 // 这里也可以有更复杂的健康检查策略，比如根据服务器负载来返回
-func (it *HealthImpl) Check(ctx context.Context, req *grpc_health_v1.HealthCheckRequest) (*grpc_health_v1.HealthCheckResponse, error) {
+func (s *HealthImpl) Check(ctx context.Context, req *grpc_health_v1.HealthCheckRequest) (*grpc_health_v1.HealthCheckResponse, error) {
 	return &grpc_health_v1.HealthCheckResponse{
 		Status: grpc_health_v1.HealthCheckResponse_SERVING,
 	}, nil
 }
-func (it *HealthImpl) Watch(*grpc_health_v1.HealthCheckRequest, grpc_health_v1.Health_WatchServer) error {
+func (s *HealthImpl) Watch(*grpc_health_v1.HealthCheckRequest, grpc_health_v1.Health_WatchServer) error {
 
 	return nil
 }

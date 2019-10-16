@@ -7,7 +7,7 @@ type MqttConfig struct {
 	Parallel bool   `json:"parallel"`
 }
 
-func (it *MqttConfig) Load() *MqttConfig {
+func (s *MqttConfig) Load() *MqttConfig {
 	var b bool
 	if Env("MQTT_PARALLEL", "no") == "yes" {
 		b = true

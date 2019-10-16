@@ -20,18 +20,18 @@ type microService struct {
 	params  map[string]interface{}
 }
 
-func (it *microService) Service(service string) *microService {
-	it.service = service
-	return it
+func (s *microService) Service(service string) *microService {
+	s.service = service
+	return s
 }
 
-func (it *microService) Params(params map[string]interface{}) *microService {
-	it.params = params
-	return it
+func (s *microService) Params(params map[string]interface{}) *microService {
+	s.params = params
+	return s
 }
 
-func (it *microService) Run() (resp contracts.Response) {
-	entity, err := GetConsulService(it.micro)
+func (s *microService) Run() (resp contracts.Response) {
+	entity, err := GetConsulService(s.micro)
 	if err != nil {
 		resp = contracts.ResponseFailed(err)
 		return
@@ -39,9 +39,9 @@ func (it *microService) Run() (resp contracts.Response) {
 	tag := entity.Service.Tags[0]
 	host := fmt.Sprintf("%s:%d", entity.Service.Address, entity.Service.Port)
 	if tag == "http" {
-		return NewHttpPostCall(host, it.service, it.params)
+		return NewHttpPostCall(host, s.service, s.params)
 	} else if tag == "grpc" {
-		resp = NewGrpcCall(host, it.service, it.params)
+		resp = NewGrpcCall(host, s.service, s.params)
 	}
 	return
 }

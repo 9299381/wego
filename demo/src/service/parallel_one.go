@@ -8,7 +8,7 @@ import (
 type ParallelOne struct {
 }
 
-func (it *ParallelOne) Handle(ctx contracts.Context) error {
+func (s *ParallelOne) Handle(ctx contracts.Context) error {
 	ctx.Log.Info(ctx.GetValue("controller"))
 	fmt.Println("one~~~~~~~~~~~~")
 	ctx.SetValue("aaa", "bbb")

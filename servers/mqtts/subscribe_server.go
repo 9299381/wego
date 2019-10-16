@@ -24,63 +24,63 @@ func NewServer() *Server {
 	}
 	return ss
 }
-func (it *Server) Register(name string, handler *commons.CommHandler) {
-	it.topics[name] = handler
+func (s *Server) Register(name string, handler *commons.CommHandler) {
+	s.topics[name] = handler
 
 }
-func (it *Server) Serve() error {
+func (s *Server) Serve() error {
 	if GetIns() != nil {
 		errChans := make(map[string]chan error)
-		it.work(errChans)
+		s.work(errChans)
 		for _, errChan := range errChans {
 			if errChan != nil {
-				it.Logger.Info(<-errChan)
+				s.Logger.Info(<-errChan)
 			}
 		}
 	} else {
-		it.Logger.Info(errors.New(constants.ErrMQTTConnect))
+		s.Logger.Info(errors.New(constants.ErrMQTTConnect))
 	}
 	return nil
 }
 
-func (it *Server) work(errChans map[string]chan error) {
-	it.Logger.Info("MQTT Subscribe Server Start")
-	for topic, handler := range it.topics {
+func (s *Server) work(errChans map[string]chan error) {
+	s.Logger.Info("MQTT Subscribe Server Start")
+	for topic, handler := range s.topics {
 		errChans[topic] = make(chan error)
-		go it.worker(topic, handler, errChans[topic])
+		go s.worker(topic, handler, errChans[topic])
 	}
 
 }
-func (it *Server) worker(t string, h *commons.CommHandler, e chan error) {
-	it.Logger.Infof("Subscribe topic:%s", t)
+func (s *Server) worker(t string, h *commons.CommHandler, e chan error) {
+	s.Logger.Infof("Subscribe topic:%s", t)
 	token := GetIns().Subscribe(t, 0, func(
 		client mqtt.Client, message mqtt.Message) {
-		if it.Parallel {
-			go it.process(h, message)
+		if s.Parallel {
+			go s.process(h, message)
 		} else {
-			it.process(h, message)
+			s.process(h, message)
 		}
 	})
 	if token.Wait() && token.Error() != nil {
 		e <- token.Error()
 	}
 }
-func (it *Server) process(h *commons.CommHandler, Message mqtt.Message) {
-	it.Logger.Info("subscribe topic:", Message.Topic())
+func (s *Server) process(h *commons.CommHandler, Message mqtt.Message) {
+	s.Logger.Info("subscribe topic:", Message.Topic())
 	resp, err := h.Handle(context.Background(), Message.Payload())
 	if err != nil {
-		it.Logger.Error(err)
+		s.Logger.Error(err)
 
 	} else {
-		it.Logger.Info(resp)
+		s.Logger.Info(resp)
 	}
 }
 
-func (it *Server) Close() {
+func (s *Server) Close() {
 	if GetIns() != nil {
-		for topic := range it.topics {
+		for topic := range s.topics {
 			GetIns().Unsubscribe(topic)
-			it.Logger.Infof("Unsubscribe topic:%s", topic)
+			s.Logger.Infof("Unsubscribe topic:%s", topic)
 		}
 		GetIns().Disconnect(250)
 	}

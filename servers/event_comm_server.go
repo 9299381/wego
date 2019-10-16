@@ -23,24 +23,24 @@ func NewEventCommServer() *EventCommServer {
 	events.Handlers = wego.App.Handlers
 	return ss
 }
-func (it *EventCommServer) Boot() {
+func (s *EventCommServer) Boot() {
 
 }
 
-func (it *EventCommServer) Load() {
+func (s *EventCommServer) Load() {
 
 	//注册通用路由
 }
-func (it *EventCommServer) Register() {
+func (s *EventCommServer) Register() {
 }
 
-func (it *EventCommServer) Route() {
+func (s *EventCommServer) Route() {
 
 }
 
-func (it *EventCommServer) Start() error {
-	return it.Serve()
+func (s *EventCommServer) Start() error {
+	return s.Serve()
 }
-func (it *EventCommServer) Close() {
-	it.Server.Close()
+func (s *EventCommServer) Close() {
+	s.Server.Close()
 }

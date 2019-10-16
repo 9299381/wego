@@ -7,15 +7,13 @@ import (
 
 //用于测试并行,串行
 type SleepController struct {
+	*contracts.Controller
 }
 
-func (it *SleepController) Handle(ctx contracts.Context) (interface{}, error) {
+func (s *SleepController) Handle(ctx contracts.Context) (interface{}, error) {
 
 	time.Sleep(10 * time.Second)
 	ctx.Log.Info("sleep ......")
 
 	return nil, nil
-}
-func (it *SleepController) GetRules() interface{} {
-	return nil
 }

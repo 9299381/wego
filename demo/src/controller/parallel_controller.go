@@ -7,9 +7,10 @@ import (
 )
 
 type ParallelController struct {
+	*contracts.Controller
 }
 
-func (it *ParallelController) Handle(ctx contracts.Context) (interface{}, error) {
+func (s *ParallelController) Handle(ctx contracts.Context) (interface{}, error) {
 	ctx.SetValue("controller", "parallel")
 
 	//并行service中间件
@@ -27,7 +28,4 @@ func (it *ParallelController) Handle(ctx contracts.Context) (interface{}, error)
 	m["controller"] = ctx.GetValue("controller") //controller中设置
 
 	return m, nil
-}
-func (it *ParallelController) GetRules() interface{} {
-	return nil
 }

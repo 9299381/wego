@@ -16,7 +16,7 @@ func NewUserRepo(ctx contracts.Context) *UserRepo {
 	return &UserRepo{Context: ctx}
 }
 
-func (it *UserRepo) First(req map[string]interface{}) (ret *model.CommUser, err error) {
+func (s *UserRepo) First(req map[string]interface{}) (ret *model.CommUser, err error) {
 	cond := builder.Eq{}
 	for k, v := range req {
 		cond[k] = v
@@ -33,11 +33,11 @@ func (it *UserRepo) First(req map[string]interface{}) (ret *model.CommUser, err 
 	return
 }
 
-func (it *UserRepo) Update(user *model.CommUser) {
+func (s *UserRepo) Update(user *model.CommUser) {
 	affected, err := clients.DB().Update(user, &model.CommUser{Id: user.Id})
 	if err != nil {
-		it.Log.Info(err)
+		s.Log.Info(err)
 		return
 	}
-	it.Log.Info(affected)
+	s.Log.Info(affected)
 }

@@ -9,10 +9,10 @@ import (
 type DemoProvider struct {
 }
 
-func (it *DemoProvider) Boot() {
+func (s *DemoProvider) Boot() {
 }
 
-func (it *DemoProvider) Register() {
+func (s *DemoProvider) Register() {
 
 	//限速
 	wego.Handler("one", filters.Limit(&controller.OneController{}))

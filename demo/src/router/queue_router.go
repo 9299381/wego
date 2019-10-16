@@ -9,10 +9,10 @@ type QueueRouter struct {
 	*servers.QueueCommServer
 }
 
-func (it *QueueRouter) Boot() {
-	it.QueueCommServer = servers.NewQueueCommServer()
+func (s *QueueRouter) Boot() {
+	s.QueueCommServer = servers.NewQueueCommServer()
 }
 
-func (it *QueueRouter) Register() {
-	it.Route("queue_test", wego.Handler("two"))
+func (s *QueueRouter) Register() {
+	s.Route("queue_test", wego.Handler("two"))
 }

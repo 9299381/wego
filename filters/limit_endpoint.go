@@ -13,17 +13,17 @@ type LimitEndpoint struct {
 	next endpoint.Endpoint
 }
 
-func (it *LimitEndpoint) Next(next endpoint.Endpoint) contracts.IFilter {
-	it.next = next
-	return it
+func (s *LimitEndpoint) Next(next endpoint.Endpoint) contracts.IFilter {
+	s.next = next
+	return s
 }
 
-func (it *LimitEndpoint) Make() endpoint.Endpoint {
+func (s *LimitEndpoint) Make() endpoint.Endpoint {
 	limit := ratelimit.NewBucket(time.Second*1, 3)
 	return func(ctx context.Context, request interface{}) (response interface{}, err error) {
 		if limit.TakeAvailable(1) == 0 {
 			return nil, errors.New("Rate limit exceed!")
 		}
-		return it.next(ctx, request)
+		return s.next(ctx, request)
 	}
 }

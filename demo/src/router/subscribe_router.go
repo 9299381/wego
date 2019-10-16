@@ -9,14 +9,14 @@ type SubscribeRouter struct {
 	*servers.MqttSubscribeCommCommServer
 }
 
-func (it *SubscribeRouter) Boot() {
-	it.MqttSubscribeCommCommServer = servers.NewMqttSubscribeCommCommServer()
+func (s *SubscribeRouter) Boot() {
+	s.MqttSubscribeCommCommServer = servers.NewMqttSubscribeCommCommServer()
 }
 
-func (it *SubscribeRouter) Register() {
+func (s *SubscribeRouter) Register() {
 	//topic -> handler
-	it.Route("sub_test", wego.Handler("two"))
-	it.Route("sub_test2", wego.Handler("two"))
-	it.Route("sub_test3", wego.Handler("sleep"))
+	s.Route("sub_test", wego.Handler("two"))
+	s.Route("sub_test2", wego.Handler("two"))
+	s.Route("sub_test3", wego.Handler("sleep"))
 
 }

@@ -8,9 +8,9 @@ type IController interface {
 type Controller struct {
 }
 
-func (it *Controller) Handle(ctx Context) (interface{}, error) {
+func (s *Controller) Handle(ctx Context) (interface{}, error) {
 	return nil, nil
 }
-func (it *Controller) GetRules() interface{} {
+func (s *Controller) GetRules() interface{} {
 	return nil
 }

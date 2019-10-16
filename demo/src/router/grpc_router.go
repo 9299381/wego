@@ -9,15 +9,15 @@ type GrpcRouter struct {
 	*servers.GrpcCommServer
 }
 
-func (it *GrpcRouter) Boot() {
-	it.GrpcCommServer = servers.NewGrpcCommServer()
+func (s *GrpcRouter) Boot() {
+	s.GrpcCommServer = servers.NewGrpcCommServer()
 }
 
 //这里注册路由
-func (it *GrpcRouter) Register() {
+func (s *GrpcRouter) Register() {
 
-	it.Route("demo.two", wego.Handler("two"))
-	it.Route("demo.one", wego.Handler("one"))
-	it.Route("demo.post", wego.Handler("post"))
+	s.Route("demo.two", wego.Handler("two"))
+	s.Route("demo.one", wego.Handler("one"))
+	s.Route("demo.post", wego.Handler("post"))
 
 }

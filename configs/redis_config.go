@@ -14,7 +14,7 @@ type RedisConfig struct {
 	IdleTimeout time.Duration
 }
 
-func (it *RedisConfig) Load() *RedisConfig {
+func (s *RedisConfig) Load() *RedisConfig {
 
 	db, _ := strconv.Atoi(Env("REDIS_DB", "0"))
 	maxActive, _ := strconv.Atoi(Env("REDIS_MAX_ACTIVE", "50"))

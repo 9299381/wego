@@ -7,9 +7,10 @@ import (
 )
 
 type CacheGetController struct {
+	*contracts.Controller
 }
 
-func (it *CacheGetController) Handle(ctx contracts.Context) (interface{}, error) {
+func (s *CacheGetController) Handle(ctx contracts.Context) (interface{}, error) {
 
 	v, _ := cache.Get("aaaaa")
 	d := make(map[string]interface{})
@@ -21,7 +22,4 @@ func (it *CacheGetController) Handle(ctx contracts.Context) (interface{}, error)
 	}
 
 	return nil, nil
-}
-func (it *CacheGetController) GetRules() interface{} {
-	return nil
 }

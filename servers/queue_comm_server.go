@@ -33,23 +33,23 @@ func NewQueueCommServer() *QueueCommServer {
 	return ss
 }
 
-func (it *QueueCommServer) Route(name string, endpoint endpoint.Endpoint) {
+func (s *QueueCommServer) Route(name string, endpoint endpoint.Endpoint) {
 
 	handler := &commons.CommHandler{
 		Handler: transports.NewQueue(endpoint),
 	}
-	it.Register(name, handler)
+	s.Register(name, handler)
 }
 
-func (it *QueueCommServer) Load() {
+func (s *QueueCommServer) Load() {
 
 	//注册通用路由
 }
 
-func (it *QueueCommServer) Start() error {
-	return it.Serve()
+func (s *QueueCommServer) Start() error {
+	return s.Serve()
 
 }
-func (it *QueueCommServer) Close() {
-	it.Server.Close()
+func (s *QueueCommServer) Close() {
+	s.Server.Close()
 }

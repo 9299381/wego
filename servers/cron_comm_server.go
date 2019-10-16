@@ -11,7 +11,7 @@ type CronCommServer struct {
 	*cronjobs.Server
 }
 
-func (it *CronCommServer) Desc() {
+func (s *CronCommServer) Desc() {
 	//1）星号(*)
 	//表示 cron 表达式能匹配该字段的所有值。如在第5个字段使用星号(month)，表示每个月
 	//2）斜线(/)
@@ -38,22 +38,22 @@ func NewCronCommServer() *CronCommServer {
 	return ss
 }
 
-func (it *CronCommServer) Route(spec string, endpoint endpoint.Endpoint) {
+func (s *CronCommServer) Route(spec string, endpoint endpoint.Endpoint) {
 
 	handler := &commons.CommHandler{
 		Handler: transports.NewCronJob(endpoint),
 	}
-	it.Register(spec, handler)
+	s.Register(spec, handler)
 }
 
-func (it *CronCommServer) Load() {
+func (s *CronCommServer) Load() {
 	//通用加载 todo
 }
 
-func (it *CronCommServer) Start() error {
+func (s *CronCommServer) Start() error {
 
-	return it.Serve()
+	return s.Serve()
 }
-func (it *CronCommServer) Close() {
-	it.Server.Close()
+func (s *CronCommServer) Close() {
+	s.Server.Close()
 }

@@ -9,7 +9,7 @@ type TokenConfig struct {
 	Exp int64  `json:"exp"`
 }
 
-func (it *TokenConfig) Load() *TokenConfig {
+func (s *TokenConfig) Load() *TokenConfig {
 	exp, _ := strconv.Atoi(Env("TOKEN_EXP", "2592000"))
 	config := &TokenConfig{
 		Key: Env("TOKEN_KEY", "EHKHHP54PXKYTS2E"),

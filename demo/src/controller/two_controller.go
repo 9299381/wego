@@ -8,6 +8,7 @@ import (
 )
 
 type TwoController struct {
+	*contracts.Controller
 }
 
 // swagger:route Get /demo/two 分组1 twoController
@@ -16,7 +17,7 @@ type TwoController struct {
 //     Responses:
 //       200: twoResponse
 
-func (it *TwoController) Handle(ctx contracts.Context) (interface{}, error) {
+func (s *TwoController) Handle(ctx contracts.Context) (interface{}, error) {
 	_ = services.Pipe().
 		Middle(&service.TwoService{}).
 		Line(ctx)
@@ -25,9 +26,6 @@ func (it *TwoController) Handle(ctx contracts.Context) (interface{}, error) {
 		UserName: ctx.GetValue("one").(string),
 	}
 	return ret, nil
-}
-func (it *TwoController) GetRules() interface{} {
-	return nil
 }
 
 // swagger:parameters twoController

@@ -13,7 +13,7 @@ type CommUser struct {
 	UpdateTime tools.LocalTime `xorm:"datetime updated 'update_time'" json:"update_time"`
 }
 
-func (it *CommUser) TableName() string {
+func (s *CommUser) TableName() string {
 	return "comm_user_info"
 
 	//return "comm_user_info_copy1"

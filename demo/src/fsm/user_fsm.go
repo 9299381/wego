@@ -19,7 +19,7 @@ type UserFSM struct {
 }
 
 func NewUserFSM(ctx contracts.Context, user *model.CommUser) *UserFSM {
-	it := &UserFSM{
+	s := &UserFSM{
 		Context: ctx,
 		User:    user,
 	}
@@ -33,17 +33,17 @@ func NewUserFSM(ctx contracts.Context, user *model.CommUser) *UserFSM {
 		},
 		fsm.Callbacks{
 			"after_event": func(e *fsm.Event) {
-				it.Log.Infof("fsm event:%s change status to %s", e.Event, e.Dst)
-				it.User.Status = e.Dst
+				s.Log.Infof("fsm event:%s change status to %s", e.Event, e.Dst)
+				s.User.Status = e.Dst
 			},
 		},
 	)
-	if it.User.Status != "" {
-		sm.SetState(it.User.Status)
+	if s.User.Status != "" {
+		sm.SetState(s.User.Status)
 	} else {
 		sm.SetState(Begin)
 	}
 
-	it.FSM = sm
-	return it
+	s.FSM = sm
+	return s
 }

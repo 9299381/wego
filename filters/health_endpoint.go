@@ -9,11 +9,11 @@ import (
 type HealthEndpoint struct {
 }
 
-func (it *HealthEndpoint) Next(next endpoint.Endpoint) contracts.IFilter {
-	return it
+func (s *HealthEndpoint) Next(next endpoint.Endpoint) contracts.IFilter {
+	return s
 }
 
-func (it *HealthEndpoint) Make() endpoint.Endpoint {
+func (s *HealthEndpoint) Make() endpoint.Endpoint {
 	return func(ctx context.Context, request interface{}) (response interface{}, err error) {
 		return contracts.ResponseSucess("SERVING"), nil
 	}

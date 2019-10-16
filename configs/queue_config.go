@@ -13,7 +13,7 @@ type QueueConfig struct {
 	Concurrency int
 }
 
-func (it *QueueConfig) Load() *QueueConfig {
+func (s *QueueConfig) Load() *QueueConfig {
 	listen := Env("QUEUE_LISTEN", "queue")
 	interal, _ := strconv.Atoi(Env("QUEUE_INTERVAL", "1"))
 	concurrency, _ := strconv.Atoi(Env("QUEUE_CONCURRENCY", "1"))

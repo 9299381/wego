@@ -9,12 +9,12 @@ type CronRouter struct {
 	*servers.CronCommServer
 }
 
-func (it *CronRouter) Boot() {
-	it.CronCommServer = servers.NewCronCommServer()
+func (s *CronRouter) Boot() {
+	s.CronCommServer = servers.NewCronCommServer()
 }
 
-func (it *CronRouter) Register() {
+func (s *CronRouter) Register() {
 
-	it.Route("*/5 * * * * *", wego.Handler("one"))
-	it.Route("*/2 * * * * *", wego.Handler("two"))
+	s.Route("*/5 * * * * *", wego.Handler("one"))
+	s.Route("*/2 * * * * *", wego.Handler("two"))
 }

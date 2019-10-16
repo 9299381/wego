@@ -7,7 +7,7 @@ import (
 type OneService struct {
 }
 
-func (it *OneService) Handle(ctx contracts.Context) error {
+func (s *OneService) Handle(ctx contracts.Context) error {
 	ctx.Log.Info("one....")
 	ctx.SetValue("k.a", "a")
 	ctx.SetValue("k.b", "b")

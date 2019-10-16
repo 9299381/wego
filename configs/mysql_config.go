@@ -14,7 +14,7 @@ type MySqlConfig struct {
 	ShowSQL      bool
 }
 
-func (it *MySqlConfig) Load() *MySqlConfig {
+func (s *MySqlConfig) Load() *MySqlConfig {
 	driver := Env("DB_CONNECTION", "mysql")
 	dataSource := fmt.Sprintf(
 		"%s:%s@(%s:%s)/%s"+"?charset=utf8&collation=utf8_general_ci",

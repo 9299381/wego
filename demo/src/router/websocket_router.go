@@ -10,10 +10,10 @@ type WebSocketRouter struct {
 	*servers.WebSocketCommServer
 }
 
-func (it *WebSocketRouter) Boot() {
-	it.WebSocketCommServer = servers.NewWebSocketCommServer()
+func (s *WebSocketRouter) Boot() {
+	s.WebSocketCommServer = servers.NewWebSocketCommServer()
 }
 
-func (it *WebSocketRouter) Register() {
-	it.Route("Two", wego.Handler("two"))
+func (s *WebSocketRouter) Register() {
+	s.Route("Two", wego.Handler("two"))
 }

@@ -6,7 +6,7 @@ type WebSocketConfig struct {
 	Path          string
 }
 
-func (it *WebSocketConfig) Load() *WebSocketConfig {
+func (s *WebSocketConfig) Load() *WebSocketConfig {
 
 	config := &WebSocketConfig{
 		Path:          "/ws",

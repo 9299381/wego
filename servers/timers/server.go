@@ -25,18 +25,18 @@ func NewServer() *Server {
 
 	return ss
 }
-func (it *Server) Register(name string, freq int, handler *commons.CommHandler, params map[string]interface{}) {
+func (s *Server) Register(name string, freq int, handler *commons.CommHandler, params map[string]interface{}) {
 
-	it.handlers[name] = &service{
+	s.handlers[name] = &service{
 		freq:    freq,
 		handler: handler,
 		params:  params,
 	}
 }
 
-func (it *Server) Serve() error {
+func (s *Server) Serve() error {
 	errChans := make(map[string]chan error)
-	for name, svr := range it.handlers {
+	for name, svr := range s.handlers {
 		errChans[name] = make(chan error)
 		ticker := time.NewTicker(time.Duration(svr.freq) * time.Second)
 		go func(name string, svr *service, t *time.Ticker, errChan chan error) {
@@ -49,9 +49,9 @@ func (it *Server) Serve() error {
 					params["request_id"] = id
 					resp, err := svr.handler.Handle(ctx, params)
 					if err != nil {
-						it.Logger.Info(err.Error())
+						s.Logger.Info(err.Error())
 					} else {
-						it.Logger.Info("定时任务:", resp)
+						s.Logger.Info("定时任务:", resp)
 					}
 				}
 			}
@@ -66,6 +66,6 @@ func (it *Server) Serve() error {
 	return nil
 }
 
-func (it *Server) Close() {
+func (s *Server) Close() {
 
 }

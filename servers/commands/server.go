@@ -22,15 +22,15 @@ func NewServer() *Server {
 	return s
 }
 
-func (it *Server) Register(name string, handler *commons.CommHandler) {
-	it.handlers[name] = handler
+func (s *Server) Register(name string, handler *commons.CommHandler) {
+	s.handlers[name] = handler
 
 }
 
-func (it *Server) Serve() error {
+func (s *Server) Serve() error {
 	if args.Cmd != "" {
 		//调用服务
-		handler, isExist := it.handlers[args.Cmd]
+		handler, isExist := s.handlers[args.Cmd]
 		if isExist == false {
 			return errors.New(constants.ErrRoute)
 		}
@@ -39,10 +39,10 @@ func (it *Server) Serve() error {
 		if err != nil {
 			return err
 		}
-		it.Logger.Info(response)
+		s.Logger.Info(response)
 	}
 	return nil
 }
-func (it *Server) Close() {
+func (s *Server) Close() {
 
 }

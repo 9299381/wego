@@ -7,14 +7,12 @@ import (
 )
 
 type SqlController struct {
+	*contracts.Controller
 }
 
-func (it *SqlController) Handle(ctx contracts.Context) (interface{}, error) {
+func (s *SqlController) Handle(ctx contracts.Context) (interface{}, error) {
 	_ = services.Pipe().Middle(&service.SqlService{}).Line(ctx)
 	ret := ctx.GetValue("user")
 	return ret, nil
 
-}
-func (it *SqlController) GetRules() interface{} {
-	return nil
 }
