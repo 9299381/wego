@@ -11,8 +11,8 @@ type AuthController struct {
 
 func (s *AuthController) Handle(ctx contracts.Context) (interface{}, error) {
 
-	fmt.Println(ctx.GetValue("request.claim.Id"))
-	fmt.Println(ctx.GetValue("request.claim.Name"))
+	fmt.Println(ctx.Get("request.claim.Id"))
+	fmt.Println(ctx.Get("request.claim.Name"))
 
 	return nil, nil
 }

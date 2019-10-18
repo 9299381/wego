@@ -2,10 +2,10 @@ package filters
 
 import (
 	"context"
+	"github.com/9299381/wego/constants"
 	"github.com/9299381/wego/contracts"
 	"github.com/9299381/wego/loggers"
 	"github.com/9299381/wego/tools/convert"
-	"github.com/9299381/wego/validations"
 	"github.com/go-kit/kit/endpoint"
 	"github.com/sirupsen/logrus"
 )
@@ -45,16 +45,12 @@ func (s *CommEndpoint) Make() endpoint.Endpoint {
 func (s *CommEndpoint) valid(ctx contracts.Context, request contracts.Request) error {
 	obj := s.Controller.GetRules()
 	if obj != nil {
+		// Map2Struct 时自动验证
 		err := convert.Map2Struct(request.Data, obj)
 		if err != nil {
 			return err
 		}
-		//验证obj
-		err = validations.Valid(obj)
-		if err != nil {
-			return err
-		}
-		ctx.SetValue("RequestDTO", obj)
+		ctx.Set(constants.RequestDto, obj)
 	}
 	return nil
 }
@@ -77,8 +73,8 @@ func (s *CommEndpoint) makeContext(ctx context.Context, req contracts.Request) c
 		Context: ctx,
 		Keys:    make(map[string]interface{}),
 	}
-	cc.SetValue("request", req.Data)
-	cc.SetValue("request.id", req.Id)
+	cc.Set("request", req.Data)
+	cc.Set("request.id", req.Id)
 
 	return cc
 }

@@ -23,7 +23,7 @@ func (s *TwoController) Handle(ctx contracts.Context) (interface{}, error) {
 		Line(ctx)
 	ret := &TwoResponse{
 		Id:       idwork.ID(),
-		UserName: ctx.GetValue("one").(string),
+		UserName: ctx.Get("one").(string),
 	}
 	return ret, nil
 }

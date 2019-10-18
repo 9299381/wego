@@ -5,6 +5,14 @@ import (
 	"github.com/9299381/wego/contracts"
 )
 
+func New(service contracts.IService) *commonService {
+	var s []contracts.IService
+	s = append(s, service)
+	return &commonService{
+		services: s,
+	}
+}
+
 func Pipe() *commonService {
 	var s []contracts.IService
 	return &commonService{
@@ -22,6 +30,11 @@ func (s *commonService) Middle(services ...contracts.IService) *commonService {
 	}
 	return s
 }
+
+func (s *commonService) Call(ctx contracts.Context) error {
+	return s.services[0].Handle(ctx)
+}
+
 func (s *commonService) Line(ctx contracts.Context) error {
 	for _, service := range s.services {
 		err := service.Handle(ctx)

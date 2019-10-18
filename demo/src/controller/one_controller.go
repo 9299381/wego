@@ -27,7 +27,7 @@ func (s *OneController) Handle(ctx contracts.Context) (interface{}, error) {
 	}
 	ret := &oneResponse{
 		Id:       idwork.ID(),
-		UserName: ctx.GetValue("k.a").(string),
+		UserName: ctx.Get("k.a").(string),
 	}
 	return ret, nil
 }

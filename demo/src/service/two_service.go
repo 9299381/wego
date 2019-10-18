@@ -9,7 +9,7 @@ type TwoService struct {
 
 func (s *TwoService) Handle(ctx contracts.Context) error {
 
-	ctx.SetValue("one", "tow")
+	ctx.Set("one", "tow")
 	//if ctx.Request("a").(string) == "a" {
 	//	panic(errors.New("9988::严重错误"))
 	//}

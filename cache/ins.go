@@ -16,12 +16,12 @@ var once sync.Once
 
 func GetIns() *freecache.Cache {
 	once.Do(func() {
-		ins = init_cache()
+		ins = initCache()
 	})
 	return ins
 }
 
-func init_cache() *freecache.Cache {
+func initCache() *freecache.Cache {
 	config := (&configs.CacheConfig{}).Load()
 	value, err := strconv.Atoi(config.Size)
 	if err == nil && value != 0 {

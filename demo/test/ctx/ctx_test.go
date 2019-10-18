@@ -11,8 +11,8 @@ func TestContext(t *testing.T) {
 		Keys: make(map[string]interface{}),
 	}
 
-	ctx.SetValue("a", "1")
-	ctx.SetValue("a.b", "2")
-	//ctx.SetValue("a", "2")
-	fmt.Println(ctx.GetValue("a"))
+	ctx.Set("a", "1")
+	ctx.Set("a.b", "2")
+	//ctx.Set("a", "2")
+	fmt.Println(ctx.Get("a"))
 }

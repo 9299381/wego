@@ -12,7 +12,7 @@ type SqlController struct {
 
 func (s *SqlController) Handle(ctx contracts.Context) (interface{}, error) {
 	_ = services.Pipe().Middle(&service.SqlService{}).Line(ctx)
-	ret := ctx.GetValue("user")
+	ret := ctx.Get("user")
 	return ret, nil
 
 }

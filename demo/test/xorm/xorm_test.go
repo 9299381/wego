@@ -3,7 +3,6 @@ package xorm
 import (
 	"fmt"
 	"github.com/9299381/wego/clients"
-	"github.com/9299381/wego/clients/mysql"
 	"github.com/9299381/wego/demo/src/model"
 	"github.com/9299381/wego/tools/idwork"
 	"testing"
@@ -94,7 +93,7 @@ func TestFetch(t *testing.T) {
 			ToSQL()
 
 	var users []model.CommUser
-	err := mysql.Fetch(sql, args, &users)
+	err := clients.DB().SQL(sql, args...).Find(&users)
 	for _, v := range users {
 		fmt.Println(v.Id)
 	}
@@ -128,7 +127,7 @@ func TestUpdate(t *testing.T) {
 	_, _ = clients.DB().Get(user)
 	fmt.Println(user)
 	user.UserName = "ccc"
-	mysql.Update(user, &model.CommUser{Id: user.Id})
+	_, _ = clients.DB().Update(user, &model.CommUser{Id: user.Id})
 	fmt.Println(user)
 }
 
@@ -140,7 +139,7 @@ func TestInsert(t *testing.T) {
 		Status:    "30",
 		LoginName: "aaaaa",
 	}
-	mysql.Insert(user)
+	_, _ = clients.DB().Insert(user)
 
 }
 

@@ -29,7 +29,10 @@ func (s *TestStruct) Request(m map[string]interface{}) *TestStruct {
 	return s
 }
 func (s *TestStruct) Run() (contracts.Response, error) {
-	e := filters.New(s.controller)
+	e := filters.Chain(
+		&filters.ResponseEndpoint{},
+		&filters.CommEndpoint{Controller: s.controller},
+	)
 	request := contracts.Request{
 		Id:   idwork.ID(),
 		Data: s.request,

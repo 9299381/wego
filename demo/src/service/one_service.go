@@ -9,10 +9,10 @@ type OneService struct {
 
 func (s *OneService) Handle(ctx contracts.Context) error {
 	ctx.Log.Info("one....")
-	ctx.SetValue("k.a", "a")
-	ctx.SetValue("k.b", "b")
-	ctx.SetValue("k.a", "b")
+	ctx.Set("k.a", "a")
+	ctx.Set("k.b", "b")
+	ctx.Set("k.a", "b")
 
-	ctx.Log.Info(ctx.GetValue("k"))
+	ctx.Log.Info(ctx.Get("k"))
 	return nil
 }

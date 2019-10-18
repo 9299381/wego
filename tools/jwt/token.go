@@ -1,13 +1,12 @@
 package jwt
 
 import (
-	"crypto/md5"
 	"encoding/base64"
-	"encoding/hex"
 	"encoding/json"
 	"errors"
 	"github.com/9299381/wego/configs"
 	"github.com/9299381/wego/constants"
+	"github.com/9299381/wego/tools/util"
 	"strconv"
 	"strings"
 	"time"
@@ -85,8 +84,6 @@ func (s *Token) getExpTime() int64 {
 func (s *Token) getSign(claims *Claims) string {
 	key := s.config.Key
 	keyPlain := claims.Id + strconv.Itoa(int(claims.Iat)) + key
-	h := md5.New()
-	h.Write([]byte(keyPlain))
-	return hex.EncodeToString(h.Sum(nil))
+	return util.Md5(keyPlain)
 
 }

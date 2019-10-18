@@ -9,10 +9,10 @@ type ParallelOne struct {
 }
 
 func (s *ParallelOne) Handle(ctx contracts.Context) error {
-	ctx.Log.Info(ctx.GetValue("controller"))
+	ctx.Log.Info(ctx.Get("controller"))
 	fmt.Println("one~~~~~~~~~~~~")
-	ctx.SetValue("aaa", "bbb")
-	ctx.SetValue("one", "one")
+	ctx.Set("aaa", "bbb")
+	ctx.Set("one", "one")
 	//return errors.New("error")
 	return nil
 }

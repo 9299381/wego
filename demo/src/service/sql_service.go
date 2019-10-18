@@ -3,7 +3,8 @@ package service
 import (
 	"github.com/9299381/wego/contracts"
 	"github.com/9299381/wego/demo/src/fsm"
-	"github.com/9299381/wego/demo/src/repository"
+	"github.com/9299381/wego/demo/src/model"
+	"github.com/9299381/wego/demo/src/repo"
 )
 
 type SqlService struct {
@@ -11,11 +12,11 @@ type SqlService struct {
 
 func (s *SqlService) Handle(ctx contracts.Context) error {
 
-	repo := repository.NewUserRepo(ctx)
+	st := repo.NewUserRepo(ctx)
 	req := make(map[string]interface{})
 	req["id"] = "1189164474851006208"
 	//req["user_name"] = "aaa"
-	user, err := repo.First(req)
+	user, err := st.GetUser(req)
 	ctx.Log.Info(user)
 	if err != nil {
 		return err
@@ -32,9 +33,9 @@ func (s *SqlService) Handle(ctx contracts.Context) error {
 		}
 		user.UserName = "aaaaaaaaa"
 		ctx.Log.Info(user.Status)
-		repo.Update(user)
+		st.Update(user, &model.CommUser{Id: user.Id})
 	}
-	ctx.SetValue("user", user)
+	ctx.Set("user", user)
 
 	return nil
 }

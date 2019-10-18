@@ -11,7 +11,7 @@ type ParallelController struct {
 }
 
 func (s *ParallelController) Handle(ctx contracts.Context) (interface{}, error) {
-	ctx.SetValue("controller", "parallel")
+	ctx.Set("controller", "parallel")
 
 	//并行service中间件
 	err := services.Pipe().
@@ -22,10 +22,10 @@ func (s *ParallelController) Handle(ctx contracts.Context) (interface{}, error) 
 		return nil, err
 	}
 	m := make(map[string]interface{})
-	m["aaa"] = ctx.GetValue("aaa")               //不确定值,
-	m["one"] = ctx.GetValue("one")               //one中设置
-	m["two"] = ctx.GetValue("two")               //two中设置
-	m["controller"] = ctx.GetValue("controller") //controller中设置
+	m["aaa"] = ctx.Get("aaa")               //不确定值,
+	m["one"] = ctx.Get("one")               //one中设置
+	m["two"] = ctx.Get("two")               //two中设置
+	m["controller"] = ctx.Get("controller") //controller中设置
 
 	return m, nil
 }

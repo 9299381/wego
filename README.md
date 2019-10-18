@@ -26,7 +26,7 @@
 ~~~~    
     //经过jwt认证后的用户id,和name
 	fmt.Println(ctx.Request("claim.Id"))
-	fmt.Println(ctx.GetValue("request.claim.Name"))
+	fmt.Println(ctx.Get("request.claim.Name"))
     //cache使用
     v, _ := cache.Get("aaaaa")
 	v := make(map[string]interface{})
@@ -152,7 +152,7 @@ func (it *OneController) Handle(ctx contracts.Context) (interface{}, error) {
 
 	ret := &FirstResp{
 		Id:       idwork.ID(),
-		UserName: ctx.GetValue("k.a").(string),
+		UserName: ctx.Get("k.a").(string),
 	}
 	return ret, nil
 }
@@ -212,7 +212,7 @@ SqlService
 func (it *SqlService)Handle(ctx contracts.Context) error  {
 	repo := &repository2.UserRepo{Context: ctx}
 	user := repo.FetchId("1189164474851006208")
-	ctx.SetValue("user",user)
+	ctx.Set("user",user)
 	return nil
 }
 ~~~~

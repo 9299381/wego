@@ -9,6 +9,7 @@ import (
 	"net/url"
 	"reflect"
 	"strconv"
+	"strings"
 )
 
 func Struct2Map(obj interface{}) map[string]interface{} {
@@ -23,9 +24,17 @@ func Struct2Map(obj interface{}) map[string]interface{} {
 }
 
 func Map2Struct(req, obj interface{}) error {
+	// map转struct时, key与struct的字段应该相同,忽略大小写,
+	// 注意 不可随意增加_,json中可以有_
 	request, ok := req.(map[string]interface{})
 	if ok == false {
 		return errors.New(constants.ErrConvert)
+	}
+	for k, v := range request {
+		if strings.Contains(k, "_") {
+			kk := strings.ReplaceAll(k, "_", "")
+			request[kk] = v
+		}
 	}
 	err := mapstructure.WeakDecode(request, obj)
 	if err != nil {

@@ -9,10 +9,10 @@ type ParallelTwo struct {
 }
 
 func (s *ParallelTwo) Handle(ctx contracts.Context) error {
-	ctx.Log.Info(ctx.GetValue("controller"))
+	ctx.Log.Info(ctx.Get("controller"))
 	fmt.Println("two~~~~~~~~~~~~")
-	ctx.SetValue("aaa", "ccc")
-	ctx.SetValue("two", "two")
+	ctx.Set("aaa", "ccc")
+	ctx.Set("two", "two")
 
 	return nil
 }

@@ -26,7 +26,7 @@ func (s *HttpRouter) Register() {
 	s.Get("/demo/cache_set", wego.Handler("cache_set"))
 	s.Get("/demo/cache_get", wego.Handler("cache_get"))
 	//验证validate
-	s.Get("/demo/valid", wego.Handler("valid"))
+	s.Post("/demo/valid", wego.Handler("valid"))
 
 	s.Get("/demo/consul", wego.Handler("consul"))
 	s.Get("/demo/event", wego.Handler("event"))
