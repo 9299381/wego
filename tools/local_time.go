@@ -7,6 +7,11 @@ import (
 
 const localDateTimeFormat string = "2006-01-02 15:04:05"
 
+func LocalBegin() LocalTime {
+	begin, _ := time.Parse(localDateTimeFormat, "2000-01-01 00:00:00")
+	return LocalTime(begin)
+}
+
 type LocalTime time.Time
 
 func (l LocalTime) MarshalJSON() ([]byte, error) {

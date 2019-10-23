@@ -11,7 +11,7 @@ func First(query interface{}, args []interface{}, bean interface{}) error {
 		return err
 	}
 	if !has {
-		return errors.New(constants.ErrExsit)
+		return errors.New(constants.ErrNotExist)
 	}
 	return nil
 }

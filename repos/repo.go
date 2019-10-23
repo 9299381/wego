@@ -21,8 +21,15 @@ func (s *Repo) DB() *xorm.Engine {
 	return mysql.GetDB()
 }
 
-func (s *Repo) First(obj interface{}) (bool, error) {
-	return mysql.GetDB().Get(obj)
+func (s *Repo) First(obj interface{}) error {
+	has, err := mysql.GetDB().Get(obj)
+	if err != nil {
+		return err
+	}
+	if !has {
+		return errors.New(constants.ErrNotExist)
+	}
+	return nil
 }
 func (s *Repo) Find(beans interface{}, condiBeans ...interface{}) error {
 	return mysql.GetDB().Find(beans, condiBeans)
@@ -43,8 +50,12 @@ func (s *Repo) Update(bean interface{}, cond interface{}) bool {
 	}
 	return false
 }
-func (s *Repo) Exist(obj interface{}) (bool, error) {
-	return mysql.GetDB().Exist(obj)
+func (s *Repo) Exist(obj interface{}) bool {
+	b, err := mysql.GetDB().Exist(obj)
+	if err != nil {
+		return false
+	}
+	return b
 }
 
 func (s *Repo) FetchOne(b *builder.Builder, bean interface{}) error {
@@ -57,7 +68,7 @@ func (s *Repo) FetchOne(b *builder.Builder, bean interface{}) error {
 		return err
 	}
 	if !has {
-		return errors.New(constants.ErrExsit)
+		return errors.New(constants.ErrNotExist)
 	}
 	return nil
 }
