@@ -11,16 +11,18 @@ import (
 )
 
 type Server struct {
-	topics   map[string]*commons.CommHandler
-	Logger   contracts.ILogger
-	Parallel bool //并行处理
+	topics       map[string]*commons.CommHandler
+	Logger       contracts.ILogger
+	Parallel     bool //并行处理
+	SubscribeQos byte
 }
 
 func NewServer() *Server {
 	config := (&configs.MqttConfig{}).Load()
 	ss := &Server{
-		topics:   make(map[string]*commons.CommHandler),
-		Parallel: config.Parallel,
+		topics:       make(map[string]*commons.CommHandler),
+		Parallel:     config.Parallel,
+		SubscribeQos: config.SubscribeQos,
 	}
 	return ss
 }
@@ -53,7 +55,7 @@ func (s *Server) work(errChans map[string]chan error) {
 }
 func (s *Server) worker(t string, h *commons.CommHandler, e chan error) {
 	s.Logger.Infof("Subscribe topic:%s", t)
-	token := GetIns().Subscribe(t, 0, func(
+	token := GetIns().Subscribe(t, s.SubscribeQos, func(
 		client mqtt.Client, message mqtt.Message) {
 		if s.Parallel {
 			go s.process(h, message)

@@ -6,6 +6,7 @@ const ErrMQTTConnect string = "9991::MQTT链接失败"
 const ErrCacheInit string = "9992::Cache初始化错误"
 const ErrLoadEnv string = "9993::ENV环境加载失败"
 const ErrSign string = "9994::数据签名错误"
+const ErrBalance = "9995::金额不可为负值"
 
 const ErrNotExist string = "9000::数据不存在"
 const ErrIsExist string = "9001::数据已存在"

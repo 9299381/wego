@@ -3,6 +3,7 @@ package mqtts
 import (
 	"encoding/json"
 	"errors"
+	"github.com/9299381/wego/configs"
 	"github.com/9299381/wego/constants"
 )
 
@@ -14,7 +15,8 @@ func Publish(topic string, payload interface{}) error {
 	if err != nil {
 		return err
 	}
-	token := GetIns().Publish(topic, 0, false, param)
+	config := (&configs.MqttConfig{}).Load()
+	token := GetIns().Publish(topic, config.PublishQos, false, param)
 	if token.Wait() && token.Error() != nil {
 		return token.Error()
 	}
