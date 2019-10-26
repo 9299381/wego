@@ -169,16 +169,7 @@ func (c *Context) getValue(key string) (ret interface{}) {
 	return
 }
 
-func (c *Context) Request(key ...string) (ret interface{}) {
-	var k string
-	if key == nil {
-		k = "request"
-	} else {
-		k = "request." + key[0]
-	}
-	return c.getValue(k)
-}
-func (c *Context) Dto() interface{} {
+func (c *Context) Request() interface{} {
 	return c.Get(constants.RequestDto)
 }
 

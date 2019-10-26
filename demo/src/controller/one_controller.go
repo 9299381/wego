@@ -1,10 +1,10 @@
 package controller
 
 import (
+	"fmt"
 	"github.com/9299381/wego/contracts"
 	"github.com/9299381/wego/demo/src/service"
 	"github.com/9299381/wego/services"
-	"github.com/9299381/wego/tools/idwork"
 )
 
 type OneController struct {
@@ -18,6 +18,10 @@ func (s *OneController) Handle(ctx contracts.Context) (interface{}, error) {
 	// This will .......
 	//     Responses:
 	//       200: oneResponse
+	req := ctx.Request().(*oneRequest)
+	fmt.Println(req)
+	fmt.Println(ctx.Get("request"))
+
 	err := services.Pipe().
 		Middle(&service.OneService{}).
 		Middle(&service.TwoService{}).
@@ -26,14 +30,15 @@ func (s *OneController) Handle(ctx contracts.Context) (interface{}, error) {
 		return nil, err
 	}
 	ret := &oneResponse{
-		Id:       idwork.ID(),
-		UserName: ctx.Get("k.a").(string),
+		Id:       ctx.Get("request.id").(string),
+		UserName: req.Param1,
+		Age:      req.Param2,
 	}
 	return ret, nil
 }
 
 func (s *OneController) GetRules() interface{} {
-	return nil
+	return &oneRequest{}
 }
 
 // swagger:parameters oneController
@@ -55,4 +60,6 @@ type oneResponse struct {
 	Id string `json:"id"`
 	// 响应UserName的描述
 	UserName string `json:"user_name"`
+	// 整形
+	Age int `json:"age"`
 }

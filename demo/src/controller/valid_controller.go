@@ -15,7 +15,7 @@ type ValidController struct {
 //     Responses:
 //       200: postResponse
 func (s *ValidController) Handle(ctx contracts.Context) (interface{}, error) {
-	st := ctx.Dto().(*dto.TestDto)
+	st := ctx.Request().(*dto.TestDto)
 	resp := &dto.ValidResponse{
 		Age:  st.Age,
 		List: st.DemoList,

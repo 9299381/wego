@@ -29,6 +29,7 @@ func (s *DemoProvider) Register() {
 	wego.Handler("sql", filters.New(&controller.SqlController{}))
 	wego.Handler("redis", filters.New(&controller.RedisController{}))
 	wego.Handler("queue", filters.New(&controller.QueueController{}))
+	wego.Handler("queue2", filters.New(&controller.Queue2Controller{}))
 
 	wego.Handler("cache_set", filters.New(&controller.CacheSetController{}))
 	wego.Handler("cache_get", filters.New(&controller.CacheGetController{}))

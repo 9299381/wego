@@ -15,4 +15,6 @@ func (s *QueueRouter) Boot() {
 
 func (s *QueueRouter) Register() {
 	s.Route("queue_test", wego.Handler("two"))
+	s.Route("queue2", wego.Handler("queue2"))
+
 }

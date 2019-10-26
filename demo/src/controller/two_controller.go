@@ -8,16 +8,14 @@ import (
 )
 
 type TwoController struct {
-	*contracts.Controller
 }
 
-// swagger:route Get /demo/two 分组1 twoController
-// Test swagger
-// This will .......
-//     Responses:
-//       200: twoResponse
-
 func (s *TwoController) Handle(ctx contracts.Context) (interface{}, error) {
+	// swagger:route Get /demo/two 分组1 twoController
+	// Test swagger
+	// This will .......
+	//     Responses:
+	//       200: twoResponse
 	_ = services.Pipe().
 		Middle(&service.TwoService{}).
 		Line(ctx)
@@ -27,9 +25,14 @@ func (s *TwoController) Handle(ctx contracts.Context) (interface{}, error) {
 	}
 	return ret, nil
 }
+func (s *TwoController) GetRules() interface{} {
+	return &TwoRequest{}
+}
 
 // swagger:parameters twoController
 type TwoRequest struct {
+	// 备注
+	Name string `json:"name"`
 }
 
 // swagger:response twoResponse

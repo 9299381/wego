@@ -25,7 +25,7 @@
 举例
 ~~~~    
     //经过jwt认证后的用户id,和name
-	fmt.Println(ctx.Request("claim.Id"))
+	fmt.Println(ctx.Get("request.claim.Id"))
 	fmt.Println(ctx.Get("request.claim.Name"))
     //cache使用
     v, _ := cache.Get("aaaaa")
@@ -37,7 +37,7 @@
 	ctx.Log.Info("one....")
 	ctx.Log.Infof(format,arg...)
 	//请求参数
-	ctx.Request("claim.Id")
+	dto := ctx.Request().(*dto.Request)
 	//redis使用
     client := clients.Redis() //从pool中获取一个链接
     defer client.Close()      //延时释放链接,本方法执行完毕时释放
@@ -219,7 +219,7 @@ func (it *SqlService)Handle(ctx contracts.Context) error  {
 struct validations 由 beego的validations 修改而来
 github.com/astaxie/beego/validation
 ~~~~
-	req := ctx.Request()
+	req := ctx.Get("request")
 	st := &dto.TestDto{}
 	err := convert.Map2Struct(req, st)
 	if err != nil {

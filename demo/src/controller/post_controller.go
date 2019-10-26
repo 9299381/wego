@@ -19,7 +19,7 @@ type PostController struct {
 func (s *PostController) Handle(ctx contracts.Context) (interface{}, error) {
 
 	request := &postRequest{}
-	err := convert.Map2Struct(ctx.Request(), request)
+	err := convert.Map2Struct(ctx.Get("request"), request)
 
 	if err != nil {
 		return nil, err
