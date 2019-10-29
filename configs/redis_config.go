@@ -1,7 +1,6 @@
 package configs
 
 import (
-	"strconv"
 	"time"
 )
 
@@ -15,18 +14,13 @@ type RedisConfig struct {
 }
 
 func (s *RedisConfig) Load() *RedisConfig {
-
-	db, _ := strconv.Atoi(Env("REDIS_DB", "0"))
-	maxActive, _ := strconv.Atoi(Env("REDIS_MAX_ACTIVE", "50"))
-	maxIdle, _ := strconv.Atoi(Env("REDIS_MAX_IDLE", "5"))
-	timeout, _ := strconv.Atoi(Env("REDIS_TIMEOUT", "10"))
 	config := &RedisConfig{
-		Uri:         Env("REDIS_URI", "127.0.0.1:6937"),
-		Auth:        Env("REDIS_AUTH", "password"),
-		Db:          db,
-		MaxActive:   maxActive,
-		MaxIdle:     maxIdle,
-		IdleTimeout: time.Duration(timeout) * time.Second,
+		Uri:         EnvString("redis.uri", "127.0.0.1:6937"),
+		Auth:        EnvString("redis.auth", "password"),
+		Db:          EnvInt("redis.db", 0),
+		MaxActive:   EnvInt("redis.max_active", 50),
+		MaxIdle:     EnvInt("redis.max_idle", 5),
+		IdleTimeout: time.Duration(EnvInt("redis.timeout", 10)) * time.Second,
 	}
 	return config
 }

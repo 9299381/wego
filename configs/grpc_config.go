@@ -7,8 +7,8 @@ type GrpcConfig struct {
 
 func (i *GrpcConfig) Load() *GrpcConfig {
 	config := &GrpcConfig{
-		GrpcHost: Env("SERVER_GRPC_HOST", "127.0.0.1"),
-		GrpcPort: Env("SERVER_GRPC_PORT", "9341"),
+		GrpcHost: EnvString("server.grpc_host", "127.0.0.1"),
+		GrpcPort: EnvString("server.grpc_port", "9341"),
 	}
 	return config
 }

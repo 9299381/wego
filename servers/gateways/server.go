@@ -122,7 +122,7 @@ func (s *Server) fireEvent(begin time.Time, key, tag, host *string) {
 	params["tag"] = *tag
 	params["host"] = *host
 	payload := &contracts.Payload{
-		Route:  configs.Env("GATEWAY_EVENT_HANDLER", "GATEWAY_EVENT_HANDLER"),
+		Route:  configs.EnvString("gateway.event_handler", "GATEWAY_EVENT_HANDLER"),
 		Params: params,
 	}
 	events.Fire(payload)

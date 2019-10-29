@@ -10,8 +10,8 @@ func (s *WebSocketConfig) Load() *WebSocketConfig {
 
 	config := &WebSocketConfig{
 		Path:          "/ws",
-		WebSocketPort: Env("SERVER_WEBSOCKET_PORT", "8342"),
-		WebSocketHost: Env("SERVER_WEBSOCKET_HOST", "127.0.0.1"),
+		WebSocketPort: EnvString("server.websocket_port", "8342"),
+		WebSocketHost: EnvString("server.websocket_host", "127.0.0.1"),
 	}
 	return config
 }

@@ -7,7 +7,6 @@ import (
 	"github.com/9299381/wego/constants"
 	"github.com/coocood/freecache"
 	"runtime/debug"
-	"strconv"
 	"sync"
 )
 
@@ -23,9 +22,8 @@ func GetIns() *freecache.Cache {
 
 func initCache() *freecache.Cache {
 	config := (&configs.CacheConfig{}).Load()
-	value, err := strconv.Atoi(config.Size)
-	if err == nil && value != 0 {
-		c := freecache.NewCache(value)
+	if config.Size != 0 {
+		c := freecache.NewCache(config.Size)
 		//根据cache的大小进行设置
 		debug.SetGCPercent(20)
 		return c

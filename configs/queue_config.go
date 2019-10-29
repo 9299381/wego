@@ -1,8 +1,6 @@
 package configs
 
 import (
-	"strconv"
-	"strings"
 	"time"
 )
 
@@ -14,14 +12,12 @@ type QueueConfig struct {
 }
 
 func (s *QueueConfig) Load() *QueueConfig {
-	listen := Env("QUEUE_LISTEN", "queue")
-	interal, _ := strconv.Atoi(Env("QUEUE_INTERVAL", "1"))
-	concurrency, _ := strconv.Atoi(Env("QUEUE_CONCURRENCY", "1"))
+	interval := EnvInt("queue.interval", 1)
 	config := &QueueConfig{
-		Prefix:      Env("QUEUE_PREFIX", "wego"),
-		Listen:      strings.Split(listen, ","),
-		Interval:    time.Duration(interal) * time.Second,
-		Concurrency: concurrency,
+		Prefix:      EnvString("queue.prefix", "wego"),
+		Listen:      EnvStringSlice("queue.listen"),
+		Interval:    time.Duration(interval) * time.Second,
+		Concurrency: EnvInt("queue.concurrency", 1),
 	}
 	return config
 }

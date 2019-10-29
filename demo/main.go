@@ -17,23 +17,25 @@ func main() {
 	//args.Server = "http,event,subscribe"
 	//args.Server = "subscribe"
 	//args.Server = "queue"
-	args.Name = "consul_demo"
+	args.Name = "demo"
 	args.Mode = "dev"
 	//服务注册
 	wego.Provider(&providers.ConsulRegistyProvider{})
-
+	// api 接口
 	wego.Provider(&provider.DemoProvider{})
+	// web 页面
+	wego.Provider(&provider.WebProvider{})
 
+	// http服务器路由
 	wego.Router("http", &router.HttpRouter{})
+	// grpc_api 接口服务路由
 	wego.Router("grpc", &router.GrpcRouter{})
 	wego.Router("queue", &router.QueueRouter{})
 	wego.Router("command", &router.CommandRouter{})
 	wego.Router("timer", &router.TimerRouter{})
 	wego.Router("cron", &router.CronRouter{})
 	wego.Router("websocket", &router.WebSocketRouter{})
-
 	wego.Router("subscribe", &router.SubscribeRouter{})
-
 	//内置加载事件服务,无需路由,直接调用 filter handler
 	wego.Router("event", servers.NewEventCommServer())
 

@@ -7,8 +7,8 @@ type LogConfig struct {
 
 func (s *LogConfig) Load() *LogConfig {
 	config := &LogConfig{
-		LogFilePath: Env("LOG_FILE_PATH", "./logs"),
-		LogFileName: Env("LOG_FILE_NAME", "log"),
+		LogFilePath: EnvString("log.file_path", "./logs"),
+		LogFileName: EnvString("log.file_name", "log"),
 	}
 
 	return config

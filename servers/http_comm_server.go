@@ -35,6 +35,12 @@ func (s *HttpCommServer) Route(method string, path string, endpoint endpoint.End
 		Handler(transports.NewHTTP(endpoint))
 }
 
+//
+func (s *HttpCommServer) Get(path string, endpoint endpoint.Endpoint) {
+	s.Methods("GET").
+		Path(path).
+		Handler(transports.NewHTTP(endpoint))
+}
 func (s *HttpCommServer) Post(path string, endpoint endpoint.Endpoint) {
 	s.Methods("POST").
 		Path(path).
@@ -42,12 +48,16 @@ func (s *HttpCommServer) Post(path string, endpoint endpoint.Endpoint) {
 }
 
 //
-func (s *HttpCommServer) Get(path string, endpoint endpoint.Endpoint) {
+func (s *HttpCommServer) WebGet(path string, endpoint endpoint.Endpoint) {
 	s.Methods("GET").
 		Path(path).
-		Handler(transports.NewHTTP(endpoint))
+		Handler(transports.NewWeb(endpoint))
 }
-
+func (s *HttpCommServer) WebPost(path string, endpoint endpoint.Endpoint) {
+	s.Methods("POST").
+		Path(path).
+		Handler(transports.NewWeb(endpoint))
+}
 func (s *HttpCommServer) Load() {
 
 	//注册通用路由

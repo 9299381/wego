@@ -15,7 +15,7 @@ func Fire(name string, router string, params map[string]interface{}) error {
 			Params: params,
 		},
 	}
-	prefix := configs.Env("QUEUE_PREFIX", "wego")
+	prefix := configs.EnvString("queue.prefix", "wego")
 	return Enqueue(conn, job, prefix)
 
 }
