@@ -1,6 +1,9 @@
 package args
 
-import "flag"
+import (
+	"flag"
+	"testing"
+)
 
 var Name string
 var Mode string
@@ -24,7 +27,10 @@ func init() {
 
 	flag.StringVar(&Cmd, "cmd", "cmd", "cli命令")
 	flag.StringVar(&Args, "args", "{}", "json参数")
-
+	var _ = func() bool {
+		testing.Init()
+		return true
+	}()
 	if !flag.Parsed() {
 		flag.Parse()
 	}

@@ -1,7 +1,9 @@
 package configs
 
 import (
+	"errors"
 	"github.com/9299381/wego/args"
+	"github.com/9299381/wego/constants"
 	"github.com/spf13/viper"
 	"strings"
 )
@@ -102,7 +104,7 @@ func loadFromToml(fileName string) *config {
 	c.AddConfigPath("../env/")
 	c.SetConfigType("toml")
 	if err := c.ReadInConfig(); err != nil {
-		panic(err)
+		panic(errors.New(constants.ErrLoadEnv))
 	}
 	return c
 }

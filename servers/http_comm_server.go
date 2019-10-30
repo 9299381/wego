@@ -3,7 +3,6 @@ package servers
 import (
 	"context"
 	"github.com/9299381/wego"
-	"github.com/9299381/wego/args"
 	"github.com/9299381/wego/configs"
 	"github.com/9299381/wego/contracts"
 	"github.com/9299381/wego/filters"
@@ -59,23 +58,11 @@ func (s *HttpCommServer) WebPost(path string, endpoint endpoint.Endpoint) {
 		Handler(transports.NewWeb(endpoint))
 }
 func (s *HttpCommServer) Load() {
-
 	//注册通用路由
 	s.Route("GET", "/health", (&filters.HealthEndpoint{}).Make())
-	if args.Mode != "prod" {
-		s.handleSwagger()
-	}
 }
 
-func (s *HttpCommServer) Start() error {
-	config := (&configs.HttpConfig{}).Load()
-	address := config.HttpHost + ":" + config.HttpPort
-	s.Logger.Info("Http Server Start ", address)
-	handler := s.Router
-	return http.ListenAndServe(address, handler)
-}
-
-func (s *HttpCommServer) handleSwagger() {
+func (s *HttpCommServer) HandleSwagger() {
 	//文件服务器 /swagger/ 前缀目录下index.html
 	fs := http.FileServer(http.Dir("./swaggerui/"))
 	s.Methods("GET").
@@ -96,6 +83,14 @@ func (s *HttpCommServer) buildSwagger() http.HandlerFunc {
 		response := contracts.MakeResponse("ok", err)
 		_ = codecs.HttpEncodeResponse(context.Background(), w, response)
 	}
+}
+
+func (s *HttpCommServer) Start() error {
+	config := (&configs.HttpConfig{}).Load()
+	address := config.HttpHost + ":" + config.HttpPort
+	s.Logger.Info("Http Server Start ", address)
+	handler := s.Router
+	return http.ListenAndServe(address, handler)
 }
 
 func (s *HttpCommServer) Close() {

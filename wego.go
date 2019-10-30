@@ -7,6 +7,7 @@ import (
 	"github.com/9299381/wego/loggers"
 	"github.com/go-kit/kit/endpoint"
 	"github.com/go-kit/kit/sd/consul"
+	"github.com/spf13/viper"
 	"os"
 	"os/signal"
 	"strings"
@@ -20,6 +21,7 @@ type Application struct {
 	Consul   map[string]*consul.Registrar
 	Handlers map[string]endpoint.Endpoint
 	Routers  map[string]contracts.IRouter
+	tomls    map[string]*viper.Viper
 }
 
 var App *Application
@@ -32,6 +34,7 @@ func init() {
 		Consul:   make(map[string]*consul.Registrar),
 		Handlers: make(map[string]endpoint.Endpoint),
 		Routers:  make(map[string]contracts.IRouter),
+		tomls:    make(map[string]*viper.Viper),
 	}
 }
 
@@ -52,6 +55,28 @@ func Handler(name string, endpoint ...endpoint.Endpoint) endpoint.Endpoint {
 	return nil
 }
 
+func Toml(name string, fileName ...string) *viper.Viper {
+	if fileName == nil {
+		//这里是get
+		ret, exist := App.tomls[name]
+		if exist {
+			return ret
+		}
+	} else {
+		//这里是注册
+		c := viper.New()
+		c.SetConfigName(fileName[0])
+		c.AddConfigPath("./toml/")
+		c.AddConfigPath("../toml/")
+		c.AddConfigPath("../../toml/")
+		c.SetConfigType("toml")
+		if err := c.ReadInConfig(); err != nil {
+			panic(err)
+		}
+		App.tomls[name] = c
+	}
+	return nil
+}
 func Service(name string, service ...contracts.IService) contracts.IService {
 	if service == nil {
 		ret, exist := App.Service[name]
@@ -75,7 +100,6 @@ func Router(name string, server contracts.IRouter) {
 func Start() {
 	servers := strings.Split(args.Server, ",")
 	routers := make(map[string]contracts.IRouter)
-
 	for _, s := range servers {
 		if ss, exist := App.Routers[strings.Trim(s, " ")]; exist == true {
 			routers[s] = ss

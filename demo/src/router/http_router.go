@@ -2,6 +2,7 @@ package router
 
 import (
 	"github.com/9299381/wego"
+	"github.com/9299381/wego/args"
 	"github.com/9299381/wego/servers"
 )
 
@@ -32,4 +33,7 @@ func (s *HttpRouter) Register() {
 	s.Get("/demo/event", wego.Handler("event"))
 	s.Get("/demo/publish", wego.Handler("publish"))
 
+	if args.Mode != "prod" {
+		s.HandleSwagger()
+	}
 }
