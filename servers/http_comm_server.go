@@ -75,7 +75,7 @@ func (s *HttpCommServer) buildSwagger() http.HandlerFunc {
 }
 
 func (s *HttpCommServer) Start() error {
-	config := (&configs.HttpConfig{}).Load()
+	config := configs.LoadHttpConfig()
 	address := config.HttpHost + ":" + config.HttpPort
 	s.Logger.Info("Http Server Start ", address)
 	handler := s.Router

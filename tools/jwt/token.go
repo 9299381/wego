@@ -21,7 +21,7 @@ func New() *Token {
 	token := &Token{
 		Claims: &Claims{},
 	}
-	token.config = (&configs.TokenConfig{}).Load()
+	token.config = configs.LoadTokenConfig()
 	return token
 }
 

@@ -18,7 +18,7 @@ type Server struct {
 }
 
 func NewServer() *Server {
-	config := (&configs.MqttConfig{}).Load()
+	config := configs.LoadMqttConfig()
 	ss := &Server{
 		topics:       make(map[string]*commons.CommHandler),
 		Parallel:     config.Parallel,

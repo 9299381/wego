@@ -6,8 +6,7 @@ type WebSocketConfig struct {
 	Path          string
 }
 
-func (s *WebSocketConfig) Load() *WebSocketConfig {
-
+func LoadWebSocketConfig() *WebSocketConfig {
 	config := &WebSocketConfig{
 		Path:          "/ws",
 		WebSocketPort: EnvString("server.websocket_port", "8342"),

@@ -53,7 +53,7 @@ func getLogHook() *lfshook.LfsHook {
 }
 
 func getLogWriter() (*rotatelogs.RotateLogs, error) {
-	config := (&configs.LogConfig{}).Load()
+	config := configs.LoadLogConfig()
 	logFilePath := config.LogFilePath
 	logFileName := config.LogFileName
 

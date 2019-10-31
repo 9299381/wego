@@ -43,7 +43,7 @@ func (s *GrpcCommServer) Load() {
 }
 
 func (s *GrpcCommServer) Start() error {
-	config := (&configs.GrpcConfig{}).Load()
+	config := configs.LoadGrpcConfig()
 	address := config.GrpcHost + ":" + config.GrpcPort
 	s.Logger.Info("Grpc Server Start ", address)
 	lis, err := net.Listen("tcp", address)

@@ -18,7 +18,7 @@ type QueueCommServer struct {
 }
 
 func NewQueueCommServer() *QueueCommServer {
-	config := (&configs.QueueConfig{}).Load()
+	config := configs.LoadQueueConfig()
 	ss := &QueueCommServer{
 		Server: queues.NewServer(&queues.Options{
 			Prefix:      config.Prefix,

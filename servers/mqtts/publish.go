@@ -15,7 +15,7 @@ func Publish(topic string, payload interface{}) error {
 	if err != nil {
 		return err
 	}
-	config := (&configs.MqttConfig{}).Load()
+	config := configs.LoadMqttConfig()
 	token := GetIns().Publish(topic, config.PublishQos, false, param)
 	if token.Wait() && token.Error() != nil {
 		return token.Error()

@@ -4,7 +4,7 @@ type CacheConfig struct {
 	Size int `json:"size"`
 }
 
-func (s *CacheConfig) Load() *CacheConfig {
+func LoadCacheConfig() *CacheConfig {
 
 	config := &CacheConfig{
 		Size: EnvInt("cache.size", 1048576),

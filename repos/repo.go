@@ -98,3 +98,5 @@ func (s *Repo) GetCache(key string, obj interface{}) error {
 func (s *Repo) SetCache(key string, obj interface{}, exp int) error {
 	return cache.Set(key, obj, exp)
 }
+
+////////// mongodb 操作

@@ -17,7 +17,7 @@ func GetIns() mqtt.Client {
 	return ins
 }
 func init_mc() mqtt.Client {
-	config := (&configs.MqttConfig{}).Load()
+	config := configs.LoadMqttConfig()
 	opts := mqtt.NewClientOptions().AddBroker(config.Host)
 	opts.SetUsername(config.UserName)
 	opts.SetPassword(config.PassWord)

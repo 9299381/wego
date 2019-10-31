@@ -33,7 +33,7 @@ func (s *Server) Register(method, path string, endpoint endpoint.Endpoint) {
 }
 
 func (s *Server) Serve() error {
-	config := (&configs.HttpConfig{}).Load()
+	config := configs.LoadHttpConfig()
 	address := config.HttpHost + ":" + config.HttpPort
 	s.Logger.Info("Http Server Start ", address)
 	handler := s

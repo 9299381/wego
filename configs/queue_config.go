@@ -11,7 +11,7 @@ type QueueConfig struct {
 	Concurrency int
 }
 
-func (s *QueueConfig) Load() *QueueConfig {
+func LoadQueueConfig() *QueueConfig {
 	interval := EnvInt("queue.interval", 1)
 	config := &QueueConfig{
 		Prefix:      EnvString("queue.prefix", "wego"),

@@ -5,7 +5,7 @@ type TokenConfig struct {
 	Exp int64  `json:"exp"`
 }
 
-func (s *TokenConfig) Load() *TokenConfig {
+func LoadTokenConfig() *TokenConfig {
 	config := &TokenConfig{
 		Key: EnvString("token.key", "EHKHHP54PXKYTS2E"),
 		Exp: int64(EnvInt("token.exp", 2592000)),

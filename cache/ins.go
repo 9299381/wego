@@ -21,7 +21,7 @@ func GetIns() *freecache.Cache {
 }
 
 func initCache() *freecache.Cache {
-	config := (&configs.CacheConfig{}).Load()
+	config := configs.LoadCacheConfig()
 	if config.Size != 0 {
 		c := freecache.NewCache(config.Size)
 		//根据cache的大小进行设置

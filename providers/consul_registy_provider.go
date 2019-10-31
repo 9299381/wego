@@ -23,7 +23,7 @@ func (s *ConsulRegistyProvider) Register() {
 }
 func (s *ConsulRegistyProvider) consulHttpRegister() {
 	if strings.Contains(args.Server, "http") || strings.Contains(args.Server, "gateway") {
-		httpConfig := (&configs.HttpConfig{}).Load()
+		httpConfig := configs.LoadHttpConfig()
 		wego.App.Consul["http"] = clients.NewConsulHttpRegister(
 			args.Name,
 			httpConfig.HttpHost,
@@ -33,7 +33,7 @@ func (s *ConsulRegistyProvider) consulHttpRegister() {
 }
 func (s *ConsulRegistyProvider) consulGrpcRegister() {
 	if strings.Contains(args.Server, "grpc") {
-		grpcConfig := (&configs.GrpcConfig{}).Load()
+		grpcConfig := configs.LoadGrpcConfig()
 		wego.App.Consul["grpc"] = clients.NewConsulGrpcRegister(
 			args.Name,
 			grpcConfig.GrpcHost,

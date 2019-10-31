@@ -9,7 +9,7 @@ type MqttConfig struct {
 	PublishQos   uint8  `json:"publish_qos"`
 }
 
-func (s *MqttConfig) Load() *MqttConfig {
+func LoadMqttConfig() *MqttConfig {
 	config := &MqttConfig{
 		Host:         EnvString("mqtt.host", "tcp://127.0.0.1:1883"),
 		UserName:     EnvString("mqtt.username", ""),

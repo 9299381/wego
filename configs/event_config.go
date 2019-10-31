@@ -5,7 +5,7 @@ type EventConfig struct {
 	After       int `json:"after"`
 }
 
-func (s *EventConfig) Load() *EventConfig {
+func LoadEventConfig() *EventConfig {
 
 	config := &EventConfig{
 		Concurrency: EnvInt("event.concurrency", 1),

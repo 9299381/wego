@@ -17,7 +17,7 @@ func GetDB() *xorm.Engine {
 	return db
 }
 func newMySql() *xorm.Engine {
-	conf := (&configs.MySqlConfig{}).Load()
+	conf := configs.LoadMySqlConfig()
 	engine, _ := xorm.NewEngine(
 		conf.Driver,
 		conf.DataSource,

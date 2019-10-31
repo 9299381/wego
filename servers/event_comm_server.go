@@ -13,7 +13,7 @@ type EventCommServer struct {
 }
 
 func NewEventCommServer() *EventCommServer {
-	config := (&configs.EventConfig{}).Load()
+	config := configs.LoadEventConfig()
 	ss := &EventCommServer{
 		Server: events.NewServer(),
 	}

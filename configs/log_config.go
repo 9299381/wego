@@ -5,7 +5,7 @@ type LogConfig struct {
 	LogFileName string `json:"log_file_name"`
 }
 
-func (s *LogConfig) Load() *LogConfig {
+func LoadLogConfig() *LogConfig {
 	config := &LogConfig{
 		LogFilePath: EnvString("log.file_path", "./logs"),
 		LogFileName: EnvString("log.file_name", "log"),

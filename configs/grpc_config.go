@@ -5,7 +5,7 @@ type GrpcConfig struct {
 	GrpcPort string `json:"grpc_port"`
 }
 
-func (i *GrpcConfig) Load() *GrpcConfig {
+func LoadGrpcConfig() *GrpcConfig {
 	config := &GrpcConfig{
 		GrpcHost: EnvString("server.grpc_host", "127.0.0.1"),
 		GrpcPort: EnvString("server.grpc_port", "9341"),

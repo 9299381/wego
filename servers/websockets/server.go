@@ -32,7 +32,7 @@ func (s *Server) Register(name string, handler *commons.CommHandler) {
 }
 
 func (s *Server) Serve() error {
-	config := (&configs.WebSocketConfig{}).Load()
+	config := configs.LoadWebSocketConfig()
 	address := config.WebSocketHost + ":" + config.WebSocketPort
 	s.Logger.Info("WebSocket Server Start ", address)
 	http.HandleFunc(config.Path, s.wsHandler)

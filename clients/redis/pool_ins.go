@@ -28,7 +28,7 @@ func GetRedisPool() *redis.Pool {
 }
 
 func newRedisPool() *redis.Pool {
-	conf := (&configs.RedisConfig{}).Load()
+	conf := configs.LoadRedisConfig()
 	timeout := conf.IdleTimeout
 	pool = &redis.Pool{
 		MaxActive:   conf.MaxActive,

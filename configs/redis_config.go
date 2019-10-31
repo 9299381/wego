@@ -13,7 +13,7 @@ type RedisConfig struct {
 	IdleTimeout time.Duration
 }
 
-func (s *RedisConfig) Load() *RedisConfig {
+func LoadRedisConfig() *RedisConfig {
 	config := &RedisConfig{
 		Uri:         EnvString("redis.uri", "127.0.0.1:6937"),
 		Auth:        EnvString("redis.auth", "password"),
