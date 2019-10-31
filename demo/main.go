@@ -23,9 +23,6 @@ func main() {
 	wego.Provider(&providers.ConsulRegistyProvider{})
 	// api 接口
 	wego.Provider(&provider.DemoProvider{})
-	// web 页面
-	wego.Provider(&provider.WebProvider{})
-
 	// http服务器路由
 	wego.Router("http", &router.HttpRouter{})
 	// grpc_api 接口服务路由

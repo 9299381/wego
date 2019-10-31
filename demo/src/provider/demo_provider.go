@@ -13,7 +13,7 @@ func (s *DemoProvider) Boot() {
 }
 
 func (s *DemoProvider) Register() {
-
+	// 这种controller 可以重复再event,subscribe,queue中使用,因此注册到handler中
 	//限速
 	wego.Handler("one", filters.Limit(&controller.OneController{}))
 	wego.Handler("two", filters.New(&controller.TwoController{}))

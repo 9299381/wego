@@ -36,4 +36,5 @@ func (s *HttpRouter) Register() {
 	if args.Mode != "prod" {
 		s.HandleSwagger()
 	}
+
 }

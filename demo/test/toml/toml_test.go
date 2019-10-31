@@ -7,7 +7,9 @@ import (
 )
 
 func TestToml(t *testing.T) {
+	// 加载过程
 	wego.Toml("user", "user")
+	// 读取过程
 	level := wego.Toml("user").GetString("type.register")
 	fmt.Println(level)
 

@@ -46,17 +46,6 @@ func (s *HttpCommServer) Post(path string, endpoint endpoint.Endpoint) {
 		Handler(transports.NewHTTP(endpoint))
 }
 
-//
-func (s *HttpCommServer) WebGet(path string, endpoint endpoint.Endpoint) {
-	s.Methods("GET").
-		Path(path).
-		Handler(transports.NewWeb(endpoint))
-}
-func (s *HttpCommServer) WebPost(path string, endpoint endpoint.Endpoint) {
-	s.Methods("POST").
-		Path(path).
-		Handler(transports.NewWeb(endpoint))
-}
 func (s *HttpCommServer) Load() {
 	//注册通用路由
 	s.Route("GET", "/health", (&filters.HealthEndpoint{}).Make())
