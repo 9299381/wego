@@ -8,10 +8,20 @@ import (
 	"go.mongodb.org/mongo-driver/mongo/readconcern"
 	"go.mongodb.org/mongo-driver/mongo/readpref"
 	"go.mongodb.org/mongo-driver/mongo/writeconcern"
+	"sync"
 	"time"
 )
 
-func GetMgo(database ...string) *mongo.Database {
+var mongodb *mongo.Client
+var onceMongo sync.Once
+
+func GetMongo() *mongo.Client {
+	onceMongo.Do(func() {
+		mongodb = newMongo()
+	})
+	return mongodb
+}
+func newMongo(database ...string) *mongo.Client {
 	config := configs.LoadMongoConfig()
 	var client *mongo.Client
 	want, err := readpref.New(readpref.SecondaryMode) //表示只使用辅助节点
@@ -38,12 +48,5 @@ func GetMgo(database ...string) *mongo.Database {
 	if err = client.Ping(ctx, readpref.Primary()); err != nil {
 		panic(err)
 	}
-	var db *mongo.Database
-	if database == nil {
-		db = client.Database(config.Database)
-	} else {
-		db = client.Database(database[0])
-
-	}
-	return db
+	return client
 }

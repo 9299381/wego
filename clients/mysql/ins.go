@@ -8,10 +8,10 @@ import (
 )
 
 var db *xorm.Engine
-var once sync.Once
+var onceMysql sync.Once
 
 func GetDB() *xorm.Engine {
-	once.Do(func() {
+	onceMysql.Do(func() {
 		db = newMySql()
 	})
 	return db

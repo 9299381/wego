@@ -3,7 +3,7 @@ package mgo
 import (
 	"context"
 	"fmt"
-	"github.com/9299381/wego/clients/mgo"
+	"github.com/9299381/wego/repos"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo"
 	"log"
@@ -12,8 +12,7 @@ import (
 )
 
 func getCollection() *mongo.Collection {
-	db := mgo.GetMgo()
-	return db.Collection("numbers")
+	return repos.Mongo().Collection("numbers")
 }
 
 func TestInsert(t *testing.T) {

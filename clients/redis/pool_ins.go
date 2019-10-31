@@ -18,10 +18,10 @@ Wait 这是个很有用的配置。如果超过最大连接，是报错，还是
 */
 
 var pool *redis.Pool
-var once sync.Once
+var onceRedis sync.Once
 
 func GetRedisPool() *redis.Pool {
-	once.Do(func() {
+	onceRedis.Do(func() {
 		pool = newRedisPool()
 	})
 	return pool

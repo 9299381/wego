@@ -1,27 +1,18 @@
 package repos
 
 import (
-	"encoding/json"
 	"errors"
-	"github.com/9299381/wego/cache"
 	"github.com/9299381/wego/clients/mysql"
 	"github.com/9299381/wego/constants"
 	"github.com/go-xorm/xorm"
 	"xorm.io/builder"
 )
 
-func New() *Repo {
-	return &Repo{}
-}
-
-type Repo struct {
-}
-
-func (s *Repo) DB() *xorm.Engine {
+func DB() *xorm.Engine {
 	return mysql.GetDB()
 }
 
-func (s *Repo) First(obj interface{}) error {
+func First(obj interface{}) error {
 	has, err := mysql.GetDB().Get(obj)
 	if err != nil {
 		return err
@@ -31,11 +22,11 @@ func (s *Repo) First(obj interface{}) error {
 	}
 	return nil
 }
-func (s *Repo) Find(beans interface{}, condiBeans ...interface{}) error {
+func Find(beans interface{}, condiBeans ...interface{}) error {
 	return mysql.GetDB().Find(beans, condiBeans)
 }
 
-func (s *Repo) Insert(bean interface{}) bool {
+func Insert(bean interface{}) bool {
 	affected, _ := mysql.GetDB().Insert(bean)
 	if affected == 1 {
 		return true
@@ -43,14 +34,14 @@ func (s *Repo) Insert(bean interface{}) bool {
 	return false
 }
 
-func (s *Repo) Update(bean interface{}, cond interface{}) bool {
+func Update(bean interface{}, cond interface{}) bool {
 	affected, _ := mysql.GetDB().Update(bean, cond)
 	if affected == 1 {
 		return true
 	}
 	return false
 }
-func (s *Repo) Exist(obj interface{}) bool {
+func Exist(obj interface{}) bool {
 	b, err := mysql.GetDB().Exist(obj)
 	if err != nil {
 		return false
@@ -58,7 +49,7 @@ func (s *Repo) Exist(obj interface{}) bool {
 	return b
 }
 
-func (s *Repo) FetchOne(b *builder.Builder, bean interface{}) error {
+func FetchOne(b *builder.Builder, bean interface{}) error {
 	query, args, err := b.ToSQL()
 	if err != nil {
 		return err
@@ -73,30 +64,10 @@ func (s *Repo) FetchOne(b *builder.Builder, bean interface{}) error {
 	return nil
 }
 
-func (s *Repo) Fetch(b *builder.Builder, bean interface{}) error {
+func Fetch(b *builder.Builder, bean interface{}) error {
 	query, args, err := b.ToSQL()
 	if err != nil {
 		return err
 	}
 	return mysql.GetDB().SQL(query, args...).Find(bean)
 }
-
-//////////////
-
-func (s *Repo) GetCache(key string, obj interface{}) error {
-	b, err := cache.Get(key)
-	if err != nil {
-		return err
-	}
-	err = json.Unmarshal(b, obj)
-	if err != nil {
-		return err
-	}
-	return nil
-}
-
-func (s *Repo) SetCache(key string, obj interface{}, exp int) error {
-	return cache.Set(key, obj, exp)
-}
-
-////////// mongodb 操作

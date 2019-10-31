@@ -25,14 +25,14 @@ func TestInsert(t *testing.T) {
 		NumInt2: 0,
 		NumBig:  1111111111111111111,
 	}
-	repos.New().Insert(demo)
+	repos.Insert(demo)
 }
 func TestUpdate(t *testing.T) {
 	demo := &model.CommDemoModel{Id: "1298580054575415296"}
-	_ = repos.New().First(demo)
+	_ = repos.First(demo)
 	demo.NumInt1 = 0
 	demo.NumInt2 = 123
-	_, _ = repos.New().DB().
+	_, _ = repos.DB().
 		Id(demo.Id).
 		Cols("num_int1", "num_int2").
 		Update(demo)

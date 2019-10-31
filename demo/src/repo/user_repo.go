@@ -9,7 +9,6 @@ import (
 
 type UserRepo struct {
 	contracts.Context
-	*repos.Repo
 }
 
 func NewUserRepo(ctx contracts.Context) *UserRepo {
@@ -26,6 +25,6 @@ func (s *UserRepo) GetUser(req map[string]interface{}) (ret *model.CommUser, err
 		From("comm_user_info").
 		Where(cond)
 	ret = &model.CommUser{}
-	err = s.FetchOne(b, ret)
+	err = repos.FetchOne(b, ret)
 	return
 }
