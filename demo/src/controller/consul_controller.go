@@ -7,7 +7,6 @@ import (
 )
 
 type ConsulController struct {
-	*contracts.Controller
 }
 
 func (s *ConsulController) Handle(ctx contracts.Context) (interface{}, error) {

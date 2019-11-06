@@ -7,7 +7,6 @@ import (
 
 //用于测试并行,串行
 type SleepController struct {
-	*contracts.Controller
 }
 
 func (s *SleepController) Handle(ctx contracts.Context) (interface{}, error) {

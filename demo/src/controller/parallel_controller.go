@@ -7,7 +7,6 @@ import (
 )
 
 type ParallelController struct {
-	*contracts.Controller
 }
 
 func (s *ParallelController) Handle(ctx contracts.Context) (interface{}, error) {

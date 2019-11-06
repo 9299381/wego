@@ -7,7 +7,6 @@ import (
 )
 
 type SqlController struct {
-	*contracts.Controller
 }
 
 func (s *SqlController) Handle(ctx contracts.Context) (interface{}, error) {

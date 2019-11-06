@@ -24,6 +24,12 @@ func (s *CommEndpoint) Make() endpoint.Endpoint {
 	return func(ctx context.Context, request interface{}) (interface{}, error) {
 		//生成请求参数
 		req := request.(contracts.Request)
+		_, has := (req.Data)["mock"]
+		if has {
+			if v, ok := s.Controller.(contracts.IMock); ok {
+				return v.Mock(), nil
+			}
+		}
 		//生成context上下文
 		cc := s.makeContext(ctx, req)
 		//成成线程log,统一处理ip,request_id等
@@ -43,7 +49,10 @@ func (s *CommEndpoint) Make() endpoint.Endpoint {
 	}
 }
 func (s *CommEndpoint) valid(ctx contracts.Context, request contracts.Request) error {
-	obj := s.Controller.GetRules()
+	var obj interface{}
+	if v, ok := s.Controller.(contracts.IValid); ok {
+		obj = v.GetRules()
+	}
 	if obj != nil {
 		// Map2Struct 时自动验证
 		err := convert.Map2Struct(request.Data, obj)
@@ -57,8 +66,8 @@ func (s *CommEndpoint) valid(ctx contracts.Context, request contracts.Request) e
 
 func (s *CommEndpoint) makeLog(ctx contracts.Context, req contracts.Request) *logrus.Entry {
 	//初始化日志字段,放到context中
-	ip := (req.Data)["client_ip"]
-	if ip == nil {
+	ip, has := (req.Data)["client_ip"]
+	if !has || ip == nil {
 		ip = "LAN"
 	}
 	entity := loggers.GetLog().WithFields(logrus.Fields{

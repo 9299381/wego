@@ -7,7 +7,6 @@ import (
 )
 
 type CacheGetController struct {
-	*contracts.Controller
 }
 
 func (s *CacheGetController) Handle(ctx contracts.Context) (interface{}, error) {

@@ -6,7 +6,6 @@ import (
 )
 
 type QueueController struct {
-	*contracts.Controller
 }
 
 func (s *QueueController) Handle(ctx contracts.Context) (interface{}, error) {

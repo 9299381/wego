@@ -3,7 +3,7 @@ module github.com/9299381/wego/demo
 go 1.12
 
 require (
-	github.com/9299381/wego v1.0.0
+	github.com/9299381/wego v0.1.0
 	github.com/Azure/go-autorest v10.15.3+incompatible
 	github.com/gomodule/redigo v2.0.0+incompatible
 	github.com/hashicorp/consul/api v1.2.0

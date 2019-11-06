@@ -6,7 +6,6 @@ import (
 )
 
 type PublishController struct {
-	*contracts.Controller
 }
 
 func (s *PublishController) Handle(ctx contracts.Context) (interface{}, error) {

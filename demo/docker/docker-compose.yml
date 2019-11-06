@@ -1,0 +1,8 @@
+version: "3"
+services:
+  demo_app:
+    build:
+      context: .
+    ports:
+      - 8341:8341
+    command: /home/main

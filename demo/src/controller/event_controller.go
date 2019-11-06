@@ -6,7 +6,6 @@ import (
 )
 
 type EventController struct {
-	*contracts.Controller
 }
 
 func (s *EventController) Handle(ctx contracts.Context) (interface{}, error) {

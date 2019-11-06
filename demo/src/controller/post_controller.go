@@ -7,7 +7,6 @@ import (
 )
 
 type PostController struct {
-	*contracts.Controller
 }
 
 // swagger:route Post /demo/post 分组2 postController

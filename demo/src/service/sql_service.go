@@ -5,6 +5,7 @@ import (
 	"github.com/9299381/wego/demo/src/fsm"
 	"github.com/9299381/wego/demo/src/model"
 	"github.com/9299381/wego/demo/src/repo"
+	"github.com/9299381/wego/repos"
 )
 
 type SqlService struct {
@@ -33,7 +34,7 @@ func (s *SqlService) Handle(ctx contracts.Context) error {
 		}
 		user.UserName = "aaaaaaaaa"
 		ctx.Log.Info(user.Status)
-		st.Update(user, &model.CommUser{Id: user.Id})
+		repos.Update(user, &model.CommUser{Id: user.Id})
 	}
 	ctx.Set("user", user)
 

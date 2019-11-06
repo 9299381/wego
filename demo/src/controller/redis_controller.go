@@ -7,7 +7,6 @@ import (
 )
 
 type RedisController struct {
-	*contracts.Controller
 }
 
 func (s *RedisController) Handle(ctx contracts.Context) (interface{}, error) {

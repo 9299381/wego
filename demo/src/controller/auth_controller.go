@@ -6,7 +6,6 @@ import (
 )
 
 type AuthController struct {
-	*contracts.Controller
 }
 
 func (s *AuthController) Handle(ctx contracts.Context) (interface{}, error) {

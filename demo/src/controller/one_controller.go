@@ -8,7 +8,6 @@ import (
 )
 
 type OneController struct {
-	*contracts.Controller
 }
 
 // ServeAPI serves the API for this record store
@@ -39,6 +38,14 @@ func (s *OneController) Handle(ctx contracts.Context) (interface{}, error) {
 
 func (s *OneController) GetRules() interface{} {
 	return &oneRequest{}
+}
+
+func (s *OneController) Mock() interface{} {
+	return &oneResponse{
+		Id:       "123123",
+		UserName: "demo",
+		Age:      18,
+	}
 }
 
 // swagger:parameters oneController
