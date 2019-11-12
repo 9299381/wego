@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"github.com/9299381/wego/cache"
 	"github.com/9299381/wego/contracts"
+	"github.com/tidwall/gjson"
 )
 
 type CacheGetController struct {
@@ -20,5 +21,10 @@ func (s *CacheGetController) Handle(ctx contracts.Context) (interface{}, error) 
 		ctx.Log.Info(d["aaa"])
 	}
 
-	return nil, nil
+	//使用gjson 更方便
+	return map[string]interface{}{
+		"ccc":  gjson.Get(string(v), "ccc").Str,
+		"aaa":  d["aaa"],
+		"gaaa": gjson.Get(string(v), "aaa").String(),
+	}, nil
 }
