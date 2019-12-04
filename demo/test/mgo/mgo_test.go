@@ -1,46 +1,72 @@
 package mgo
 
 import (
-	"context"
 	"fmt"
-	"github.com/9299381/wego/repos"
-	"go.mongodb.org/mongo-driver/bson"
-	"go.mongodb.org/mongo-driver/mongo"
-	"log"
+	"github.com/9299381/wego/clients/mongo"
+	"github.com/9299381/wego/tools"
+	"gopkg.in/mgo.v2"
+	"gopkg.in/mgo.v2/bson"
 	"testing"
-	"time"
 )
 
-func getCollection() *mongo.Collection {
-	return repos.Mongo().Collection("numbers")
+type Person struct {
+	Id    bson.ObjectId `bson:"_id"`
+	Name  string        `json:"name"`
+	Phone string        `json:"phone"`
 }
 
-func TestInsert(t *testing.T) {
-	collection := getCollection()
-	ctx, _ := context.WithTimeout(context.Background(), 30*time.Second)
-	res, _ := collection.InsertOne(ctx, bson.M{"name": "cos", "value": 3.14159})
-	id := res.InsertedID
-	fmt.Println(id)
+const (
+	PEOPLE string = "people"
+)
 
+func TestMgoInsert(t *testing.T) {
+	person := Person{
+		Id:    bson.NewObjectId(),
+		Name:  tools.RandString(6, "a"),
+		Phone: tools.RandString(10, "0"),
+	}
+	mongo.Coll(PEOPLE, func(c *mgo.Collection) {
+		_ = c.Insert(person)
+	})
 }
+func TestMgoFind(t *testing.T) {
+	var persons []Person
+	filter := bson.M{}
+	mongo.Coll(PEOPLE, func(c *mgo.Collection) {
+		_ = c.Find(filter).All(&persons)
+	})
+	fmt.Print(persons)
+}
+func TestMgoFineOne(t *testing.T) {
+	var person = &Person{}
+	filter := bson.M{"_id": bson.ObjectIdHex("5de71ec1d4a40398def8c0df")}
+	mongo.Coll(PEOPLE, func(c *mgo.Collection) {
+		_ = c.Find(filter).One(person)
+	})
+	fmt.Print(person.Name)
+}
+func TestMgoUpdate(t *testing.T) {
+	filter := bson.M{
+		"_id": bson.ObjectIdHex("5de71ec1d4a40398def8c0df")}
+	update := bson.M{"$set": bson.M{"name": "中文"}}
+	mongo.Coll(PEOPLE, func(c *mgo.Collection) {
+		_ = c.Update(filter, update)
+	})
+}
+func TestDb(t *testing.T) {
+	person := Person{
+		Id:    bson.NewObjectId(),
+		Name:  tools.RandString(6, "a"),
+		Phone: tools.RandString(10, "0"),
+	}
+	mongo.Table("test", PEOPLE, func(c *mgo.Collection) {
+		_ = c.Insert(person)
+	})
 
-func TestFind(t *testing.T) {
-	collection := getCollection()
-	ctx, _ := context.WithTimeout(context.Background(), 30*time.Second)
-	cur, err := collection.Find(ctx, bson.M{"name": "cos"})
-	if err != nil {
-		log.Fatal(err)
-	}
-	defer cur.Close(ctx)
-	for cur.Next(ctx) {
-		var result bson.M
-		err := cur.Decode(&result)
-		if err != nil {
-			log.Fatal(err)
-		}
-		fmt.Println(result)
-	}
-	if err := cur.Err(); err != nil {
-		log.Fatal(err)
-	}
+	var persons []Person
+	filter := bson.M{}
+	mongo.Table("test", PEOPLE, func(c *mgo.Collection) {
+		_ = c.Find(filter).All(&persons)
+	})
+	fmt.Print(persons)
 }

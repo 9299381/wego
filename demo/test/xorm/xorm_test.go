@@ -63,7 +63,7 @@ func TestFetchOneJoin(t *testing.T) {
 
 func TestFetchOne(t *testing.T) {
 	req := make(map[string]interface{})
-	req["id"] = "118916447485100620"
+	req["id"] = "1306582895206334464"
 	cond := builder.Eq{}
 	for k, v := range req {
 		cond[k] = v
@@ -123,7 +123,7 @@ func TestFage(t *testing.T) {
 }
 
 func TestUpdate(t *testing.T) {
-	user := &model.CommUser{Id: "1189164474851006208"}
+	user := &model.CommUser{Id: "1306582895206334464"}
 	_, _ = clients.DB().Get(user)
 	fmt.Println(user)
 	user.UserName = "ccc"

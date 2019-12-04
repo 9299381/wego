@@ -15,7 +15,7 @@ func LoadQueueConfig() *QueueConfig {
 	interval := EnvInt("queue.interval", 1)
 	config := &QueueConfig{
 		Prefix:      EnvString("queue.prefix", "wego"),
-		Listen:      EnvStringSlice("queue.listen"),
+		Listen:      EnvStringSlice("queue.listen", []string{}),
 		Interval:    time.Duration(interval) * time.Second,
 		Concurrency: EnvInt("queue.concurrency", 1),
 	}
