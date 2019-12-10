@@ -28,7 +28,7 @@ func Session() *mgo.Session {
 	}
 	return session.Clone()
 }
-func Coll(collection string, f func(*mgo.Collection)) {
+func Col(collection string, f func(*mgo.Collection)) {
 	Table(configs.LoadMongoConfig().Database, collection, f)
 }
 func Table(database string, collection string, f func(*mgo.Collection)) {
