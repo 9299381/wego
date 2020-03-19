@@ -3,6 +3,7 @@ package wego
 import (
 	"fmt"
 	"github.com/9299381/wego/args"
+	"github.com/9299381/wego/container"
 	"github.com/9299381/wego/contracts"
 	"github.com/9299381/wego/loggers"
 	"github.com/go-kit/kit/endpoint"
@@ -125,4 +126,8 @@ func Start() {
 		server.Close()
 	}
 
+}
+
+func DI() *container.Container {
+	return container.GetIns()
 }

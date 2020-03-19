@@ -7,6 +7,7 @@ require (
 	github.com/eclipse/paho.mqtt.golang v1.2.0
 	github.com/fastly/go-utils v0.0.0-20180712184237-d95a45783239 // indirect
 	github.com/go-kit/kit v0.9.0
+	github.com/go-macaron/inject v0.0.0-20200308113650-138e5925c53b
 	github.com/go-sql-driver/mysql v1.4.1
 	github.com/go-xorm/xorm v0.7.6
 	github.com/golang/protobuf v1.3.1
@@ -25,7 +26,6 @@ require (
 	github.com/mitchellh/mapstructure v1.1.2
 	github.com/rifflock/lfshook v0.0.0-20180920164130-b9218ef580f5
 	github.com/robfig/cron/v3 v3.0.0
-
 	github.com/sirupsen/logrus v1.4.2
 	github.com/spf13/viper v1.4.0
 	github.com/tebeka/strftime v0.1.3 // indirect

@@ -18,5 +18,6 @@ func (s *SubscribeRouter) Register() {
 	s.Route("sub_test", wego.Handler("two"))
 	s.Route("sub_test2", wego.Handler("two"))
 	s.Route("sub_test3", wego.Handler("sleep"))
+	s.Route("$SYS/brokers/+/clients/+/+", wego.Handler("mqtt_event"))
 
 }

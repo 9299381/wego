@@ -42,5 +42,5 @@ func (s *DemoProvider) Register() {
 	//
 	wego.Handler("publish", filters.New(&controller.PublishController{}))
 	wego.Handler("sleep", filters.New(&controller.SleepController{}))
-
+	wego.Handler("mqtt_event", filters.New(&controller.MqttEventController{}))
 }
