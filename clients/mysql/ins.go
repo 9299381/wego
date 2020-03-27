@@ -3,8 +3,8 @@ package mysql
 import (
 	"github.com/9299381/wego/configs"
 	_ "github.com/go-sql-driver/mysql"
-	"github.com/go-xorm/xorm"
 	"sync"
+	"xorm.io/xorm"
 )
 
 var db *xorm.Engine

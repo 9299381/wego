@@ -1,11 +1,10 @@
 package service
 
 import (
+	"github.com/9299381/wego/clients"
 	"github.com/9299381/wego/contracts"
 	"github.com/9299381/wego/demo/src/fsm"
 	"github.com/9299381/wego/demo/src/model"
-	"github.com/9299381/wego/demo/src/repo"
-	"github.com/9299381/wego/repos"
 )
 
 type SqlService struct {
@@ -13,15 +12,9 @@ type SqlService struct {
 
 func (s *SqlService) Handle(ctx contracts.Context) error {
 
-	st := repo.NewUserRepo(ctx)
-	req := make(map[string]interface{})
-	req["id"] = "1189164474851006208"
-	//req["user_name"] = "aaa"
-	user, err := st.GetUser(req)
+	user := &model.CommUser{Id: "1189164474851006208"}
+	_, _ = clients.DB().Get(user)
 	ctx.Log.Info(user)
-	if err != nil {
-		return err
-	}
 
 	////初始化状态机
 	sm := fsm.NewUserFSM(ctx, user)
@@ -34,7 +27,7 @@ func (s *SqlService) Handle(ctx contracts.Context) error {
 		}
 		user.UserName = "aaaaaaaaa"
 		ctx.Log.Info(user.Status)
-		repos.Update(user, &model.CommUser{Id: user.Id})
+		_, _ = clients.DB().Update(user, &model.CommUser{Id: user.Id})
 	}
 	ctx.Set("user", user)
 

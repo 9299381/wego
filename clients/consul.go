@@ -64,7 +64,7 @@ func NewConsulGrpcRegister(service, host, port string) *consul.Registrar {
 func GetConsulService(service string) (entity *api.ServiceEntry, err error) {
 	//这里考虑可以从缓存中读取,10分钟过期,比如
 	var entitys []*api.ServiceEntry
-	c, _ := cache.Get("consul_entitys")
+	c, _ := cache.GetByte("consul_entitys")
 	if c != nil {
 		entitys = []*api.ServiceEntry{}
 		err = json.Unmarshal(c, &entitys)

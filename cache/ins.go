@@ -47,7 +47,18 @@ func Set(key string, value interface{}, exp int) error {
 	}
 	return nil
 }
-func Get(key string) ([]byte, error) {
+func Get(key string, obj interface{}) error {
+	b, err := GetByte(key)
+	if err != nil {
+		return err
+	}
+	err = json.Unmarshal(b, obj)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+func GetByte(key string) ([]byte, error) {
 	if GetIns() == nil {
 		return nil, errors.New(constants.ErrCacheInit)
 	}

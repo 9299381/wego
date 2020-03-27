@@ -3,7 +3,6 @@ package num
 import (
 	"github.com/9299381/wego/clients"
 	"github.com/9299381/wego/demo/src/model"
-	"github.com/9299381/wego/repos"
 	"github.com/9299381/wego/tools/idwork"
 	"testing"
 )
@@ -25,14 +24,14 @@ func TestInsert(t *testing.T) {
 		NumInt2: 0,
 		NumBig:  1111111111111111111,
 	}
-	repos.Insert(demo)
+	_, _ = clients.DB().Insert(demo)
 }
 func TestUpdate(t *testing.T) {
 	demo := &model.CommDemoModel{Id: "1298580054575415296"}
-	_ = repos.First(demo)
+	_, _ = clients.DB().Get(demo)
 	demo.NumInt1 = 0
 	demo.NumInt2 = 123
-	_, _ = repos.DB().
+	_, _ = clients.DB().
 		Id(demo.Id).
 		Cols("num_int1", "num_int2").
 		Update(demo)

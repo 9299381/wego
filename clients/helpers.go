@@ -3,8 +3,8 @@ package clients
 import (
 	"github.com/9299381/wego/clients/mysql"
 	"github.com/9299381/wego/clients/redis"
-	"github.com/go-xorm/xorm"
 	redigo "github.com/gomodule/redigo/redis"
+	"xorm.io/xorm"
 )
 
 func DB() *xorm.Engine {

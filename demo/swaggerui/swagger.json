@@ -1,0 +1,207 @@
+{
+  "swagger": "2.0",
+  "paths": {
+    "/demo/one": {
+      "get": {
+        "description": "Test swagger\nThis will .......",
+        "tags": [
+          "分组1"
+        ],
+        "operationId": "oneController",
+        "parameters": [
+          {
+            "minimum": 1,
+            "type": "string",
+            "x-go-name": "Param1",
+            "description": "参数param1的说明\n最小1",
+            "name": "param_1",
+            "in": "query",
+            "required": true
+          },
+          {
+            "minLength": 4,
+            "type": "integer",
+            "format": "int64",
+            "x-go-name": "Param2",
+            "description": "最短4",
+            "name": "param_2",
+            "in": "query",
+            "required": true
+          },
+          {
+            "type": "integer",
+            "format": "int64",
+            "x-go-name": "Param4",
+            "name": "param_4",
+            "in": "query"
+          }
+        ],
+        "responses": {
+          "200": {
+            "$ref": "#/responses/oneResponse"
+          }
+        }
+      }
+    },
+    "/demo/post": {
+      "post": {
+        "description": "Test swagger\nThis will .......",
+        "tags": [
+          "分组2"
+        ],
+        "operationId": "postController",
+        "parameters": [
+          {
+            "type": "string",
+            "x-go-name": "Id",
+            "name": "id",
+            "in": "query"
+          },
+          {
+            "type": "string",
+            "x-go-name": "Value",
+            "name": "value",
+            "in": "query"
+          },
+          {
+            "type": "integer",
+            "format": "int64",
+            "x-go-name": "Number",
+            "name": "number",
+            "in": "query"
+          }
+        ],
+        "responses": {
+          "200": {
+            "$ref": "#/responses/postResponse"
+          }
+        }
+      }
+    },
+    "/demo/two": {
+      "get": {
+        "description": "Test swagger\nThis will .......",
+        "tags": [
+          "分组1"
+        ],
+        "operationId": "twoController",
+        "parameters": [
+          {
+            "type": "string",
+            "x-go-name": "Name",
+            "description": "备注",
+            "name": "name",
+            "in": "query"
+          }
+        ],
+        "responses": {
+          "200": {
+            "$ref": "#/responses/twoResponse"
+          }
+        }
+      }
+    },
+    "/demo/valid": {
+      "post": {
+        "description": "Test swagger\nThis will .......",
+        "tags": [
+          "分组2"
+        ],
+        "operationId": "validController",
+        "responses": {
+          "200": {
+            "$ref": "#/responses/postResponse"
+          }
+        }
+      }
+    }
+  },
+  "definitions": {
+    "Demo": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "x-go-name": "Id"
+        },
+        "name": {
+          "type": "string",
+          "x-go-name": "Name"
+        }
+      },
+      "x-go-package": "github.com/9299381/wego/demo/src/dto"
+    },
+    "postRequest": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "x-go-name": "Id"
+        },
+        "number": {
+          "type": "integer",
+          "format": "int64",
+          "x-go-name": "Number"
+        },
+        "value": {
+          "type": "string",
+          "x-go-name": "Value"
+        }
+      },
+      "x-go-package": "github.com/9299381/wego/demo/src/controller"
+    }
+  },
+  "responses": {
+    "oneResponse": {
+      "headers": {
+        "age": {
+          "type": "integer",
+          "format": "int64",
+          "description": "整形"
+        },
+        "id": {
+          "type": "string"
+        },
+        "user_name": {
+          "type": "string",
+          "description": "响应UserName的描述"
+        }
+      }
+    },
+    "postResponse": {
+      "schema": {
+        "$ref": "#/definitions/postRequest"
+      },
+      "headers": {
+        "id": {
+          "type": "string"
+        },
+        "resp": {}
+      }
+    },
+    "twoResponse": {
+      "headers": {
+        "id": {
+          "type": "string"
+        },
+        "user_name": {
+          "type": "string"
+        }
+      }
+    },
+    "validResponse": {
+      "headers": {
+        "age": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "list": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Demo"
+          }
+        }
+      }
+    }
+  }
+}
