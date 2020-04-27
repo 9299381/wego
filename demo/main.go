@@ -12,7 +12,7 @@ import (
 func main() {
 
 	//args.Registy = "127.0.0.1:8500"
-	args.Server = "http"
+	args.Server = "http,grpc"
 
 	//args.Server = "http,event,subscribe"
 	//args.Server = "subscribe"
@@ -22,7 +22,7 @@ func main() {
 	//服务注册
 	wego.Provider(&providers.ConsulRegistyProvider{})
 	// api 接口
-	wego.Provider(&provider.DemoProvider{})
+	wego.Provider(new(provider.DemoProvider))
 	// http服务器路由
 	wego.Router("http", &router.HttpRouter{})
 	// grpc_api 接口服务路由

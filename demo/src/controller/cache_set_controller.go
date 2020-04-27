@@ -12,8 +12,13 @@ func (s *CacheSetController) Handle(ctx contracts.Context) (interface{}, error) 
 
 	v := make(map[string]interface{})
 	v["aaa"] = "bbb"
-	v["ccc"] = "ddd"
-	_ = cache.Set("aaaaa", v, 60)
+
+	dd := make(map[string]interface{})
+	dd["a"] = "111"
+	dd["b"] = "222"
+
+	v["ccc"] = dd
+	_ = cache.Set("key", v, 60)
 
 	return nil, nil
 }

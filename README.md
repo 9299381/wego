@@ -64,8 +64,8 @@
     params:=make(map[string]interface{})
     params["test_rpc_post"] = "test_rpc_post"
     resp := clients.
-        Micro("consul_demo").    //服务的名称
-        Service("demo.post").    //服务的注册的handler
+        Service("consul_demo").    //服务的名称
+        Api("demo.post").    //服务的注册的handler
         Params(params).
         Run()
     该方法会从consul中获取注册的服务,并随机选择一个进行请求,支持grpc和http post
@@ -80,9 +80,7 @@
 	github.com/go-kit/kit  //核心组件
 	github.com/go-logfmt/logfmt   格式化输出
 	
-	github.com/go-sql-driver/mysql   mysql
-	github.com/go-xorm/xorm          mysql orm
-	
+
 	github.com/golang/protobuf      grpc pb协议
 	github.com/gomodule/redigo      redis
 	github.com/gorilla/mux          http router
@@ -101,6 +99,9 @@
 	gopkg.in/check.v1  
     github.com/hashicorp/consul v1.6.1 //  consul http grpc 服务注册,发现
     github.com/hashicorp/consul/api v1.2.0
+	github.com/go-sql-driver/mysql   mysql
+	xorm.io/xorm v1.0.0 mysql orm
+	
 ~~~~
 
 # 样例

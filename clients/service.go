@@ -7,21 +7,21 @@ import (
 
 // 为统一php模式而封装
 // micro -> service,  service ->route
-func Micro(micro string) *microService {
+func Service(service string) *microService {
 	return &microService{
-		micro:  micro,
-		params: make(map[string]interface{}),
+		service: service,
+		params:  make(map[string]interface{}),
 	}
 }
 
 type microService struct {
-	micro   string
 	service string
+	api     string
 	params  map[string]interface{}
 }
 
-func (s *microService) Service(service string) *microService {
-	s.service = service
+func (s *microService) Api(api string) *microService {
+	s.api = api
 	return s
 }
 
@@ -31,7 +31,7 @@ func (s *microService) Params(params map[string]interface{}) *microService {
 }
 
 func (s *microService) Run() (resp contracts.Response) {
-	entity, err := GetConsulService(s.micro)
+	entity, err := GetConsulService(s.service)
 	if err != nil {
 		resp = contracts.ResponseFailed(err)
 		return
@@ -39,9 +39,9 @@ func (s *microService) Run() (resp contracts.Response) {
 	tag := entity.Service.Tags[0]
 	host := fmt.Sprintf("%s:%d", entity.Service.Address, entity.Service.Port)
 	if tag == "http" {
-		return NewHttpPostCall(host, s.service, s.params)
+		return NewHttpPostCall(host, s.api, s.params)
 	} else if tag == "grpc" {
-		resp = NewGrpcCall(host, s.service, s.params)
+		resp = NewGrpcCall(host, s.api, s.params)
 	}
 	return
 }

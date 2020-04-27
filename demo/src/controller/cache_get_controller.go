@@ -1,7 +1,6 @@
 package controller
 
 import (
-	"encoding/json"
 	"github.com/9299381/wego/cache"
 	"github.com/9299381/wego/contracts"
 	"github.com/tidwall/gjson"
@@ -11,20 +10,16 @@ type CacheGetController struct {
 }
 
 func (s *CacheGetController) Handle(ctx contracts.Context) (interface{}, error) {
+	//GetByte 方式
+	jsonBytes, _ := cache.GetByte("key")
+	// Get方式
+	obj := make(map[string]interface{})
+	_ = cache.Get("key", &obj)
 
-	v, _ := cache.Get("aaaaa")
-	d := make(map[string]interface{})
-	err := json.Unmarshal(v, &d)
-	if err != nil {
-		return nil, err
-	} else {
-		ctx.Log.Info(d["aaa"])
-	}
-
-	//使用gjson 更方便
+	//使用gjson 更方便 直接从json字符串中取值
 	return map[string]interface{}{
-		"ccc":  gjson.Get(string(v), "ccc").Str,
-		"aaa":  d["aaa"],
-		"gaaa": gjson.Get(string(v), "aaa").String(),
+		"ccc":  gjson.Get(string(jsonBytes), "ccc.a").Str,
+		"aaa":  obj["aaa"],
+		"gaaa": gjson.Get(string(jsonBytes), "aaa").String(),
 	}, nil
 }
